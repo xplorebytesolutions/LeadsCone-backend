@@ -17010,3 +17010,556 @@ VALUES ('20251001122934_InitialMigration', '8.0.18');
 2025-10-01 18:03:25.182 +05:30 [INF] User profile is available. Using 'C:\Users\sunde\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
 2025-10-01 18:03:25.227 +05:30 [INF] 🚀 Webhook Queue Worker started.
 2025-10-01 18:03:25.245 +05:30 [INF] 🧹 FailedWebhookLogCleanupService started.
+2025-10-01 18:03:26.438 +05:30 [WRN] Sensitive data logging is enabled. Log entries and exception messages may include sensitive application data; this mode should only be enabled during development.
+2025-10-01 18:03:26.979 +05:30 [WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+2025-10-01 18:03:26.995 +05:30 [INF] ClickLogWorker started
+2025-10-01 18:03:27.177 +05:30 [INF] Now listening on: http://localhost:7113
+2025-10-01 18:03:27.178 +05:30 [INF] Now listening on: http://localhost:5295
+2025-10-01 18:03:27.179 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-01 18:03:27.180 +05:30 [INF] Hosting environment: Development
+2025-10-01 18:03:27.181 +05:30 [INF] Content root path: D:\xbytechat\xbytechat-api\xbytechat-api
+2025-10-01 18:03:28.065 +05:30 [INF] ClickLogWorker stopped
+2025-10-01 18:03:28.245 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:7113/swagger/index.html - null null
+2025-10-01 18:03:28.557 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:7113/swagger/index.html - 200 null text/html;charset=utf-8 322.4507ms
+2025-10-01 18:03:28.594 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:7113/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-01 18:03:28.609 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:7113/_framework/aspnetcore-browser-refresh.js - 200 13762 application/javascript; charset=utf-8 14.558ms
+2025-10-01 18:03:28.682 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:7113/_vs/browserLink - null null
+2025-10-01 18:03:28.766 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:7113/_vs/browserLink - 200 null text/javascript; charset=UTF-8 83.3517ms
+2025-10-01 18:03:29.015 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:7113/swagger/v1/swagger.json - null null
+2025-10-01 18:03:29.620 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:7113/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 604.5471ms
+2025-10-01 18:03:35.387 +05:30 [INF] Executed DbCommand (102ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT w."Id", w."AutoCleanupEnabled", w."LastCleanupAt"
+FROM "WebhookSettings" AS w
+LIMIT 1
+2025-10-01 18:03:35.420 +05:30 [INF] Executed DbCommand (135ms) [Parameters=[@__cutoff_0='2025-09-24T12:33:25.3486969Z' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+SELECT f."Id", f."CreatedAt", f."ErrorMessage", f."FailureType", f."RawJson", f."SourceModule"
+FROM "FailedWebhookLogs" AS f
+WHERE f."CreatedAt" < @__cutoff_0
+2025-10-01 18:03:37.131 +05:30 [INF] Executed DbCommand (96ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT DISTINCT w."BusinessId"
+FROM "WhatsAppSettings" AS w
+WHERE w."IsActive"
+2025-10-01 18:03:37.137 +05:30 [INF] TemplateSyncWorker: no active WhatsApp settings found.
+2025-10-01 18:03:37.138 +05:30 [INF] TemplateSyncWorker: sweep finished in 125 ms; processed=0; next run ~"2025-10-01T18:33:37.0131047Z"
+2025-10-01 18:03:40.165 +05:30 [INF] Executed DbCommand (84ms) [Parameters=[@__now_0='2025-10-01T12:33:32.0147241+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:03:50.320 +05:30 [INF] Executed DbCommand (134ms) [Parameters=[@__now_0='2025-10-01T12:33:50.1830536+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:04:00.575 +05:30 [INF] Executed DbCommand (245ms) [Parameters=[@__now_0='2025-10-01T12:34:00.3289801+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:04:10.673 +05:30 [INF] Executed DbCommand (90ms) [Parameters=[@__now_0='2025-10-01T12:34:10.5831660+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:04:20.794 +05:30 [INF] Executed DbCommand (116ms) [Parameters=[@__now_0='2025-10-01T12:34:20.6778294+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:04:30.897 +05:30 [INF] Executed DbCommand (93ms) [Parameters=[@__now_0='2025-10-01T12:34:30.8029606+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:04:40.980 +05:30 [INF] Executed DbCommand (84ms) [Parameters=[@__now_0='2025-10-01T12:34:40.8959736+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:04:51.075 +05:30 [INF] Executed DbCommand (87ms) [Parameters=[@__now_0='2025-10-01T12:34:50.9873671+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:05:01.150 +05:30 [INF] Executed DbCommand (70ms) [Parameters=[@__now_0='2025-10-01T12:35:01.0800300+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:05:11.240 +05:30 [INF] Executed DbCommand (84ms) [Parameters=[@__now_0='2025-10-01T12:35:11.1557886+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:05:21.338 +05:30 [INF] Executed DbCommand (91ms) [Parameters=[@__now_0='2025-10-01T12:35:21.2460383+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:05:31.427 +05:30 [INF] Executed DbCommand (80ms) [Parameters=[@__now_0='2025-10-01T12:35:31.3461449+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:05:41.507 +05:30 [INF] Executed DbCommand (75ms) [Parameters=[@__now_0='2025-10-01T12:35:41.4314959+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:05:51.611 +05:30 [INF] Executed DbCommand (92ms) [Parameters=[@__now_0='2025-10-01T12:35:51.5187924+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:06:01.698 +05:30 [INF] Executed DbCommand (82ms) [Parameters=[@__now_0='2025-10-01T12:36:01.6155355+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:06:11.797 +05:30 [INF] Executed DbCommand (93ms) [Parameters=[@__now_0='2025-10-01T12:36:11.7034553+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:06:21.891 +05:30 [INF] Executed DbCommand (79ms) [Parameters=[@__now_0='2025-10-01T12:36:21.8120843+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:06:31.998 +05:30 [INF] Executed DbCommand (92ms) [Parameters=[@__now_0='2025-10-01T12:36:31.9061655+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:06:42.084 +05:30 [INF] Executed DbCommand (71ms) [Parameters=[@__now_0='2025-10-01T12:36:42.0130882+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:06:52.178 +05:30 [INF] Executed DbCommand (92ms) [Parameters=[@__now_0='2025-10-01T12:36:52.0859251+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:07:02.247 +05:30 [INF] Executed DbCommand (64ms) [Parameters=[@__now_0='2025-10-01T12:37:02.1825641+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:07:12.427 +05:30 [INF] Executed DbCommand (172ms) [Parameters=[@__now_0='2025-10-01T12:37:12.2547731+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:07:22.567 +05:30 [INF] Executed DbCommand (133ms) [Parameters=[@__now_0='2025-10-01T12:37:22.4342897+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:07:32.659 +05:30 [INF] Executed DbCommand (89ms) [Parameters=[@__now_0='2025-10-01T12:37:32.5704458+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:07:42.744 +05:30 [INF] Executed DbCommand (81ms) [Parameters=[@__now_0='2025-10-01T12:37:42.6626995+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:07:52.865 +05:30 [INF] Executed DbCommand (106ms) [Parameters=[@__now_0='2025-10-01T12:37:52.7594720+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:08:02.965 +05:30 [INF] Executed DbCommand (82ms) [Parameters=[@__now_0='2025-10-01T12:38:02.8829002+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:08:13.064 +05:30 [INF] Executed DbCommand (88ms) [Parameters=[@__now_0='2025-10-01T12:38:12.9747886+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:08:23.173 +05:30 [INF] Executed DbCommand (101ms) [Parameters=[@__now_0='2025-10-01T12:38:23.0711534+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:08:33.274 +05:30 [INF] Executed DbCommand (99ms) [Parameters=[@__now_0='2025-10-01T12:38:33.1738812+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:08:51.364 +05:30 [INF] Executed DbCommand (85ms) [Parameters=[@__now_0='2025-10-01T12:38:43.2824711+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:09:01.484 +05:30 [INF] Executed DbCommand (103ms) [Parameters=[@__now_0='2025-10-01T12:39:01.3806020+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:09:11.554 +05:30 [INF] Executed DbCommand (57ms) [Parameters=[@__now_0='2025-10-01T12:39:11.4962427+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:09:21.645 +05:30 [INF] Executed DbCommand (91ms) [Parameters=[@__now_0='2025-10-01T12:39:21.5533128+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:09:31.740 +05:30 [INF] Executed DbCommand (84ms) [Parameters=[@__now_0='2025-10-01T12:39:31.6554866+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:09:41.851 +05:30 [INF] Executed DbCommand (97ms) [Parameters=[@__now_0='2025-10-01T12:39:41.7528984+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:09:51.933 +05:30 [INF] Executed DbCommand (70ms) [Parameters=[@__now_0='2025-10-01T12:39:51.8628579+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:10:02.033 +05:30 [INF] Executed DbCommand (85ms) [Parameters=[@__now_0='2025-10-01T12:40:01.9475159+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:10:12.111 +05:30 [INF] Executed DbCommand (66ms) [Parameters=[@__now_0='2025-10-01T12:40:12.0450576+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:10:22.194 +05:30 [INF] Executed DbCommand (76ms) [Parameters=[@__now_0='2025-10-01T12:40:22.1183576+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:10:32.302 +05:30 [INF] Executed DbCommand (91ms) [Parameters=[@__now_0='2025-10-01T12:40:32.2108592+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:10:42.393 +05:30 [INF] Executed DbCommand (85ms) [Parameters=[@__now_0='2025-10-01T12:40:42.3068647+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:10:52.491 +05:30 [INF] Executed DbCommand (93ms) [Parameters=[@__now_0='2025-10-01T12:40:52.3985298+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:11:02.569 +05:30 [INF] Executed DbCommand (76ms) [Parameters=[@__now_0='2025-10-01T12:41:02.4923173+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:11:12.651 +05:30 [INF] Executed DbCommand (66ms) [Parameters=[@__now_0='2025-10-01T12:41:12.5842954+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:11:22.752 +05:30 [INF] Executed DbCommand (83ms) [Parameters=[@__now_0='2025-10-01T12:41:22.6681150+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:11:32.843 +05:30 [INF] Executed DbCommand (77ms) [Parameters=[@__now_0='2025-10-01T12:41:32.7657102+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:11:42.911 +05:30 [INF] Executed DbCommand (67ms) [Parameters=[@__now_0='2025-10-01T12:41:42.8431397+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:11:53.031 +05:30 [INF] Executed DbCommand (102ms) [Parameters=[@__now_0='2025-10-01T12:41:52.9278099+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:12:03.125 +05:30 [INF] Executed DbCommand (82ms) [Parameters=[@__now_0='2025-10-01T12:42:03.0420012+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:12:13.199 +05:30 [INF] Executed DbCommand (84ms) [Parameters=[@__now_0='2025-10-01T12:42:13.1152450+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:12:23.283 +05:30 [INF] Executed DbCommand (75ms) [Parameters=[@__now_0='2025-10-01T12:42:23.2076309+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:12:33.383 +05:30 [INF] Executed DbCommand (90ms) [Parameters=[@__now_0='2025-10-01T12:42:33.2918939+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:12:43.483 +05:30 [INF] Executed DbCommand (91ms) [Parameters=[@__now_0='2025-10-01T12:42:43.3911032+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:12:53.578 +05:30 [INF] Executed DbCommand (91ms) [Parameters=[@__now_0='2025-10-01T12:42:53.4867287+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:13:03.677 +05:30 [INF] Executed DbCommand (93ms) [Parameters=[@__now_0='2025-10-01T12:43:03.5833631+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:13:13.763 +05:30 [INF] Executed DbCommand (77ms) [Parameters=[@__now_0='2025-10-01T12:43:13.6854549+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:13:23.867 +05:30 [INF] Executed DbCommand (94ms) [Parameters=[@__now_0='2025-10-01T12:43:23.7732025+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:13:33.965 +05:30 [INF] Executed DbCommand (88ms) [Parameters=[@__now_0='2025-10-01T12:43:33.8766488+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:13:44.070 +05:30 [INF] Executed DbCommand (95ms) [Parameters=[@__now_0='2025-10-01T12:43:43.9755376+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:14:02.148 +05:30 [INF] Executed DbCommand (85ms) [Parameters=[@__now_0='2025-10-01T12:43:54.0870970+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:14:12.243 +05:30 [INF] Executed DbCommand (81ms) [Parameters=[@__now_0='2025-10-01T12:44:12.1623664+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:14:22.360 +05:30 [INF] Executed DbCommand (95ms) [Parameters=[@__now_0='2025-10-01T12:44:22.2644981+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:14:32.447 +05:30 [INF] Executed DbCommand (93ms) [Parameters=[@__now_0='2025-10-01T12:44:32.3543389+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:14:42.534 +05:30 [INF] Executed DbCommand (79ms) [Parameters=[@__now_0='2025-10-01T12:44:42.4555421+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:14:52.625 +05:30 [INF] Executed DbCommand (76ms) [Parameters=[@__now_0='2025-10-01T12:44:52.5496449+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:15:02.707 +05:30 [INF] Executed DbCommand (74ms) [Parameters=[@__now_0='2025-10-01T12:45:02.6320232+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:15:12.774 +05:30 [INF] Executed DbCommand (64ms) [Parameters=[@__now_0='2025-10-01T12:45:12.7099099+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:15:22.868 +05:30 [INF] Executed DbCommand (87ms) [Parameters=[@__now_0='2025-10-01T12:45:22.7806781+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:15:32.969 +05:30 [INF] Executed DbCommand (95ms) [Parameters=[@__now_0='2025-10-01T12:45:32.8740604+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:15:43.058 +05:30 [INF] Executed DbCommand (83ms) [Parameters=[@__now_0='2025-10-01T12:45:42.9751887+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:15:53.142 +05:30 [INF] Executed DbCommand (75ms) [Parameters=[@__now_0='2025-10-01T12:45:53.0672365+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:16:03.238 +05:30 [INF] Executed DbCommand (89ms) [Parameters=[@__now_0='2025-10-01T12:46:03.1494459+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:16:13.343 +05:30 [INF] Executed DbCommand (88ms) [Parameters=[@__now_0='2025-10-01T12:46:13.2550053+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:16:23.469 +05:30 [INF] Executed DbCommand (121ms) [Parameters=[@__now_0='2025-10-01T12:46:23.3484797+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:16:33.558 +05:30 [INF] Executed DbCommand (81ms) [Parameters=[@__now_0='2025-10-01T12:46:33.4772400+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:16:43.651 +05:30 [INF] Executed DbCommand (85ms) [Parameters=[@__now_0='2025-10-01T12:46:43.5667599+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:16:53.741 +05:30 [INF] Executed DbCommand (82ms) [Parameters=[@__now_0='2025-10-01T12:46:53.6590020+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:17:03.936 +05:30 [INF] Executed DbCommand (179ms) [Parameters=[@__now_0='2025-10-01T12:47:03.7569679+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:17:14.050 +05:30 [INF] Executed DbCommand (96ms) [Parameters=[@__now_0='2025-10-01T12:47:13.9537413+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:17:24.159 +05:30 [INF] Executed DbCommand (109ms) [Parameters=[@__now_0='2025-10-01T12:47:24.0497907+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:17:34.249 +05:30 [INF] Executed DbCommand (85ms) [Parameters=[@__now_0='2025-10-01T12:47:34.1634706+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:17:44.340 +05:30 [INF] Executed DbCommand (88ms) [Parameters=[@__now_0='2025-10-01T12:47:44.2511864+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:17:54.458 +05:30 [INF] Executed DbCommand (113ms) [Parameters=[@__now_0='2025-10-01T12:47:54.3446806+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:18:04.547 +05:30 [INF] Executed DbCommand (78ms) [Parameters=[@__now_0='2025-10-01T12:48:04.4684154+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:18:14.638 +05:30 [INF] Executed DbCommand (85ms) [Parameters=[@__now_0='2025-10-01T12:48:14.5531332+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-01 18:18:24.726 +05:30 [INF] Executed DbCommand (80ms) [Parameters=[@__now_0='2025-10-01T12:48:24.6455571+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
