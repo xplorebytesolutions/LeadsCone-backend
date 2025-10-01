@@ -1,0 +1,751 @@
+Folder and File Content Report
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Audiences\Audiences_AllFileDump.txt 
+====================================================== 
+ 
+Folder and File Content Report
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Audiences\Audiences_AllFileDump.txt 
+====================================================== 
+ 
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Audiences\ExtrackAllFiles.bat 
+====================================================== 
+ 
+@echo off
+REM This script will find all files and output their name and content into one file.
+REM The output file will be named [FolderName]_AllFileDump.txt.
+
+REM Get the current folder's name and set it as the output file name with the custom suffix
+for %%I in ("%cd%") do set "outputFile=%%~nI_AllFileDump.txt"
+
+REM Clear the output file to start fresh
+> "%outputFile%" (echo Folder and File Content Report)
+echo. >> "%outputFile%"
+
+REM Loop through all files in the current directory and subdirectories
+for /R . %%F in (*.*) do (
+    echo ====================================================== >> "%outputFile%"
+    echo FILE: %%F >> "%outputFile%"
+    echo ====================================================== >> "%outputFile%"
+    echo. >> "%outputFile%"
+    type "%%F" >> "%outputFile%" 2>nul
+    echo. >> "%outputFile%"
+    echo. >> "%outputFile%"
+)
+
+echo Finished! All content has been extracted to %outputFile% 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Audiences\Controllers\AudienceController.cs 
+====================================================== 
+ 
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Serilog;
+using xbytechat.api;
+using xbytechat.api.Features.Audiences.DTOs;
+using xbytechat.api.Features.Audiences.Services;
+using xbytechat.api.Shared; // User.GetBusinessId()
+
+namespace xbytechat.api.Features.Audiences.Controllers
+{
+    [ApiController]
+    [Route("api/audiences")]
+    [Authorize]
+    public class AudienceController : ControllerBase
+    {
+        private readonly AppDbContext _db;
+        private readonly IAudienceService _svc;
+
+        public AudienceController(AppDbContext db, IAudienceService svc)
+        { _db = db; _svc = svc; }
+
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] AudienceCreateDto dto)
+        {
+            var businessId = User.GetBusinessId();
+            var userName = User.Identity?.Name ?? "system";
+            if (businessId == Guid.Empty) return Unauthorized();
+
+            if (string.IsNullOrWhiteSpace(dto?.Name))
+                return BadRequest(new { success = false, message = "Name is required" });
+
+            var id = await _svc.CreateAsync(businessId, dto!, userName);
+            return Ok(new { success = true, id });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> List()
+        {
+            var businessId = User.GetBusinessId();
+            if (businessId == Guid.Empty) return Unauthorized();
+
+            var items = await _svc.ListAsync(businessId);
+            return Ok(new { success = true, items });
+        }
+
+        [HttpPost("{audienceId:guid}/assign")]
+        public async Task<IActionResult> Assign(Guid audienceId, [FromBody] AudienceAssignDto dto)
+        {
+            var businessId = User.GetBusinessId();
+            var userName = User.Identity?.Name ?? "system";
+            if (businessId == Guid.Empty) return Unauthorized();
+
+            var ok = await _svc.AssignAsync(businessId, audienceId, dto ?? new AudienceAssignDto(), userName);
+            return Ok(new { success = ok });
+        }
+
+        [HttpGet("{audienceId:guid}/members")]
+        public async Task<IActionResult> Members(Guid audienceId, [FromQuery] int page = 1, [FromQuery] int pageSize = 50)
+        {
+            var businessId = User.GetBusinessId();
+            if (businessId == Guid.Empty) return Unauthorized();
+
+            var exists = await _db.Audiences.AnyAsync(a => a.Id == audienceId && a.BusinessId == businessId && !a.IsDeleted);
+            if (!exists) return NotFound(new { success = false, message = "Audience not found" });
+
+            var rows = await _svc.GetMembersAsync(businessId, audienceId, page, pageSize);
+            return Ok(new { success = true, items = rows, page, pageSize });
+        }
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Audiences\Controllers\AudienceImportController.cs 
+====================================================== 
+ 
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Serilog;
+using xbytechat.api.Features.Audiences.Services;
+using xbytechat.api.Shared; // User.GetBusinessId()
+
+namespace xbytechat.api.Features.Audiences.Controllers
+{
+    [ApiController]
+    [Route("api/audiences/import")]
+    [Authorize]
+    public class AudienceImportController : ControllerBase
+    {
+        private readonly IAudienceImportService _svc;
+
+        public AudienceImportController(IAudienceImportService svc)
+        {
+            _svc = svc;
+        }
+
+        //[HttpPost("csv")]
+        //[RequestSizeLimit(64_000_000)] // 64 MB
+        //public async Task<IActionResult> ImportCsv([FromForm] IFormFile file)
+        //{
+        //    var businessId = User.GetBusinessId();
+        //    if (businessId == Guid.Empty) return Unauthorized();
+
+        //    if (file == null || file.Length == 0)
+        //        return BadRequest(new { success = false, message = "CSV file is required" });
+
+        //    try
+        //    {
+        //        await using var stream = file.OpenReadStream();
+        //        var resp = await _svc.ImportCsvAsync(businessId, stream, file.FileName, HttpContext.RequestAborted);
+
+        //        return Ok(new { success = true, data = resp });
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Log.Error(ex, "❌ CSV import failed | biz={Biz}", businessId);
+        //        return StatusCode(500, new { success = false, message = "CSV import failed" });
+        //    }
+        //}
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Audiences\DTOs\AudienceDtos.cs 
+====================================================== 
+ 
+﻿using System;
+using System.Collections.Generic;
+
+namespace xbytechat.api.Features.Audiences.DTOs
+{
+    public class AudienceCreateDto
+    {
+        public string Name { get; set; } = "";
+        public string? Description { get; set; }
+    }
+
+    public class AudienceSummaryDto
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; } = "";
+        public string? Description { get; set; }
+        public int MemberCount { get; set; }
+        public DateTime CreatedAt { get; set; }
+    }
+
+    public class AudienceMemberDto
+    {
+        public Guid Id { get; set; }
+        public Guid? ContactId { get; set; }   // optional link to CRM contact
+        public string? Name { get; set; }
+        public string? PhoneNumber { get; set; }
+        public string? Email { get; set; }
+        public string? VariablesJson { get; set; } // if your model stores row-level vars
+        public DateTime CreatedAt { get; set; }
+    }
+
+    public class AudienceAssignDto
+    {
+        public List<Guid> ContactIds { get; set; } = new(); // optional: assign CRM contacts
+        public Guid? CsvBatchId { get; set; }               // optional: attach CSV batch to audience
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Audiences\DTOs\CsvImportDtos.cs 
+====================================================== 
+ 
+﻿using System;
+using System.Collections.Generic;
+
+namespace xbytechat.api.Features.Audiences.DTOs
+{
+    public class CsvImportResponseDto
+    {
+        public Guid BatchId { get; set; }
+        public int RowCount { get; set; }
+        public List<string> Columns { get; set; } = new();
+        public DateTime CreatedAt { get; set; }
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Audiences\Services\AudienceImportService.cs 
+====================================================== 
+ 
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Serilog;
+using xbytechat.api;
+using xbytechat.api.Features.Audiences.DTOs;
+
+namespace xbytechat.api.Features.Audiences.Services
+{
+    public class AudienceImportService : IAudienceImportService
+    {
+        private readonly AppDbContext _db;
+
+        public AudienceImportService(AppDbContext db)
+        {
+            _db = db;
+        }
+
+        public async Task<CsvImportResponseDto> ImportCsvAsync(
+            Guid businessId,
+            Stream csvStream,
+            string fileName,
+            CancellationToken ct = default)
+        {
+            if (businessId == Guid.Empty)
+                throw new UnauthorizedAccessException("Invalid business id.");
+
+            if (csvStream == null || !csvStream.CanRead)
+                throw new ArgumentException("CSV stream is not readable.");
+
+            using var reader = new StreamReader(csvStream);
+
+            // --- header row ---
+            var headerLine = await reader.ReadLineAsync();
+            if (string.IsNullOrWhiteSpace(headerLine))
+                throw new InvalidOperationException("Empty CSV.");
+
+            var headers = headerLine.Split(',')
+                                    .Select(h => (h ?? string.Empty).Trim())
+                                    .Where(h => !string.IsNullOrWhiteSpace(h))
+                                    .ToList();
+
+            if (headers.Count == 0)
+                throw new InvalidOperationException("No columns.");
+
+            var batchId = Guid.NewGuid();
+            var now = DateTime.UtcNow;
+
+            // Pre-create batch
+            _db.CsvBatches.Add(new Features.CampaignModule.Models.CsvBatch
+            {
+                Id = batchId,
+                BusinessId = businessId,
+                FileName = fileName,
+                // ✅ match your model: CsvBatch.HeadersJson
+                HeadersJson = Newtonsoft.Json.JsonConvert.SerializeObject(headers),
+                RowCount = 0,
+                CreatedAt = now
+            });
+
+            var rowsBuffer = new List<Features.CampaignModule.Models.CsvRow>(capacity: 1024);
+            var total = 0;
+
+            // naive CSV parse (comma-only, no quoting in v1)
+            while (!reader.EndOfStream)
+            {
+                var line = await reader.ReadLineAsync();
+                if (string.IsNullOrWhiteSpace(line)) continue;
+
+                var cells = line.Split(',');
+                var dict = new Dictionary<string, string?>();
+                for (int i = 0; i < headers.Count; i++)
+                {
+                    var v = (i < cells.Length ? cells[i] : null)?.Trim();
+                    dict[headers[i]] = v;
+                }
+
+                rowsBuffer.Add(new Features.CampaignModule.Models.CsvRow
+                {
+                    Id = Guid.NewGuid(),
+                    BatchId = batchId,
+                    // 🔁 If your property is not RowJson, change this to the correct one (e.g., DataJson)
+                    RowJson = Newtonsoft.Json.JsonConvert.SerializeObject(dict),
+                    CreatedAt = DateTime.UtcNow
+                });
+
+                total++;
+
+                // chunked insert every 1k for memory safety
+                if (rowsBuffer.Count >= 1000)
+                {
+                    await _db.CsvRows.AddRangeAsync(rowsBuffer, ct);
+                    await _db.SaveChangesAsync(ct);
+                    rowsBuffer.Clear();
+                }
+            }
+
+            if (rowsBuffer.Count > 0)
+            {
+                await _db.CsvRows.AddRangeAsync(rowsBuffer, ct);
+            }
+
+            // update batch row count
+            var batchRow = await _db.CsvBatches.FirstAsync(b => b.Id == batchId, ct);
+            batchRow.RowCount = total;
+
+            await _db.SaveChangesAsync(ct);
+
+            Log.Information("📥 CSV imported | biz={Biz} batch={Batch} rows={Rows} file={File}",
+                businessId, batchId, total, fileName);
+
+            return new CsvImportResponseDto
+            {
+                BatchId = batchId,
+                RowCount = total,
+                Columns = headers,
+                CreatedAt = now
+            };
+        }
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Audiences\Services\AudienceService.cs 
+====================================================== 
+ 
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Serilog;
+using xbytechat.api;
+using xbytechat.api.CRM.Models;
+using xbytechat.api.Features.Audiences.DTOs;
+using xbytechat.api.Features.CampaignModule.Models;
+
+namespace xbytechat.api.Features.Audiences.Services
+{
+    public interface IAudienceService
+    {
+        Task<Guid> CreateAsync(Guid businessId, AudienceCreateDto dto, string createdBy);
+        Task<List<AudienceSummaryDto>> ListAsync(Guid businessId);
+        Task<bool> AssignAsync(Guid businessId, Guid audienceId, AudienceAssignDto dto, string createdBy);
+        Task<List<AudienceMemberDto>> GetMembersAsync(Guid businessId, Guid audienceId, int page = 1, int pageSize = 50);
+    }
+
+    public class AudienceService : IAudienceService
+    {
+        private readonly AppDbContext _db;
+
+        public AudienceService(AppDbContext db) { _db = db; }
+
+        public async Task<Guid> CreateAsync(Guid businessId, AudienceCreateDto dto, string createdBy)
+        {
+            var id = Guid.NewGuid();
+            try
+            {
+                var now = DateTime.UtcNow;
+                Guid? createdByUserId = null;
+                if (Guid.TryParse(createdBy, out var parsed)) createdByUserId = parsed;
+
+                var model = new Audience
+                {
+                    Id = id,
+                    BusinessId = businessId,
+                    Name = dto?.Name?.Trim() ?? "Untitled Audience",
+                    Description = dto?.Description,
+                    CsvBatchId = null,
+                    IsDeleted = false,
+                    CreatedByUserId = createdByUserId,
+                    CreatedAt = now,
+                    UpdatedAt = now
+                };
+
+                _db.Set<Audience>().Add(model);
+                await _db.SaveChangesAsync();
+
+                Log.Information("✅ Audience created | biz={Biz} id={Id} name={Name}", businessId, id, model.Name);
+                return id;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "❌ Failed creating audience | biz={Biz}", businessId);
+                throw;
+            }
+        }
+
+        public async Task<List<AudienceSummaryDto>> ListAsync(Guid businessId)
+        {
+            var audiences = _db.Set<Audience>()
+                .AsNoTracking()
+                .Where(a => a.BusinessId == businessId && !a.IsDeleted);
+
+            var members = _db.Set<AudienceMember>();
+
+            var items = await audiences
+                .OrderByDescending(a => a.CreatedAt)
+                .Select(a => new AudienceSummaryDto
+                {
+                    Id = a.Id,
+                    Name = a.Name,
+                    Description = a.Description,
+                    MemberCount = members.Count(m => m.BusinessId == businessId && m.AudienceId == a.Id && !m.IsDeleted),
+                    CreatedAt = a.CreatedAt
+                })
+                .ToListAsync();
+
+            return items;
+        }
+
+        public async Task<bool> AssignAsync(Guid businessId, Guid audienceId, AudienceAssignDto dto, string createdBy)
+        {
+            var audience = await _db.Set<Audience>()
+                .FirstOrDefaultAsync(a => a.Id == audienceId && a.BusinessId == businessId && !a.IsDeleted);
+
+            if (audience == null) return false;
+
+            var now = DateTime.UtcNow;
+
+            // 1) Assign CRM contacts (if provided)
+            if (dto?.ContactIds != null && dto.ContactIds.Count > 0)
+            {
+                var contacts = await _db.Set<Contact>()
+                    .Where(c => c.BusinessId == businessId && dto.ContactIds.Contains(c.Id))
+                    .Select(c => new { c.Id, c.Name, c.PhoneNumber, c.Email })
+                    .ToListAsync();
+
+                var newMembers = contacts.Select(c =>
+                {
+                    var phoneRaw = (c.PhoneNumber ?? "").Trim();
+                    var phoneE164 = ToE164OrNull(phoneRaw);
+
+                    return new AudienceMember
+                    {
+                        Id = Guid.NewGuid(),
+                        AudienceId = audienceId,
+                        BusinessId = businessId,
+                        ContactId = c.Id,
+                        Name = c.Name,
+                        Email = string.IsNullOrWhiteSpace(c.Email) ? null : c.Email,
+                        PhoneRaw = phoneRaw,
+                        PhoneE164 = phoneE164,
+                        AttributesJson = null,            // keep as null unless you want to pack extra vars
+                        IsTransientContact = false,
+                        IsDeleted = false,
+                        CreatedAt = now,
+                        UpdatedAt = now
+                    };
+                });
+
+                await _db.Set<AudienceMember>().AddRangeAsync(newMembers);
+            }
+
+            // 2) Optionally link a CSV batch
+            if (dto?.CsvBatchId.HasValue == true && dto.CsvBatchId.Value != Guid.Empty)
+            {
+                var batch = await _db.Set<CsvBatch>()
+                    .FirstOrDefaultAsync(b => b.Id == dto.CsvBatchId.Value && b.BusinessId == businessId);
+
+                if (batch != null)
+                {
+                    audience.CsvBatchId = batch.Id;
+                }
+            }
+
+            audience.UpdatedAt = now;
+
+            await _db.SaveChangesAsync();
+
+            Log.Information("👥 Audience assigned | biz={Biz} audience={AudienceId} contacts={Contacts} batch={Batch}",
+                businessId, audienceId, dto?.ContactIds?.Count ?? 0, dto?.CsvBatchId);
+
+            return true;
+        }
+
+        public async Task<List<AudienceMemberDto>> GetMembersAsync(Guid businessId, Guid audienceId, int page = 1, int pageSize = 50)
+        {
+            page = Math.Max(1, page);
+            pageSize = Clamp(pageSize, 10, 200);
+
+            var q = _db.Set<AudienceMember>()
+                .AsNoTracking()
+                .Where(m => m.BusinessId == businessId && m.AudienceId == audienceId && !m.IsDeleted)
+                .OrderByDescending(m => m.CreatedAt);
+
+            var items = await q
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(m => new AudienceMemberDto
+                {
+                    Id = m.Id,
+                    ContactId = m.ContactId,
+                    Name = m.Name,
+                    PhoneNumber = string.IsNullOrWhiteSpace(m.PhoneE164) ? m.PhoneRaw : m.PhoneE164,
+                    Email = m.Email,
+                    VariablesJson = m.AttributesJson,
+                    CreatedAt = m.CreatedAt
+                })
+                .ToListAsync();
+
+            return items;
+        }
+
+        // ---- helpers ----
+
+        private static int Clamp(int value, int min, int max)
+        {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        }
+
+        private static string? ToE164OrNull(string? raw)
+        {
+            if (string.IsNullOrWhiteSpace(raw)) return null;
+            var digits = new string(raw.Where(char.IsDigit).ToArray());
+            if (string.IsNullOrEmpty(digits)) return null;
+
+            // naive normalization: ensure leading +
+            if (raw.Trim().StartsWith("+")) return "+" + digits;
+            return "+" + digits;
+        }
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Audiences\Services\CampaignVariableMapService.cs 
+====================================================== 
+ 
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Serilog;
+using xbytechat.api;
+using xbytechat.api.Features.CampaignModule.DTOs;
+using xbytechat.api.Features.CampaignModule.Models;
+
+namespace xbytechat.api.Features.CampaignModule.Services
+{
+    public interface ICampaignVariableMapService
+    {
+        Task<bool> SaveAsync(Guid businessId, CampaignVariableMapDto dto, string updatedBy);
+        Task<CampaignVariableMapDto?> GetAsync(Guid businessId, Guid campaignId);
+    }
+
+    public class CampaignVariableMapService : ICampaignVariableMapService
+    {
+        private readonly AppDbContext _db;
+
+        public CampaignVariableMapService(AppDbContext db) { _db = db; }
+
+        public async Task<bool> SaveAsync(Guid businessId, CampaignVariableMapDto dto, string updatedBy)
+        {
+            try
+            {
+                if (businessId == Guid.Empty) throw new UnauthorizedAccessException("Invalid business id.");
+                if (dto == null) throw new ArgumentNullException(nameof(dto));
+                if (dto.CampaignId == Guid.Empty) throw new ArgumentException("CampaignId is required.", nameof(dto));
+
+                // Ensure campaign ownership
+                var owns = await _db.Campaigns
+                    .AsNoTracking()
+                    .AnyAsync(c => c.Id == dto.CampaignId && c.BusinessId == businessId);
+                if (!owns) return false;
+
+                // Load existing rows for this campaign
+                var existing = await _db.CampaignVariableMaps
+                    .Where(m => m.BusinessId == businessId && m.CampaignId == dto.CampaignId)
+                    .ToListAsync();
+
+                // Normalize incoming:
+                // - tolerate null Items
+                // - default Component → "BODY" if missing
+                // - trim strings
+                // - keep last occurrence per (Component, Index)
+                var incoming = (dto.Items?.AsEnumerable() ?? Enumerable.Empty<CampaignVariableMapItemDto>())
+                    .Where(i => i != null && i.Index >= 1)
+                    .Select(i => new
+                    {
+                        Component = string.IsNullOrWhiteSpace(i.Component) ? "BODY" : i.Component!.Trim(),
+                        i.Index,
+                        SourceType = string.IsNullOrWhiteSpace(i.SourceType) ? "Static" : i.SourceType!.Trim(),
+                        SourceKey = string.IsNullOrWhiteSpace(i.SourceKey) ? null : i.SourceKey!.Trim(),
+                        StaticValue = i.StaticValue,
+                        Expression = i.Expression,
+                        DefaultValue = i.DefaultValue,
+                        i.IsRequired
+                    })
+                    .GroupBy(x => new { x.Component, x.Index })
+                    .Select(g => g.Last())
+                    .ToList();
+
+                var incomingKeySet = incoming
+                    .Select(i => (i.Component, i.Index))
+                    .ToHashSet();
+
+                // Upsert each incoming row
+                foreach (var item in incoming)
+                {
+                    var row = existing.FirstOrDefault(x => x.Component == item.Component && x.Index == item.Index);
+                    if (row == null)
+                    {
+                        row = new CampaignVariableMap
+                        {
+                            Id = Guid.NewGuid(),
+                            BusinessId = businessId,
+                            CampaignId = dto.CampaignId,
+                            Component = item.Component,
+                            Index = item.Index
+                        };
+                        _db.CampaignVariableMaps.Add(row);
+                        existing.Add(row); // keep local cache in sync in case of duplicates
+                    }
+
+                    row.SourceType = item.SourceType;
+                    row.SourceKey = item.SourceKey;
+                    row.StaticValue = item.StaticValue;
+                    row.Expression = item.Expression;
+                    row.DefaultValue = item.DefaultValue;
+                    row.IsRequired = item.IsRequired;
+                }
+
+                // Remove deleted mappings (anything not present in incoming)
+                var toRemove = existing.Where(x => !incomingKeySet.Contains((x.Component, x.Index))).ToList();
+                if (toRemove.Count > 0)
+                    _db.CampaignVariableMaps.RemoveRange(toRemove);
+
+                await _db.SaveChangesAsync();
+
+                var upserted = incoming.Count;
+                var removed = toRemove.Count;
+
+                Log.Information("✅ Variable map saved | biz={Biz} campaign={Campaign} upserted={Up} removed={Rm}",
+                    businessId, dto.CampaignId, upserted, removed);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "❌ Failed saving campaign variable map | biz={Biz} campaign={Campaign}", businessId, dto?.CampaignId);
+                throw;
+            }
+        }
+        public async Task<CampaignVariableMapDto?> GetAsync(Guid businessId, Guid campaignId)
+        {
+            var rows = await _db.CampaignVariableMaps
+                .AsNoTracking()
+                .Where(m => m.BusinessId == businessId && m.CampaignId == campaignId)
+                .OrderBy(m => m.Component).ThenBy(m => m.Index)
+                .ToListAsync();
+
+            var items = rows.Select(r => new CampaignVariableMapItemDto
+            {
+                Component = r.Component,
+                Index = r.Index,
+                SourceType = r.SourceType,
+                SourceKey = r.SourceKey,
+                StaticValue = r.StaticValue,
+                Expression = r.Expression,
+                DefaultValue = r.DefaultValue,
+                IsRequired = r.IsRequired
+            }).ToList();
+
+            return new CampaignVariableMapDto
+            {
+                CampaignId = campaignId,
+                Items = items
+            };
+        }
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Audiences\Services\IAudienceImportService.cs 
+====================================================== 
+ 
+﻿using System;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
+using xbytechat.api.Features.Audiences.DTOs;
+
+namespace xbytechat.api.Features.Audiences.Services
+{
+    public interface IAudienceImportService
+    {
+        /// <summary>
+        /// Parses a CSV stream (first row = headers), creates a CsvBatch and CsvRows, and returns batch summary.
+        /// </summary>
+        Task<CsvImportResponseDto> ImportCsvAsync(
+            Guid businessId,
+            Stream csvStream,
+            string fileName,
+            CancellationToken ct = default);
+    }
+}
+ 
+ 

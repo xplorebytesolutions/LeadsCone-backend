@@ -1,0 +1,1985 @@
+Folder and File Content Report
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Tracking\ExtrackAllFiles.bat 
+====================================================== 
+ 
+@echo off
+REM This script will find all files and output their name and content into one file.
+REM The output file will be named [FolderName]_AllFileDump.txt.
+
+REM Get the current folder's name and set it as the output file name with the custom suffix
+for %%I in ("%cd%") do set "outputFile=%%~nI_AllFileDump.txt"
+
+REM Clear the output file to start fresh
+> "%outputFile%" (echo Folder and File Content Report)
+echo. >> "%outputFile%"
+
+REM Loop through all files in the current directory and subdirectories
+for /R . %%F in (*.*) do (
+    echo ====================================================== >> "%outputFile%"
+    echo FILE: %%F >> "%outputFile%"
+    echo ====================================================== >> "%outputFile%"
+    echo. >> "%outputFile%"
+    type "%%F" >> "%outputFile%" 2>nul
+    echo. >> "%outputFile%"
+    echo. >> "%outputFile%"
+)
+
+echo Finished! All content has been extracted to %outputFile% 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Tracking\Tracking_AllFileDump.txt 
+====================================================== 
+ 
+Folder and File Content Report
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Tracking\ExtrackAllFiles.bat 
+====================================================== 
+ 
+@echo off
+REM This script will find all files and output their name and content into one file.
+REM The output file will be named [FolderName]_AllFileDump.txt.
+
+REM Get the current folder's name and set it as the output file name with the custom suffix
+for %%I in ("%cd%") do set "outputFile=%%~nI_AllFileDump.txt"
+
+REM Clear the output file to start fresh
+> "%outputFile%" (echo Folder and File Content Report)
+echo. >> "%outputFile%"
+
+REM Loop through all files in the current directory and subdirectories
+for /R . %%F in (*.*) do (
+    echo ====================================================== >> "%outputFile%"
+    echo FILE: %%F >> "%outputFile%"
+    echo ====================================================== >> "%outputFile%"
+    echo. >> "%outputFile%"
+    type "%%F" >> "%outputFile%" 2>nul
+    echo. >> "%outputFile%"
+    echo. >> "%outputFile%"
+)
+
+echo Finished! All content has been extracted to %outputFile% 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Tracking\Tracking_AllFileDump.txt 
+====================================================== 
+ 
+Folder and File Content Report
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Tracking\Controllers\MessageLogsReportController.cs 
+====================================================== 
+ 
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using xbytechat.api.Features.Tracking.DTOs;
+using xbytechat.api.Features.Tracking.Services;
+using xbytechat.api.Shared; // for User.GetBusinessId()
+
+namespace xbytechat.api.Features.Tracking.Controllers
+{
+    [ApiController]
+    [Route("api/report/message-logs")]
+    [Authorize]
+    public sealed class MessageLogsReportController : ControllerBase
+    {
+        private readonly IMessageLogsReportService _service;
+
+        public MessageLogsReportController(IMessageLogsReportService service)
+            => _service = service;
+
+        /// <summary>
+        /// Universal message log search with server-side filtering/sorting/paging.
+        /// </summary>
+        [HttpPost("search")]
+        [ProducesResponseType(typeof(PaginatedResponse<MessageLogListItemDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> Search([FromBody] MessageLogReportQueryDto q, CancellationToken ct)
+        {
+            var businessId = User.GetBusinessId();
+            if (businessId == Guid.Empty)
+                return Unauthorized();
+
+            var result = await _service.SearchAsync(businessId, q, ct);
+            return Ok(result);
+        }
+    }
+}
+
+//using Microsoft.AspNetCore.Authorization;
+//using Microsoft.AspNetCore.Mvc;
+//using xbytechat.api.Shared; // User.GetBusinessId()
+//using xbytechat.api.Features.Tracking.DTOs;
+//using xbytechat.api.Features.Tracking.Services;
+
+//namespace xbytechat.api.Features.Tracking.Controllers
+//{
+//    [ApiController]
+//    [Route("api/report/message-logs")]
+//    [Authorize]
+//    public class MessageLogsReportController : ControllerBase
+//    {
+//        private readonly IMessageLogsReportService _service;
+//        public MessageLogsReportController(IMessageLogsReportService service) => _service = service;
+
+//        [HttpPost("search")]
+//        public async Task<IActionResult> Search([FromBody] MessageLogReportQueryDto q, CancellationToken ct)
+//        {
+//            var businessId = User.GetBusinessId();
+//            if (businessId == Guid.Empty) return Unauthorized();
+//            var data = await _service.SearchAsync(businessId, q, ct);
+//            return Ok(data);
+//        }
+//    }
+//}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Tracking\Controllers\TrackingController.cs 
+====================================================== 
+ 
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using xbytechat.api; // Your using for AppDbContext
+using xbytechat.api.Features.Tracking.Services;
+using xbytechat.api.Features.Tracking.DTOs;
+using xbytechat.api.Features.CampaignTracking.Worker; // Your using for DTOs
+
+namespace xbytechat.api.Features.Tracking.Controllers
+{
+    [ApiController]
+    [Route("api/tracking")]
+    public class TrackingController : ControllerBase
+    {
+        private readonly ITrackingService _tracker;
+        private readonly AppDbContext _context;
+        private readonly IContactJourneyService _journeyService;
+        public TrackingController(ITrackingService tracker, AppDbContext context, IContactJourneyService journeyService)
+        {
+            _tracker = tracker;
+            _context = context;
+            _journeyService = journeyService;
+        }
+
+        [HttpGet("journeys/{campaignSendLogId}")]
+        public async Task<IActionResult> GetJourney(Guid campaignSendLogId)
+        {
+            var journeyEvents = await _journeyService.GetJourneyEventsAsync(campaignSendLogId);
+            return Ok(journeyEvents);
+        }
+
+
+        //[HttpGet("redirect/{campaignSendLogId}")]
+        //public async Task<IActionResult> TrackCampaignClick(
+        //    Guid campaignSendLogId,
+        //    [FromQuery] string type,
+        //    [FromQuery] string to)
+        //{
+        //    if (string.IsNullOrWhiteSpace(to))
+        //    {
+        //        return BadRequest("Missing redirect target URL.");
+        //    }
+
+        //    var log = await _context.CampaignSendLogs.FindAsync(campaignSendLogId);
+        //    if (log != null)
+        //    {
+        //        log.IsClicked = true;
+        //        log.ClickedAt = DateTime.UtcNow;
+        //        log.ClickType = type;
+        //        log.IpAddress = HttpContext.Connection.RemoteIpAddress?.ToString();
+        //        await _context.SaveChangesAsync();
+        //    }
+
+        //    return Redirect(to);
+        //}
+
+        [HttpGet("redirect/{campaignSendLogId}")]
+        public async Task<IActionResult> TrackCampaignClick(
+    Guid campaignSendLogId,
+    [FromQuery] string type,
+    [FromQuery] string to,
+    [FromQuery] int? idx = null,
+    CancellationToken ct = default)
+        {
+            if (string.IsNullOrWhiteSpace(to))
+                return BadRequest("Missing redirect target URL.");
+
+            if (!Uri.TryCreate(to, UriKind.Absolute, out var destUri))
+                return BadRequest("Destination URL is invalid.");
+
+            var clickType = string.IsNullOrWhiteSpace(type)
+                ? ClassifyClickType(destUri)
+                : type.Trim().ToLowerInvariant();
+
+            // Load parent CSL (tracked so we can update it)
+            var log = await _context.CampaignSendLogs.FindAsync(new object[] { campaignSendLogId }, ct);
+            if (log is not null)
+            {
+                var now = DateTime.UtcNow;
+                var ip = HttpContext.Connection.RemoteIpAddress?.ToString();
+                var ua = Request.Headers.UserAgent.ToString();
+
+                // First-click update on the send (idempotent enough for now)
+                log.IsClicked = true;
+                log.ClickedAt = now;
+                log.ClickType = clickType;
+                log.IpAddress = ip;
+
+                // Persist the click (ties to same run/session)
+                await _context.CampaignClickLogs.AddAsync(new CampaignClickLog
+                {
+                    Id = Guid.NewGuid(),
+                    CampaignSendLogId = log.Id,
+                    CampaignId = log.CampaignId,// ?? Guid.Empty, // ✅ coalesce; make column Guid? to avoid this
+                    ContactId = log.ContactId,                // Guid? OK
+                    ButtonIndex = (short)(idx ?? 0),
+                    ButtonTitle = string.IsNullOrWhiteSpace(type) ? "link" : type,
+                    Destination = destUri.ToString(),
+                    ClickedAt = now,
+                    Ip = ip ?? "",
+                    UserAgent = ua ?? "",
+                    ClickType = clickType,
+                    RunId = log.RunId                      // remove if your schema doesn’t have RunId
+                }, ct);
+
+                await _context.SaveChangesAsync(ct);
+            }
+
+            return Redirect(destUri.ToString());
+        }
+
+        // Simple classifier used above
+        private static string ClassifyClickType(Uri u)
+        {
+            if (u == null) return "web";
+            var scheme = u.Scheme?.ToLowerInvariant() ?? "";
+            if (scheme == "tel") return "call";
+            if (scheme == "whatsapp") return "whatsapp";
+            if (scheme is "http" or "https")
+            {
+                var host = u.Host?.ToLowerInvariant() ?? "";
+                if (host.Contains("wa.me") || host.Contains("api.whatsapp.com"))
+                    return "whatsapp";
+            }
+            return "web";
+        }
+
+        /// <summary>
+        /// Gets detailed information for a specific tracking log entry.
+        /// </summary>
+        [HttpGet("logs/{id}/details")]
+        public async Task<IActionResult> GetLogDetails(Guid id)
+        {
+            var result = await _tracker.GetLogDetailsAsync(id);
+            if (result == null)
+                return NotFound("Tracking log not found");
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Retrieves click logs specifically related to automation flows.
+        /// </summary>
+        [HttpGet("flow-clicks")]
+        public async Task<IActionResult> GetFlowClickLogs()
+        {
+            var businessIdClaim = User.FindFirst("businessId")?.Value;
+            if (!Guid.TryParse(businessIdClaim, out var businessId))
+                return BadRequest("❌ Invalid or missing business ID");
+
+            var logs = await _tracker.GetFlowClickLogsAsync(businessId);
+
+            var dtoList = logs.Select(x => new
+            {
+                x.Id,
+                x.StepId,
+                x.ContactPhone,
+                x.ButtonText,
+                x.TemplateId,
+                x.FollowUpSent,
+                x.ClickedAt
+            });
+
+            return Ok(dtoList);
+        }
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Tracking\Controllers\TrackingViewerController.cs 
+====================================================== 
+ 
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using xbytechat.api.Features.Tracking.Models;
+using xbytechat.api;
+
+namespace xbytechat.api.Features.Tracking.Controllers
+{
+    [ApiController]
+    [Route("api/tracking/logs")]
+    public class TrackingViewerController : ControllerBase
+    {
+        private readonly AppDbContext _context;
+
+        public TrackingViewerController(AppDbContext context)
+        {
+            _context = context;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll([FromQuery] Guid? campaignId = null)
+        {
+            var query = _context.TrackingLogs
+                .Include(t => t.Campaign) // Optional
+                .Include(t => t.Contact)  // Optional
+                .OrderByDescending(t => t.ClickedAt)
+                .AsQueryable();
+
+            if (campaignId.HasValue)
+                query = query.Where(t => t.CampaignId == campaignId);
+
+            var results = await query
+                .Select(t => new
+                {
+                    t.Id,
+                    t.ContactPhone,
+                    ContactName = t.Contact != null ? t.Contact.Name : "(N/A)",
+                    t.ButtonText,
+                    t.CTAType,
+                    t.SourceType,
+                    t.ClickedAt,
+                    t.DeviceType,
+                    t.Country,
+                    CampaignName = t.Campaign != null ? t.Campaign.Name : "(Unknown)"
+                })
+                .ToListAsync();
+
+            return Ok(new { success = true, data = results });
+        }
+    }
+}
+
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Tracking\DTOs\JourneyEventDto.cs 
+====================================================== 
+ 
+﻿namespace xbytechat.api.Features.Tracking.DTOs
+{
+    public class JourneyEventDto
+    {
+        public DateTime Timestamp { get; set; }
+        public string Source { get; set; } = "System"; // System/User/Provider
+        public string EventType { get; set; } = "";    // MessageSent/Delivered/Read/ButtonClicked/FlowStep/FlowSend/Redirect/Error
+        public string Title { get; set; } = "";
+        public string Details { get; set; } = "";
+        public Guid? StepId { get; set; }
+        public string? StepName { get; set; }
+        public int? ButtonIndex { get; set; }
+        public string? ButtonTitle { get; set; }
+        public string? Url { get; set; }
+        public string? TemplateName { get; set; }
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Tracking\DTOs\JourneyResponseDto.cs 
+====================================================== 
+ 
+﻿namespace xbytechat.api.Features.Tracking.DTOs
+{
+    public class JourneyResponseDto
+    {
+        public string CampaignType { get; set; } = "dynamic_url"; // or "flow"
+        public string? FlowName { get; set; }
+        public Guid? FlowId { get; set; }
+        public Guid CampaignId { get; set; }
+        public Guid ContactId { get; set; }
+        public string ContactPhone { get; set; } = "";
+        public List<JourneyEventDto> Events { get; set; } = new();
+        public string? LeftOffAt { get; set; }  // step title or reason
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Tracking\DTOs\MessageLogReportQueryDto.cs 
+====================================================== 
+ 
+﻿namespace xbytechat.api.Features.Tracking.DTOs
+{
+    public sealed class MessageLogReportQueryDto
+    {
+        public DateTime? FromUtc { get; set; }
+        public DateTime? ToUtc { get; set; }
+        public string? Search { get; set; }                 // phone or text contains
+        public string[]? Statuses { get; set; }             // Sent/Delivered/Read/Failed etc.
+        public string[]? Channels { get; set; }             // meta_cloud/sms/email…
+        public string[]? SenderIds { get; set; }            // phone_number_id
+        public string[]? MessageTypes { get; set; }         // text/image/template…
+        public Guid? CampaignId { get; set; }               // optional scope
+
+        public string? SortBy { get; set; } = "SentAt";     // server-whitelisted
+        public string? SortDir { get; set; } = "desc";      // asc|desc
+
+        public int Page { get; set; } = 1;
+        public int PageSize { get; set; } = 25;
+    }
+
+    public sealed class MessageLogListItemDto
+    {
+        public Guid Id { get; set; }
+        public Guid BusinessId { get; set; }
+        public Guid? CampaignId { get; set; }
+        public string? CampaignName { get; set; }
+
+        public string? RecipientNumber { get; set; }
+        public string? SenderId { get; set; }
+        public string? SourceChannel { get; set; }
+        public string? Status { get; set; }
+        public string? MessageType { get; set; }
+
+        public string? MessageContent { get; set; }
+        public string? TemplateName { get; set; }
+        public string? ProviderMessageId { get; set; }
+        public string? ErrorMessage { get; set; }
+
+        public DateTime CreatedAt { get; set; }
+        public DateTime? SentAt { get; set; }
+        public DateTime? DeliveredAt { get; set; }
+        public DateTime? ReadAt { get; set; }
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Tracking\DTOs\TrackingLogDetailsDto.cs 
+====================================================== 
+ 
+﻿using xbytechat.api.CRM.Dtos;
+using xbytechat.api.Features.CampaignModule.DTOs;
+using xbytechat.api.Features.MessageManagement.DTOs;
+
+namespace xbytechat.api.Features.Tracking.DTOs
+{
+    public class TrackingLogDetailsDto
+    {
+        public TrackingLogDto Tracking { get; set; } = new();
+        public ContactDto? Contact { get; set; }
+        public CampaignDto? Campaign { get; set; }
+        public MessageLogDto? MessageLog { get; set; }
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Tracking\DTOs\TrackingLogDto.cs 
+====================================================== 
+ 
+﻿using System;
+
+namespace xbytechat.api.Features.Tracking.DTOs
+{
+    public class TrackingLogDto
+    {
+        // 🧩 Multi-Tenant Isolation
+        public Guid BusinessId { get; set; }
+
+        // 👤 CRM Linkage
+        public Guid? ContactId { get; set; }
+        public string? ContactPhone { get; set; }
+
+        // 🔗 Source Info
+        public string SourceType { get; set; } = string.Empty; // e.g. "campaign", "reminder", "bot"
+        public Guid? SourceId { get; set; }
+
+        // 🔘 CTA Info
+        public string? ButtonText { get; set; }
+        public string? CTAType { get; set; }
+
+        // 📨 Message Context
+        public string? MessageId { get; set; }
+        public string? TemplateId { get; set; }
+        public Guid? MessageLogId { get; set; }
+
+        // 🧠 Meta / Behaviour
+        public string? ClickedVia { get; set; }
+        public string? Referrer { get; set; }
+        public DateTime? ClickedAt { get; set; } = DateTime.UtcNow;
+        // 📡 Tracking
+        public string? IPAddress { get; set; }
+        public string? Browser { get; set; }
+        public string? DeviceType { get; set; }
+        public string? Country { get; set; }
+        public string? City { get; set; }
+
+        // 🔖 Session context
+        public string? SessionId { get; set; }
+        public string? ThreadId { get; set; }
+
+        public Guid? CampaignId { get; set; }
+        public Guid? CampaignSendLogId { get; set; }
+
+        public string RawJson { get; set; } = string.Empty; // used in queue method
+        public DateTime EnqueuedAt { get; set; } // used in queue method
+        public string? NextStepMatched { get; set; } // ✅ Add this if not already there
+
+        public string? TemplateName { get; set; } // ✅ Needed for follow-up matcher
+
+
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Tracking\Models\TrackingLog.cs 
+====================================================== 
+ 
+﻿using xbytechat.api.CRM.Models;
+using xbytechat.api.Features.CampaignModule.Models;
+using xbytechat.api.Features.CampaignTracking.Models;
+using xbytechat.api.Features.Tracking.Models;
+namespace xbytechat.api.Features.Tracking.Models
+{
+    public class TrackingLog
+    {
+        public Guid Id { get; set; } = Guid.NewGuid();
+
+        // 🧩 Multi-Tenant Isolation
+        public Guid BusinessId { get; set; }
+
+        // 👤 CRM Linkage
+        public Guid? ContactId { get; set; }
+        public string? ContactPhone { get; set; }
+        public Contact? Contact { get; set; } // ✅ NEW
+
+        // 🔗 Source Info
+        public string SourceType { get; set; } = string.Empty;
+        public Guid? SourceId { get; set; }
+
+        public Guid? CampaignId { get; set; }
+        public Campaign? Campaign { get; set; } // ✅ NEW
+
+        public Guid? CampaignSendLogId { get; set; }
+        public CampaignSendLog? CampaignSendLog { get; set; } // ✅ Optional
+
+        // 🔘 Button Info
+        public string? ButtonText { get; set; }
+        public string? CTAType { get; set; }
+
+        // 📨 Message Context
+        public string? MessageId { get; set; }
+        public string? TemplateId { get; set; }
+        public Guid? MessageLogId { get; set; }
+        public MessageLog? MessageLog { get; set; } // ✅ Optional
+
+        // 🧠 Meta / Behaviour
+        public string? ClickedVia { get; set; }
+        public string? Referrer { get; set; }
+
+        // 🕒 Audit Trail
+        public DateTime ClickedAt { get; set; } = DateTime.UtcNow;
+        public string? IPAddress { get; set; }
+        public string? DeviceType { get; set; }
+        public string? Browser { get; set; }
+        public string? Country { get; set; }
+        public string? City { get; set; }
+
+        // 🔖 Follow-up & Analytics
+        public bool FollowUpSent { get; set; } = false;
+        public string? LastInteractionType { get; set; }
+
+        // 🧵 Journey Tracking
+        public Guid? SessionId { get; set; }
+        public Guid? ThreadId { get; set; }
+        public Guid? StepId { get; set; } // ✅ Link to CTAFlowStep for CTA Flow tracking
+
+       //  public string? NextStepMatched { get; set; } // Logs which template system resolved
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Tracking\Services\ContactJourneyService.cs 
+====================================================== 
+ 
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using xbytechat.api.Features.CTAFlowBuilder.Models;
+using xbytechat.api.Features.Tracking.DTOs; // Updated namespace
+// Add other necessary using statements for your project
+
+namespace xbytechat.api.Features.Tracking.Services
+{
+    public class ContactJourneyService : IContactJourneyService
+    {
+        private readonly AppDbContext _context;
+
+        public ContactJourneyService(AppDbContext context)
+        {
+            _context = context;
+        }
+
+
+        //public async Task<JourneyResponseDto> GetJourneyEventsAsync(Guid initialCampaignSendLogId)
+        //{
+        //    var resp = new JourneyResponseDto();
+        //    var events = new List<JourneyEventDto>();
+
+        //    // 0) Load the selected send
+        //    var sentLog = await _context.CampaignSendLogs
+        //        .AsNoTracking()
+        //        .Include(x => x.Campaign)
+        //        .Include(x => x.Contact)
+        //        .FirstOrDefaultAsync(x => x.Id == initialCampaignSendLogId);
+
+        //    // Require a fully-linked send (campaign + contact) for Journey
+        //    // CampaignId is non-nullable now; only check navs + ContactId
+        //    if (sentLog is null || sentLog.Campaign is null || sentLog.Contact is null || sentLog.ContactId == null)
+        //    {
+        //        resp.Events = events;
+        //        return resp;
+        //    }
+
+        //    // Unwrap once into non-nullable locals
+        //    var campaignId = sentLog.CampaignId;          // Guid (non-nullable)
+        //    var contactId = sentLog.ContactId.Value;     // Guid (we ensured not null above)
+
+        //    resp.CampaignId = campaignId;
+        //    resp.ContactId = contactId;
+        //    resp.ContactPhone = sentLog.Contact.PhoneNumber ?? "";
+        //    resp.CampaignType = sentLog.CTAFlowConfigId.HasValue ? "flow" : "dynamic_url";
+        //    resp.FlowId = sentLog.CTAFlowConfigId;
+
+        //    // 1) Session window for THIS run of the campaign to THIS contact
+        //    var sessionStart = sentLog.SentAt ?? sentLog.CreatedAt;
+
+        //    // next send to same contact for same campaign
+        //    var nextSameCampaignAt = await _context.CampaignSendLogs
+        //        .AsNoTracking()
+        //        .Where(x => x.ContactId == contactId &&
+        //                    x.CampaignId == campaignId &&
+        //                    x.CreatedAt > sessionStart)
+        //        .OrderBy(x => x.CreatedAt)
+        //        .Select(x => (DateTime?)x.CreatedAt)
+        //        .FirstOrDefaultAsync();
+
+        //    // next send to same contact for same flow (if this is a flow)
+        //    DateTime? nextSameFlowAt = null;
+        //    if (sentLog.CTAFlowConfigId.HasValue)
+        //    {
+        //        var flowId = sentLog.CTAFlowConfigId.Value;
+        //        nextSameFlowAt = await _context.CampaignSendLogs
+        //            .AsNoTracking()
+        //            .Where(x => x.ContactId == contactId &&
+        //                        x.CTAFlowConfigId == flowId &&
+        //                        x.CreatedAt > sessionStart)
+        //            .OrderBy(x => x.CreatedAt)
+        //            .Select(x => (DateTime?)x.CreatedAt)
+        //            .FirstOrDefaultAsync();
+        //    }
+
+        //    // session end = earliest “next run” OR +24h cap
+        //    var sessionEnd = new[] { nextSameCampaignAt, nextSameFlowAt }
+        //        .Where(dt => dt.HasValue)
+        //        .Select(dt => dt!.Value)
+        //        .DefaultIfEmpty(sessionStart.AddHours(24))
+        //        .Min();
+
+        //    // 2) Initial "sent" + statuses from CSL
+        //    events.Add(new JourneyEventDto
+        //    {
+        //        Timestamp = sessionStart,
+        //        Source = "System",
+        //        EventType = "MessageSent",
+        //        Title = $"Campaign '{sentLog.Campaign?.Name ?? "Campaign"}' sent",
+        //        Details = $"Template '{sentLog.TemplateId}' to {resp.ContactPhone}",
+        //        TemplateName = sentLog.TemplateId
+        //    });
+
+        //    if (sentLog.DeliveredAt is { } d1 && d1 >= sessionStart && d1 < sessionEnd)
+        //        events.Add(new JourneyEventDto
+        //        {
+        //            Timestamp = d1,
+        //            Source = "Provider",
+        //            EventType = "Delivered",
+        //            Title = "Message delivered",
+        //            Details = $"Delivered to {resp.ContactPhone}",
+        //            TemplateName = sentLog.TemplateId
+        //        });
+
+        //    if (sentLog.ReadAt is { } r1 && r1 >= sessionStart && r1 < sessionEnd)
+        //        events.Add(new JourneyEventDto
+        //        {
+        //            Timestamp = r1,
+        //            Source = "Provider",
+        //            EventType = "Read",
+        //            Title = "Message read",
+        //            Details = $"Read by {resp.ContactPhone}",
+        //            TemplateName = sentLog.TemplateId
+        //        });
+
+        //    // 3) URL clicks for THIS send within the window
+        //    var urlClicksInitial = await _context.CampaignClickLogs
+        //        .AsNoTracking()
+        //        .Where(c => c.CampaignSendLogId == sentLog.Id &&
+        //                    c.ClickedAt >= sessionStart &&
+        //                    c.ClickedAt < sessionEnd)
+        //        .OrderBy(c => c.ClickedAt)
+        //        .ToListAsync();
+
+        //    foreach (var c in urlClicksInitial)
+        //    {
+        //        events.Add(new JourneyEventDto
+        //        {
+        //            Timestamp = c.ClickedAt,
+        //            Source = "User",
+        //            EventType = "ButtonClicked",
+        //            Title = $"Clicked URL Button: '{c.ButtonTitle}'",
+        //            Details = $"Redirected to {c.Destination}",
+        //            ButtonIndex = c.ButtonIndex,
+        //            ButtonTitle = c.ButtonTitle,
+        //            Url = c.Destination
+        //        });
+        //    }
+
+        //    // 4) FLOW chain (if any) scoped to THIS session window
+        //    if (sentLog.CTAFlowConfigId.HasValue)
+        //    {
+        //        var flowId = sentLog.CTAFlowConfigId.Value;
+
+        //        // Flow label
+        //        resp.FlowName = await _context.CTAFlowConfigs
+        //            .AsNoTracking()
+        //            .Where(f => f.Id == flowId)
+        //            .Select(f => f.FlowName)
+        //            .FirstOrDefaultAsync();
+
+        //        // All flow sends (CSLs) for same contact+flow within the window
+        //        var flowCslChain = await _context.CampaignSendLogs
+        //            .AsNoTracking()
+        //            .Where(csl => csl.BusinessId == sentLog.BusinessId &&
+        //                          csl.ContactId == contactId &&
+        //                          csl.CTAFlowConfigId == flowId &&
+        //                          csl.CreatedAt >= sessionStart &&
+        //                          csl.CreatedAt < sessionEnd)
+        //            .OrderBy(csl => csl.CreatedAt)
+        //            .Select(csl => new
+        //            {
+        //                csl.Id,
+        //                csl.MessageLogId,
+        //                csl.SentAt,
+        //                csl.CreatedAt,
+        //                csl.TemplateId,
+        //                csl.CTAFlowStepId,
+        //                csl.DeliveredAt,
+        //                csl.ReadAt
+        //            })
+        //            .ToListAsync();
+
+        //        var chainCslIds = flowCslChain.Select(x => x.Id).ToList();
+        //        var chainMsgLogIds = flowCslChain
+        //            .Where(x => x.MessageLogId.HasValue)
+        //            .Select(x => x.MessageLogId!.Value)
+        //            .ToList();
+
+        //        var execByCsl = await _context.FlowExecutionLogs
+        //            .AsNoTracking()
+        //            .Where(f => f.CampaignSendLogId.HasValue &&
+        //                        chainCslIds.Contains(f.CampaignSendLogId.Value) &&
+        //                        f.ExecutedAt >= sessionStart &&
+        //                        f.ExecutedAt < sessionEnd)
+        //            .OrderBy(f => f.ExecutedAt)
+        //            .ToListAsync();
+
+        //        var execByMsg = chainMsgLogIds.Count == 0
+        //            ? new List<FlowExecutionLog>()
+        //            : await _context.FlowExecutionLogs
+        //                .AsNoTracking()
+        //                .Where(f => f.MessageLogId.HasValue &&
+        //                            chainMsgLogIds.Contains(f.MessageLogId.Value) &&
+        //                            f.ExecutedAt >= sessionStart &&
+        //                            f.ExecutedAt < sessionEnd)
+        //                .OrderBy(f => f.ExecutedAt)
+        //                .ToListAsync();
+
+        //        // Phone fallback (strictly within the session window; accept + or digits-only)
+        //        var phoneA = resp.ContactPhone ?? "";
+        //        var phoneB = phoneA.StartsWith("+") ? phoneA[1..] : "+" + phoneA;
+
+        //        var execByPhone = await _context.FlowExecutionLogs
+        //            .AsNoTracking()
+        //            .Where(f => f.BusinessId == sentLog.BusinessId &&
+        //                        f.FlowId == flowId &&
+        //                        (f.ContactPhone == phoneA || f.ContactPhone == phoneB) &&
+        //                        f.ExecutedAt >= sessionStart &&
+        //                        f.ExecutedAt < sessionEnd)
+        //            .OrderBy(f => f.ExecutedAt)
+        //            .ToListAsync();
+
+        //        var flowExec = execByCsl.Concat(execByMsg).Concat(execByPhone)
+        //            .GroupBy(x => x.Id)
+        //            .Select(g => g.First())
+        //            .OrderBy(x => x.ExecutedAt)
+        //            .ToList();
+
+        //        foreach (var fe in flowExec)
+        //        {
+        //            if (!string.IsNullOrWhiteSpace(fe.TriggeredByButton))
+        //            {
+        //                events.Add(new JourneyEventDto
+        //                {
+        //                    Timestamp = fe.ExecutedAt,
+        //                    Source = "User",
+        //                    EventType = "ButtonClicked",
+        //                    Title = $"Clicked Quick Reply: '{fe.TriggeredByButton}'",
+        //                    Details = string.IsNullOrWhiteSpace(fe.TemplateName)
+        //                        ? $"Advanced in flow at step '{fe.StepName}'"
+        //                        : $"Triggered next template: '{fe.TemplateName}'",
+        //                    StepId = fe.StepId,
+        //                    StepName = fe.StepName,
+        //                    ButtonIndex = fe.ButtonIndex,
+        //                    ButtonTitle = fe.TriggeredByButton,
+        //                    TemplateName = fe.TemplateName
+        //                });
+        //            }
+
+        //            if (!string.IsNullOrWhiteSpace(fe.TemplateName))
+        //            {
+        //                events.Add(new JourneyEventDto
+        //                {
+        //                    Timestamp = fe.ExecutedAt,
+        //                    Source = "System",
+        //                    EventType = "FlowSend",
+        //                    Title = $"Flow sent template '{fe.TemplateName}'",
+        //                    Details = $"Step '{fe.StepName}'",
+        //                    StepId = fe.StepId,
+        //                    StepName = fe.StepName,
+        //                    TemplateName = fe.TemplateName
+        //                });
+        //            }
+        //        }
+
+        //        // Include the flow CSLs themselves + statuses (within window)
+        //        foreach (var csl in flowCslChain.Where(x => x.Id != sentLog.Id))
+        //        {
+        //            var ts = csl.SentAt ?? csl.CreatedAt;
+
+        //            events.Add(new JourneyEventDto
+        //            {
+        //                Timestamp = ts,
+        //                Source = "System",
+        //                EventType = "FlowSend",
+        //                Title = $"Flow sent template '{csl.TemplateId}'",
+        //                Details = csl.CTAFlowStepId.HasValue ? $"Step: {csl.CTAFlowStepId}" : null,
+        //                StepId = csl.CTAFlowStepId,
+        //                TemplateName = csl.TemplateId
+        //            });
+
+        //            if (csl.DeliveredAt is { } d2 && d2 >= sessionStart && d2 < sessionEnd)
+        //                events.Add(new JourneyEventDto
+        //                {
+        //                    Timestamp = d2,
+        //                    Source = "Provider",
+        //                    EventType = "Delivered",
+        //                    Title = "Message delivered",
+        //                    Details = "",
+        //                    TemplateName = csl.TemplateId,
+        //                    StepId = csl.CTAFlowStepId
+        //                });
+
+        //            if (csl.ReadAt is { } r2 && r2 >= sessionStart && r2 < sessionEnd)
+        //                events.Add(new JourneyEventDto
+        //                {
+        //                    Timestamp = r2,
+        //                    Source = "Provider",
+        //                    EventType = "Read",
+        //                    Title = "Message read",
+        //                    Details = "",
+        //                    TemplateName = csl.TemplateId,
+        //                    StepId = csl.CTAFlowStepId
+        //                });
+        //        }
+
+        //        // URL clicks during the flow (within window)
+        //        if (chainCslIds.Count > 0)
+        //        {
+        //            var flowClicks = await _context.CampaignClickLogs
+        //                .AsNoTracking()
+        //                .Where(c => chainCslIds.Contains(c.CampaignSendLogId) &&
+        //                            c.ClickedAt >= sessionStart &&
+        //                            c.ClickedAt < sessionEnd)
+        //                .OrderBy(c => c.ClickedAt)
+        //                .ToListAsync();
+
+        //            foreach (var c in flowClicks)
+        //            {
+        //                events.Add(new JourneyEventDto
+        //                {
+        //                    Timestamp = c.ClickedAt,
+        //                    Source = "User",
+        //                    EventType = "ButtonClicked",
+        //                    Title = $"Clicked URL: '{c.ButtonTitle}'",
+        //                    Details = $"Redirected to {c.Destination}",
+        //                    ButtonIndex = c.ButtonIndex,
+        //                    ButtonTitle = c.ButtonTitle,
+        //                    Url = c.Destination
+        //                });
+        //            }
+        //        }
+
+        //        // Where the user left off in this session
+        //        var lastFlowEvent = events
+        //            .Where(e => e.EventType == "FlowSend" || e.EventType == "ButtonClicked")
+        //            .OrderBy(e => e.Timestamp)
+        //            .LastOrDefault();
+
+        //        resp.LeftOffAt = lastFlowEvent?.StepName ?? lastFlowEvent?.Title;
+        //    }
+
+        //    resp.Events = events.OrderBy(e => e.Timestamp).ToList();
+        //    return resp;
+        //}
+        public async Task<JourneyResponseDto> GetJourneyEventsAsync(Guid initialCampaignSendLogId)
+        {
+            var resp = new JourneyResponseDto { Events = new List<JourneyEventDto>() };
+            var events = resp.Events;
+
+            // 0) Load the selected send (campaign required; contact optional)
+            var sentLog = await _context.CampaignSendLogs
+                .AsNoTracking()
+                .Include(x => x.Campaign)
+                .Include(x => x.Contact)
+                .FirstOrDefaultAsync(x => x.Id == initialCampaignSendLogId);
+
+            if (sentLog is null || sentLog.Campaign is null)
+                return resp;
+
+            // Envelope (CampaignId is non-nullable now)
+            var campaignId = sentLog.CampaignId;
+            resp.CampaignId = campaignId;
+            resp.CampaignType = sentLog.CTAFlowConfigId.HasValue ? "flow" : "dynamic_url";
+            resp.FlowId = sentLog.CTAFlowConfigId;
+
+            if (sentLog.ContactId.HasValue)
+                resp.ContactId = sentLog.ContactId.Value;
+
+            // ---- Resolve a phone for display/flow fallback --------------------------------------------
+            string? phone = sentLog.Contact?.PhoneNumber;
+
+            // via MessageLog
+            if (string.IsNullOrWhiteSpace(phone) && sentLog.MessageLogId.HasValue)
+            {
+                phone = await _context.MessageLogs.AsNoTracking()
+                    .Where(m => m.Id == sentLog.MessageLogId.Value && m.BusinessId == sentLog.BusinessId)
+                    .Select(m => m.RecipientNumber)
+                    .FirstOrDefaultAsync();
+            }
+
+            // via Recipient → Contact or AudienceMember
+            if (string.IsNullOrWhiteSpace(phone) && sentLog.RecipientId != Guid.Empty)
+            {
+                var rec = await _context.CampaignRecipients.AsNoTracking()
+                    .Where(r => r.Id == sentLog.RecipientId)
+                    .Select(r => new { r.ContactId, r.AudienceMemberId })
+                    .FirstOrDefaultAsync();
+
+                if (rec is not null)
+                {
+                    if (rec.ContactId.HasValue)
+                        phone = await _context.Contacts.AsNoTracking()
+                            .Where(c => c.Id == rec.ContactId.Value)
+                            .Select(c => c.PhoneNumber)
+                            .FirstOrDefaultAsync();
+                    else if (rec.AudienceMemberId.HasValue)
+                        phone = await _context.AudiencesMembers.AsNoTracking()
+                            .Where(a => a.Id == rec.AudienceMemberId.Value)
+                            .Select(a => a.PhoneE164)
+                            .FirstOrDefaultAsync();
+                }
+            }
+
+            resp.ContactPhone = phone ?? "";
+
+            // ---- 1) Session window ---------------------------------------------------------------------
+            var sessionStart = sentLog.SentAt ?? sentLog.CreatedAt;
+
+            DateTime sessionEnd;
+
+            if (sentLog.ContactId.HasValue)
+            {
+                var contactId = sentLog.ContactId.Value;
+
+                var nextSameCampaignAt = await _context.CampaignSendLogs.AsNoTracking()
+                    .Where(x => x.ContactId == contactId &&
+                                x.CampaignId == campaignId &&
+                                x.CreatedAt > sessionStart)
+                    .OrderBy(x => x.CreatedAt)
+                    .Select(x => (DateTime?)x.CreatedAt)
+                    .FirstOrDefaultAsync();
+
+                DateTime? nextSameFlowAt = null;
+                if (sentLog.CTAFlowConfigId.HasValue)
+                {
+                    var flowId = sentLog.CTAFlowConfigId.Value;
+                    nextSameFlowAt = await _context.CampaignSendLogs.AsNoTracking()
+                        .Where(x => x.ContactId == contactId &&
+                                    x.CTAFlowConfigId == flowId &&
+                                    x.CreatedAt > sessionStart)
+                        .OrderBy(x => x.CreatedAt)
+                        .Select(x => (DateTime?)x.CreatedAt)
+                        .FirstOrDefaultAsync();
+                }
+
+                sessionEnd = new[] { nextSameCampaignAt, nextSameFlowAt }
+                    .Where(dt => dt.HasValue)
+                    .Select(dt => dt!.Value)
+                    .DefaultIfEmpty(sessionStart.AddHours(24))
+                    .Min();
+            }
+            else
+            {
+                // No ContactId: keep it simple and robust
+                sessionEnd = sessionStart.AddHours(24);
+            }
+
+            // ---- 2) Initial "sent" + statuses from CSL -------------------------------------------------
+            events.Add(new JourneyEventDto
+            {
+                Timestamp = sessionStart,
+                Source = "System",
+                EventType = "MessageSent",
+                Title = $"Campaign '{sentLog.Campaign?.Name ?? "Campaign"}' sent",
+                Details = string.IsNullOrWhiteSpace(resp.ContactPhone) ? null :
+                               $"Template '{sentLog.TemplateId}' to {resp.ContactPhone}",
+                TemplateName = sentLog.TemplateId
+            });
+
+            if (sentLog.DeliveredAt is { } d1 && d1 >= sessionStart && d1 < sessionEnd)
+                events.Add(new JourneyEventDto
+                {
+                    Timestamp = d1,
+                    Source = "Provider",
+                    EventType = "Delivered",
+                    Title = "Message delivered",
+                    Details = string.IsNullOrWhiteSpace(resp.ContactPhone) ? null : $"Delivered to {resp.ContactPhone}",
+                    TemplateName = sentLog.TemplateId
+                });
+
+            if (sentLog.ReadAt is { } r1 && r1 >= sessionStart && r1 < sessionEnd)
+                events.Add(new JourneyEventDto
+                {
+                    Timestamp = r1,
+                    Source = "Provider",
+                    EventType = "Read",
+                    Title = "Message read",
+                    Details = string.IsNullOrWhiteSpace(resp.ContactPhone) ? null : $"Read by {resp.ContactPhone}",
+                    TemplateName = sentLog.TemplateId
+                });
+
+            // ---- 3) URL clicks for THIS send within the window ----------------------------------------
+            var urlClicksInitial = await _context.CampaignClickLogs
+                .AsNoTracking()
+                .Where(c => c.CampaignSendLogId == sentLog.Id &&
+                            c.ClickedAt >= sessionStart && c.ClickedAt < sessionEnd)
+                .OrderBy(c => c.ClickedAt)
+                .ToListAsync();
+
+            foreach (var c in urlClicksInitial)
+            {
+                events.Add(new JourneyEventDto
+                {
+                    Timestamp = c.ClickedAt,
+                    Source = "User",
+                    EventType = "ButtonClicked",
+                    Title = $"Clicked URL Button: '{c.ButtonTitle}'",
+                    Details = $"Redirected to {c.Destination}",
+                    ButtonIndex = c.ButtonIndex,
+                    ButtonTitle = c.ButtonTitle,
+                    Url = c.Destination
+                });
+            }
+
+            // ---- 4) FLOW chain (if any) ---------------------------------------------------------------
+            if (sentLog.CTAFlowConfigId.HasValue)
+            {
+                var flowId = sentLog.CTAFlowConfigId.Value;
+
+                resp.FlowName = await _context.CTAFlowConfigs.AsNoTracking()
+                    .Where(f => f.Id == flowId)
+                    .Select(f => f.FlowName)
+                    .FirstOrDefaultAsync();
+
+                // Build base query for CSLs in this business/flow within the window
+                var flowCslQuery = _context.CampaignSendLogs.AsNoTracking()
+                    .Where(csl => csl.BusinessId == sentLog.BusinessId &&
+                                  csl.CTAFlowConfigId == flowId &&
+                                  csl.CreatedAt >= sessionStart &&
+                                  csl.CreatedAt < sessionEnd);
+
+                // If we have ContactId, match on it; otherwise match by phone via MessageLogs
+                List<Guid> chainCslIds;
+                if (sentLog.ContactId.HasValue)
+                {
+                    var contactId = sentLog.ContactId.Value;
+                    chainCslIds = await flowCslQuery.Where(csl => csl.ContactId == contactId)
+                        .OrderBy(csl => csl.CreatedAt)
+                        .Select(csl => csl.Id)
+                        .ToListAsync();
+                }
+                else if (!string.IsNullOrWhiteSpace(phone))
+                {
+                    var msgIdsForPhone = await _context.MessageLogs.AsNoTracking()
+                        .Where(m => m.BusinessId == sentLog.BusinessId &&
+                                    m.RecipientNumber == phone &&
+                                    m.CreatedAt >= sessionStart && m.CreatedAt < sessionEnd)
+                        .Select(m => m.Id)
+                        .ToListAsync();
+
+                    chainCslIds = await flowCslQuery
+                        .Where(csl => csl.MessageLogId.HasValue &&
+                                      msgIdsForPhone.Contains(csl.MessageLogId.Value))
+                        .OrderBy(csl => csl.CreatedAt)
+                        .Select(csl => csl.Id)
+                        .ToListAsync();
+
+                    if (!chainCslIds.Contains(sentLog.Id))
+                        chainCslIds.Add(sentLog.Id);
+                }
+                else
+                {
+                    chainCslIds = new List<Guid> { sentLog.Id };
+                }
+
+                // Pull minimal data for those CSLs (for statuses)
+                var flowCslChain = await _context.CampaignSendLogs.AsNoTracking()
+                    .Where(csl => chainCslIds.Contains(csl.Id))
+                    .OrderBy(csl => csl.CreatedAt)
+                    .Select(csl => new
+                    {
+                        csl.Id,
+                        csl.MessageLogId,
+                        csl.SentAt,
+                        csl.CreatedAt,
+                        csl.TemplateId,
+                        csl.CTAFlowStepId,
+                        csl.DeliveredAt,
+                        csl.ReadAt
+                    })
+                    .ToListAsync();
+
+                var chainMsgLogIds = flowCslChain
+                    .Where(x => x.MessageLogId.HasValue)
+                    .Select(x => x.MessageLogId!.Value)
+                    .ToList();
+
+                // Flow exec logs by CSL
+                var execByCsl = await _context.FlowExecutionLogs.AsNoTracking()
+                    .Where(f => f.CampaignSendLogId.HasValue &&
+                                chainCslIds.Contains(f.CampaignSendLogId.Value) &&
+                                f.ExecutedAt >= sessionStart && f.ExecutedAt < sessionEnd)
+                    .OrderBy(f => f.ExecutedAt)
+                    .ToListAsync();
+
+                // ... by MessageLog
+                var execByMsg = chainMsgLogIds.Count == 0
+                    ? new List<FlowExecutionLog>()
+                    : await _context.FlowExecutionLogs.AsNoTracking()
+                        .Where(f => f.MessageLogId.HasValue &&
+                                    chainMsgLogIds.Contains(f.MessageLogId.Value) &&
+                                    f.ExecutedAt >= sessionStart && f.ExecutedAt < sessionEnd)
+                        .OrderBy(f => f.ExecutedAt)
+                        .ToListAsync();
+
+                // ... by Phone fallback (accept + or digits-only)
+                var phoneA = phone ?? "";
+                var phoneB = string.IsNullOrWhiteSpace(phoneA)
+                    ? ""
+                    : (phoneA.StartsWith("+") ? phoneA[1..] : "+" + phoneA);
+
+                var execByPhone = string.IsNullOrWhiteSpace(phoneA)
+                    ? new List<FlowExecutionLog>()
+                    : await _context.FlowExecutionLogs.AsNoTracking()
+                        .Where(f => f.BusinessId == sentLog.BusinessId &&
+                                    f.FlowId == flowId &&
+                                    (f.ContactPhone == phoneA || f.ContactPhone == phoneB) &&
+                                    f.ExecutedAt >= sessionStart && f.ExecutedAt < sessionEnd)
+                        .OrderBy(f => f.ExecutedAt)
+                        .ToListAsync();
+
+                var flowExec = execByCsl.Concat(execByMsg).Concat(execByPhone)
+                    .GroupBy(x => x.Id)
+                    .Select(g => g.First())
+                    .OrderBy(x => x.ExecutedAt)
+                    .ToList();
+
+                foreach (var fe in flowExec)
+                {
+                    if (!string.IsNullOrWhiteSpace(fe.TriggeredByButton))
+                    {
+                        events.Add(new JourneyEventDto
+                        {
+                            Timestamp = fe.ExecutedAt,
+                            Source = "User",
+                            EventType = "ButtonClicked",
+                            Title = $"Clicked Quick Reply: '{fe.TriggeredByButton}'",
+                            Details = string.IsNullOrWhiteSpace(fe.TemplateName)
+                                          ? $"Advanced in flow at step '{fe.StepName}'"
+                                          : $"Triggered next template: '{fe.TemplateName}'",
+                            StepId = fe.StepId,
+                            StepName = fe.StepName,
+                            ButtonIndex = fe.ButtonIndex,
+                            ButtonTitle = fe.TriggeredByButton,
+                            TemplateName = fe.TemplateName
+                        });
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(fe.TemplateName))
+                    {
+                        events.Add(new JourneyEventDto
+                        {
+                            Timestamp = fe.ExecutedAt,
+                            Source = "System",
+                            EventType = "FlowSend",
+                            Title = $"Flow sent template '{fe.TemplateName}'",
+                            Details = $"Step '{fe.StepName}'",
+                            StepId = fe.StepId,
+                            StepName = fe.StepName,
+                            TemplateName = fe.TemplateName
+                        });
+                    }
+                }
+
+                // Include the flow CSLs themselves + statuses (within window)
+                foreach (var csl in flowCslChain.Where(x => x.Id != sentLog.Id))
+                {
+                    var ts = csl.SentAt ?? csl.CreatedAt;
+
+                    events.Add(new JourneyEventDto
+                    {
+                        Timestamp = ts,
+                        Source = "System",
+                        EventType = "FlowSend",
+                        Title = $"Flow sent template '{csl.TemplateId}'",
+                        Details = csl.CTAFlowStepId.HasValue ? $"Step: {csl.CTAFlowStepId}" : null,
+                        StepId = csl.CTAFlowStepId,
+                        TemplateName = csl.TemplateId
+                    });
+
+                    if (csl.DeliveredAt is { } d2 && d2 >= sessionStart && d2 < sessionEnd)
+                        events.Add(new JourneyEventDto
+                        {
+                            Timestamp = d2,
+                            Source = "Provider",
+                            EventType = "Delivered",
+                            Title = "Message delivered",
+                            Details = "",
+                            TemplateName = csl.TemplateId,
+                            StepId = csl.CTAFlowStepId
+                        });
+
+                    if (csl.ReadAt is { } r2 && r2 >= sessionStart && r2 < sessionEnd)
+                        events.Add(new JourneyEventDto
+                        {
+                            Timestamp = r2,
+                            Source = "Provider",
+                            EventType = "Read",
+                            Title = "Message read",
+                            Details = "",
+                            TemplateName = csl.TemplateId,
+                            StepId = csl.CTAFlowStepId
+                        });
+                }
+
+                // URL clicks during the flow (within window)
+                if (chainCslIds.Count > 0)
+                {
+                    var flowClicks = await _context.CampaignClickLogs.AsNoTracking()
+                        .Where(c => chainCslIds.Contains(c.CampaignSendLogId) &&
+                                    c.ClickedAt >= sessionStart && c.ClickedAt < sessionEnd)
+                        .OrderBy(c => c.ClickedAt)
+                        .ToListAsync();
+
+                    foreach (var c in flowClicks)
+                    {
+                        events.Add(new JourneyEventDto
+                        {
+                            Timestamp = c.ClickedAt,
+                            Source = "User",
+                            EventType = "ButtonClicked",
+                            Title = $"Clicked URL: '{c.ButtonTitle}'",
+                            Details = $"Redirected to {c.Destination}",
+                            ButtonIndex = c.ButtonIndex,
+                            ButtonTitle = c.ButtonTitle,
+                            Url = c.Destination
+                        });
+                    }
+                }
+
+                // Left-off marker
+                var lastFlowEvent = events
+                    .Where(e => e.EventType == "FlowSend" || e.EventType == "ButtonClicked")
+                    .OrderBy(e => e.Timestamp)
+                    .LastOrDefault();
+
+                resp.LeftOffAt = lastFlowEvent?.StepName ?? lastFlowEvent?.Title;
+            }
+
+            resp.Events = events.OrderBy(e => e.Timestamp).ToList();
+            return resp;
+        }
+
+    }
+
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Tracking\Services\IContactJourneyService.cs 
+====================================================== 
+ 
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using xbytechat.api.Features.Tracking.DTOs; // Updated namespace
+
+namespace xbytechat.api.Features.Tracking.Services
+{
+    public interface IContactJourneyService
+    {
+        Task<JourneyResponseDto> GetJourneyEventsAsync(Guid initialCampaignSendLogId);
+    }
+} 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Tracking\Services\IMessageLogsReportService.cs 
+====================================================== 
+ 
+﻿using xbytechat.api.Shared; // PaginatedResponse<T>
+using xbytechat.api.Features.Tracking.DTOs;
+
+namespace xbytechat.api.Features.Tracking.Services
+{
+    public interface IMessageLogsReportService
+    {
+        Task<PaginatedResponse<MessageLogListItemDto>> SearchAsync(
+            Guid businessId, MessageLogReportQueryDto q, CancellationToken ct);
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Tracking\Services\ITrackingService.cs 
+====================================================== 
+ 
+﻿using System.Threading.Tasks;
+using xbytechat.api.Features.Tracking.DTOs;
+using xbytechat.api.Features.Tracking.Models;
+using xbytechat.api.Helpers;
+
+namespace xbytechat.api.Features.Tracking.Services
+{
+    public interface ITrackingService
+    {
+        Task LogCTAClickAsync(TrackingLogDto dto);
+        Task<TrackingLogDetailsDto?> GetLogDetailsAsync(Guid logId);
+        Task<ResponseResult> LogCTAClickWithEnrichmentAsync(TrackingLogDto dto);
+        Task<List<TrackingLog>> GetFlowClickLogsAsync(Guid businessId);
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Tracking\Services\IUrlBuilderService.cs 
+====================================================== 
+ 
+﻿namespace xbytechat.api.Features.Tracking.Services
+{
+    public interface IUrlBuilderService
+    {
+
+         string BuildTrackedButtonUrl(
+        Guid campaignSendLogId,
+        int buttonIndex,
+        string? buttonTitle,
+        string destinationUrlAbsolute);
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Tracking\Services\MessageLogsReportService.cs 
+====================================================== 
+ 
+﻿using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
+using xbytechat.api.Features.Tracking.DTOs;
+using xbytechat.api.Shared;
+
+namespace xbytechat.api.Features.Tracking.Services
+{
+    // Strongly-typed intermediate row for EF translation (avoid 'dynamic')
+    internal sealed class MessageLogRow
+    {
+        public Guid Id { get; set; }
+        public Guid BusinessId { get; set; }
+        public Guid? CampaignId { get; set; }
+        public string? CampaignName { get; set; }
+
+        public string? RecipientNumber { get; set; }
+        public string? SenderId { get; set; }           // Campaign.PhoneNumberId
+        public string? SourceChannel { get; set; }      // Campaign.Provider OR MessageLog.Provider
+        public string? Status { get; set; }
+
+        public string? MessageContent { get; set; }
+        public string? ProviderMessageId { get; set; }
+        public string? ErrorMessage { get; set; }
+
+        public DateTime CreatedAt { get; set; }
+        public DateTime? SentAt { get; set; }
+    }
+
+    //public interface IMessageLogsReportService
+    //{
+    //    Task<PaginatedResponse<MessageLogListItemDto>> SearchAsync(
+    //        Guid businessId, MessageLogReportQueryDto q, CancellationToken ct);
+    //}
+
+    public sealed class MessageLogsReportService : IMessageLogsReportService
+    {
+        private readonly AppDbContext _db;
+        public MessageLogsReportService(AppDbContext db) => _db = db;
+
+        public async Task<PaginatedResponse<MessageLogListItemDto>> SearchAsync(
+            Guid businessId, MessageLogReportQueryDto q, CancellationToken ct)
+        {
+            q.Page = Math.Max(1, q.Page);
+            q.PageSize = Math.Clamp(q.PageSize, 1, 200);
+
+            // Base + left join to Campaign
+            var baseQuery =
+                from m in _db.MessageLogs.AsNoTracking()
+                where m.BusinessId == businessId
+                join c0 in _db.Campaigns.AsNoTracking() on m.CampaignId equals c0.Id into cj
+                from c in cj.DefaultIfEmpty()
+                select new MessageLogRow
+                {
+                    Id = m.Id,
+                    BusinessId = m.BusinessId,
+                    CampaignId = m.CampaignId,
+                    CampaignName = c != null ? c.Name : null,
+                    RecipientNumber = m.RecipientNumber,
+                    SenderId = c != null ? c.PhoneNumberId : null,
+                    SourceChannel = (c != null && c.Provider != null) ? c.Provider : m.Provider,
+                    Status = m.Status,
+                    MessageContent = m.MessageContent,
+                    ProviderMessageId = m.ProviderMessageId ?? m.MessageId,
+                    ErrorMessage = m.ErrorMessage,
+                    CreatedAt = m.CreatedAt,
+                    SentAt = m.SentAt
+                };
+
+            // Time window (SentAt prefers over CreatedAt)
+            if (q.FromUtc.HasValue)
+                baseQuery = baseQuery.Where(x => (x.SentAt ?? x.CreatedAt) >= q.FromUtc.Value);
+            if (q.ToUtc.HasValue)
+                baseQuery = baseQuery.Where(x => (x.SentAt ?? x.CreatedAt) <= q.ToUtc.Value);
+
+            if (q.CampaignId.HasValue)
+                baseQuery = baseQuery.Where(x => x.CampaignId == q.CampaignId.Value);
+
+            if (q.Statuses is { Length: > 0 })
+            {
+                var statuses = q.Statuses.Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
+                if (statuses.Length > 0) baseQuery = baseQuery.Where(x => statuses.Contains(x.Status!));
+            }
+
+            if (q.Channels is { Length: > 0 })
+            {
+                var chans = q.Channels.Select(s => s.Trim().ToUpperInvariant())
+                                      .Where(s => s.Length > 0).ToArray();
+                if (chans.Length > 0)
+                    baseQuery = baseQuery.Where(x => x.SourceChannel != null &&
+                                                     chans.Contains(x.SourceChannel.ToUpper()));
+            }
+
+            if (q.SenderIds is { Length: > 0 })
+            {
+                var senders = q.SenderIds.Select(s => s.Trim())
+                                         .Where(s => s.Length > 0).ToArray();
+                if (senders.Length > 0)
+                    baseQuery = baseQuery.Where(x => x.SenderId != null && senders.Contains(x.SenderId));
+            }
+
+            if (!string.IsNullOrWhiteSpace(q.Search))
+            {
+                var s = q.Search.Trim().ToLower();
+                baseQuery = baseQuery.Where(x =>
+                    (x.RecipientNumber ?? "").ToLower().Contains(s) ||
+                    (x.MessageContent ?? "").ToLower().Contains(s) ||
+                    (x.ErrorMessage ?? "").ToLower().Contains(s) ||
+                    (x.ProviderMessageId ?? "").ToLower().Contains(s) ||
+                    (x.CampaignName ?? "").ToLower().Contains(s));
+            }
+
+            // ----- Strongly-typed sorting -----
+            var sortBy = (q.SortBy ?? "SentAt").Trim();
+            var sortDir = (q.SortDir ?? "desc").Trim().ToLower() == "asc" ? "asc" : "desc";
+
+            // Build a typed selector map
+            var sortMap = new Dictionary<string, Expression<Func<MessageLogRow, object>>>(StringComparer.OrdinalIgnoreCase)
+            {
+                ["Recipient"] = x => x.RecipientNumber ?? "",
+                ["SenderId"] = x => x.SenderId ?? "",
+                ["Channel"] = x => x.SourceChannel ?? "",
+                ["Status"] = x => x.Status ?? "",
+                ["CampaignName"] = x => x.CampaignName ?? "",
+                ["CreatedAt"] = x => x.CreatedAt,
+                ["SentAt"] = x => x.SentAt ?? x.CreatedAt
+            };
+
+            if (!sortMap.ContainsKey(sortBy)) sortBy = "SentAt";
+            var keySelector = sortMap[sortBy];
+
+            IOrderedQueryable<MessageLogRow> ordered =
+                sortDir == "asc"
+                    ? baseQuery.OrderBy(keySelector)
+                    : baseQuery.OrderByDescending(keySelector);
+
+            var total = await ordered.CountAsync(ct);
+
+            var items = await ordered
+                .Skip((q.Page - 1) * q.PageSize)
+                .Take(q.PageSize)
+                .Select(x => new MessageLogListItemDto
+                {
+                    Id = x.Id,
+                    BusinessId = x.BusinessId,
+                    CampaignId = x.CampaignId,
+                    CampaignName = x.CampaignName,
+                    RecipientNumber = x.RecipientNumber,
+                    SenderId = x.SenderId,
+                    SourceChannel = x.SourceChannel,
+                    Status = x.Status,
+                    MessageType = null,        // not on MessageLog
+                    MessageContent = x.MessageContent,
+                    TemplateName = null,        // not on MessageLog
+                    ProviderMessageId = x.ProviderMessageId,
+                    ErrorMessage = x.ErrorMessage,
+                    CreatedAt = x.CreatedAt,
+                    SentAt = x.SentAt,
+                    DeliveredAt = null,        // not on MessageLog
+                    ReadAt = null         // not on MessageLog
+                })
+                .ToListAsync(ct);
+
+            return new PaginatedResponse<MessageLogListItemDto>
+            {
+                Items = items,
+                TotalCount = total,
+                Page = q.Page,
+                PageSize = q.PageSize
+            };
+        }
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Tracking\Services\TrackingService.cs 
+====================================================== 
+ 
+﻿using System;
+using System.Threading.Tasks;
+using xbytechat.api.Features.Tracking.DTOs;
+using xbytechat.api.Features.Tracking.Models;
+using xbytechat.api.Shared.TrackingUtils;
+using Serilog;
+using Microsoft.EntityFrameworkCore;
+using xbytechat.api.CRM.Dtos;
+using xbytechat.api.Features.CampaignModule.DTOs;
+using AutoMapper;
+using xbytechat.api.Features.MessageManagement.DTOs;
+using xbytechat.api.Helpers;
+using xbytechat.api.Features.CampaignTracking.Models;
+
+namespace xbytechat.api.Features.Tracking.Services
+{
+    public class TrackingService : ITrackingService
+    {
+        private readonly AppDbContext _context;
+        private readonly IMapper _mapper;
+        public TrackingService(AppDbContext context, IMapper mapper)
+        {
+            _context = context;
+            _mapper = mapper;
+        }
+
+
+        public async Task<ResponseResult> LogCTAClickWithEnrichmentAsync(TrackingLogDto dto)
+        {
+            try
+            {
+                // 🧠 1. Try enrich from MessageLog (if msg ID provided)
+                if (!string.IsNullOrEmpty(dto.MessageId))
+                {
+                    var messageLog = await _context.MessageLogs
+                        .FirstOrDefaultAsync(m => m.MessageId == dto.MessageId || m.Id.ToString() == dto.MessageId);
+
+                    if (messageLog != null)
+                    {
+                        dto.BusinessId = dto.BusinessId == Guid.Empty ? messageLog.BusinessId : dto.BusinessId;
+                        dto.ContactId ??= messageLog.ContactId;
+                        dto.CampaignId ??= messageLog.CampaignId;
+                        dto.MessageLogId ??= messageLog.Id;
+                    }
+                }
+
+                // 🧩 2. Enrich from CampaignSendLog if sourceType = campaign
+                CampaignSendLog? sendLog = null;
+
+                if (dto.SourceType == "campaign")
+                {
+                    if (!string.IsNullOrEmpty(dto.MessageId))
+                    {
+                        sendLog = await _context.CampaignSendLogs
+                            .Include(c => c.Recipient)
+                            .FirstOrDefaultAsync(c => c.MessageId == dto.MessageId);
+                    }
+
+                    if (sendLog == null && dto.CampaignId != null)
+                    {
+                        sendLog = await _context.CampaignSendLogs
+                            .Include(c => c.Recipient)
+                            .Where(c => c.CampaignId == dto.CampaignId)
+                            .OrderByDescending(c => c.CreatedAt)
+                            .FirstOrDefaultAsync();
+                    }
+
+                    if (sendLog != null)
+                    {
+                        dto.BusinessId = dto.BusinessId == Guid.Empty
+                            ? sendLog.Recipient?.BusinessId ?? Guid.Empty
+                            : dto.BusinessId;
+
+                        dto.ContactId ??= sendLog.ContactId;
+                        dto.CampaignId ??= sendLog.CampaignId;
+                        dto.CampaignSendLogId ??= sendLog.Id;
+
+                        // ✅ Update campaign send log click details
+                        sendLog.IsClicked = true;
+                        sendLog.ClickedAt = dto.ClickedAt ?? DateTime.UtcNow;
+                        sendLog.ClickType = dto.ButtonText;
+
+                        await _context.SaveChangesAsync();
+                    }
+                }
+
+                // ✅ 3. Validate business context
+                if (dto.BusinessId == Guid.Empty)
+                {
+                    Log.Warning("❌ TrackingLog failed: No BusinessId available for click.");
+                    return ResponseResult.ErrorInfo("Business context is missing.");
+                }
+
+                // 💾 4. Save tracking log (inline instead of separate method)
+                var trackingLog = new TrackingLog
+                {
+                    Id = Guid.NewGuid(),
+                    BusinessId = dto.BusinessId,
+                    ContactId = dto.ContactId,
+                    ContactPhone = dto.ContactPhone,
+                    SourceType = dto.SourceType,
+                    SourceId = dto.SourceId,
+                    ButtonText = dto.ButtonText,
+                    CTAType = dto.CTAType,
+                    MessageId = dto.MessageId,
+                    TemplateId = dto.TemplateId,
+                    MessageLogId = dto.MessageLogId,
+                    ClickedVia = dto.ClickedVia ?? "web",
+                    Referrer = dto.Referrer,
+                    ClickedAt = dto.ClickedAt ?? DateTime.UtcNow,
+                    IPAddress = dto.IPAddress,
+                    DeviceType = dto.DeviceType,
+                    Browser = dto.Browser,
+                    Country = dto.Country,
+                    City = dto.City,
+                    FollowUpSent = false,
+                    LastInteractionType = "Clicked",
+                    SessionId = Guid.TryParse(dto.SessionId, out var sid) ? sid : (Guid?)null,
+                    ThreadId = Guid.TryParse(dto.ThreadId, out var tid) ? tid : (Guid?)null,
+                    CampaignId = dto.CampaignId,
+                    CampaignSendLogId = dto.CampaignSendLogId
+                };
+
+                await _context.TrackingLogs.AddAsync(trackingLog);
+                await _context.SaveChangesAsync();
+
+                // ✅ Return the TrackingLog.Id in the response
+                return ResponseResult.SuccessInfo("CTA click tracked successfully.", trackingLog.Id);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "❌ Exception during CTA tracking enrichment");
+                return ResponseResult.ErrorInfo("Exception during tracking: " + ex.Message);
+            }
+        }
+
+        public async Task LogCTAClickAsync(TrackingLogDto dto)
+        {
+            try
+            {
+                var log = new TrackingLog
+                {
+                    Id = Guid.NewGuid(),
+                    BusinessId = dto.BusinessId,
+                    ContactId = dto.ContactId,
+                    ContactPhone = dto.ContactPhone,
+                    SourceType = dto.SourceType,
+                    SourceId = dto.SourceId,
+                    ButtonText = dto.ButtonText,
+                    CTAType = dto.CTAType,
+                    MessageId = dto.MessageId,
+                    TemplateId = dto.TemplateId,
+                    MessageLogId = dto.MessageLogId,
+                    ClickedVia = dto.ClickedVia ?? "web",
+                    Referrer = dto.Referrer,
+                    ClickedAt = dto.ClickedAt ?? DateTime.UtcNow,
+                    IPAddress = dto.IPAddress,
+                    DeviceType = dto.DeviceType,
+                    Browser = dto.Browser,
+                    Country = dto.Country,
+                    City = dto.City,
+                    FollowUpSent = false,
+                    LastInteractionType = "Clicked",
+                    SessionId = Guid.TryParse(dto.SessionId, out var sid) ? sid : (Guid?)null,
+                    ThreadId = Guid.TryParse(dto.ThreadId, out var tid) ? tid : (Guid?)null,
+                    CampaignId = dto.CampaignId,
+                    CampaignSendLogId = dto.CampaignSendLogId
+                };
+
+                await _context.TrackingLogs.AddAsync(log);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "❌ Failed to log CTA click");
+            }
+        }
+        public async Task<TrackingLogDetailsDto?> GetLogDetailsAsync(Guid logId)
+        {
+            var tracking = await _context.TrackingLogs
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.Id == logId);
+
+            if (tracking == null)
+                return null;
+
+            var contact = tracking.ContactId != null
+                ? await _context.Contacts.AsNoTracking().FirstOrDefaultAsync(c => c.Id == tracking.ContactId)
+                : null;
+
+            var campaign = tracking.CampaignId != null
+                ? await _context.Campaigns.AsNoTracking().FirstOrDefaultAsync(c => c.Id == tracking.CampaignId)
+                : null;
+
+            var messageLog = tracking.MessageLogId != null
+                ? await _context.MessageLogs.AsNoTracking().FirstOrDefaultAsync(m => m.Id == tracking.MessageLogId)
+                : null;
+
+            return new TrackingLogDetailsDto
+            {
+                Tracking = _mapper.Map<TrackingLogDto>(tracking),
+                Contact = contact != null ? _mapper.Map<ContactDto>(contact) : null,
+                Campaign = campaign != null ? _mapper.Map<CampaignDto>(campaign) : null,
+                MessageLog = messageLog != null ? _mapper.Map<MessageLogDto>(messageLog) : null
+            };
+        }
+        public async Task<List<TrackingLog>> GetFlowClickLogsAsync(Guid businessId)
+        {
+            return await _context.TrackingLogs
+                .Where(x => x.BusinessId == businessId && x.SourceType == "cta-flow")
+                .OrderByDescending(x => x.ClickedAt)
+                .ToListAsync();
+        }
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Tracking\Services\TrackingToken.cs 
+====================================================== 
+ 
+﻿using System.Text.Json;
+using Microsoft.AspNetCore.WebUtilities;
+
+namespace xbytechat.api.Features.Tracking.Services
+{
+    public static class TrackingToken
+    {
+        public static string Create(object payload)
+        {
+            var json = JsonSerializer.Serialize(payload);
+            var bytes = System.Text.Encoding.UTF8.GetBytes(json);
+            return WebEncoders.Base64UrlEncode(bytes);
+        }
+
+        public static T Decode<T>(string token)
+        {
+            var bytes = WebEncoders.Base64UrlDecode(token);
+            var json = System.Text.Encoding.UTF8.GetString(bytes);
+            return JsonSerializer.Deserialize<T>(json)!;
+        }
+    }
+
+    // What we put inside the token:
+    public record ClickToken(Guid cid, int btnIndex, string btnTitle, string to, string phone);
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Tracking\Services\UrlBuilderService.cs 
+====================================================== 
+ 
+﻿// Features/Tracking/Services/UrlBuilderService.cs
+using System;
+using Microsoft.Extensions.Options;
+using xbytechat.api.Features.CampaignTracking.Config;
+using xbytechat.api.Features.CampaignTracking.Services;
+
+namespace xbytechat.api.Features.Tracking.Services
+{
+    public class UrlBuilderService : IUrlBuilderService
+    {
+        private readonly IClickTokenService _token;
+        private readonly TrackingOptions _opt;
+
+        // Allowed schemes for destination links
+        private static readonly string[] AllowedSchemes = new[] { "http", "https", "tel", "wa", "whatsapp" };
+
+        public UrlBuilderService(IClickTokenService token, IOptions<TrackingOptions> opt)
+        {
+            _token = token;
+            _opt = opt.Value;
+        }
+
+        /// <summary>
+        /// Normalizes destination and enforces an allowlist of schemes:
+        /// http, https, tel, wa, whatsapp.
+        /// Also supports shorthand WhatsApp hosts: wa.me/... and api.whatsapp.com/...
+        /// </summary>
+        private static string NormalizeAbsoluteUrlOrThrow(string input)
+        {
+            if (input is null) throw new ArgumentException("Destination URL is null.", nameof(input));
+
+            // Trim and remove any non-printable/control whitespace characters
+            var s = input.Trim();
+            s = new string(Array.FindAll(s.ToCharArray(), c => !char.IsControl(c)));
+
+            if (s.Length == 0)
+                throw new ArgumentException("Destination URL is empty after trimming.", nameof(input));
+
+            // Short-circuit for already tracked links, just in case this ever gets called that way
+            if (s.Contains("/r/", StringComparison.Ordinal))
+                return s;
+
+            // Support common WhatsApp shorthands without scheme
+            // e.g. "wa.me/9170..." or "api.whatsapp.com/send?phone=..."
+            if (!s.Contains("://", StringComparison.Ordinal))
+            {
+                if (s.StartsWith("wa.me/", StringComparison.OrdinalIgnoreCase) ||
+                    s.StartsWith("api.whatsapp.com/", StringComparison.OrdinalIgnoreCase))
+                {
+                    var guessWa = "https://" + s;
+                    if (Uri.TryCreate(guessWa, UriKind.Absolute, out var waAbs))
+                        return waAbs.AbsoluteUri;
+                }
+            }
+
+            // Accept absolute URIs with allowed schemes
+            if (Uri.TryCreate(s, UriKind.Absolute, out var abs))
+            {
+                var scheme = abs.Scheme ?? string.Empty;
+
+                // Allow only whitelisted schemes
+                var isAllowed = false;
+                for (int i = 0; i < AllowedSchemes.Length; i++)
+                {
+                    if (scheme.Equals(AllowedSchemes[i], StringComparison.OrdinalIgnoreCase))
+                    {
+                        isAllowed = true;
+                        break;
+                    }
+                }
+
+                if (!isAllowed)
+                    throw new ArgumentException(
+                        $"Destination must use one of: http, https, tel, wa, whatsapp. Got '{scheme}:'",
+                        nameof(input));
+
+                // http/https → return canonical AbsoluteUri
+                if (scheme.Equals(Uri.UriSchemeHttp, StringComparison.OrdinalIgnoreCase) ||
+                    scheme.Equals(Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase))
+                {
+                    return abs.AbsoluteUri;
+                }
+
+                // tel:/wa:/whatsapp://send → return as provided (trimmed), do not modify
+                return s;
+            }
+
+            // Human input like "www.example.com/..." or "example.com/..."
+            if (!s.Contains("://", StringComparison.Ordinal) && s.Contains('.', StringComparison.Ordinal))
+            {
+                var guess = "https://" + s;
+                if (Uri.TryCreate(guess, UriKind.Absolute, out var httpAbs))
+                    return httpAbs.AbsoluteUri;
+            }
+
+            throw new ArgumentException(
+                $"Destination must be an absolute URL or allowed deep link (http, https, tel, wa, whatsapp). Got: '{input}'",
+                nameof(input));
+        }
+
+        public string BuildTrackedButtonUrl(
+            Guid campaignSendLogId,
+            int buttonIndex,
+            string? buttonTitle,
+            string destinationUrlAbsolute)
+        {
+            var dest = NormalizeAbsoluteUrlOrThrow(destinationUrlAbsolute);
+
+            var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            var exp = now + (long)_opt.TokenTtl.TotalSeconds;
+
+            var payload = new ClickTokenPayload(
+                cid: campaignSendLogId,
+                bi: buttonIndex,
+                bt: buttonTitle ?? string.Empty,
+                to: dest,
+                iat: now,
+                exp: exp
+            );
+
+            var token = _token.Create(payload);
+            return $"{_opt.BaseUrl.TrimEnd('/')}/r/{token}";
+        }
+    }
+}
+
+
+ 
+ 

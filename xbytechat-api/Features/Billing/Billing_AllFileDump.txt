@@ -1,0 +1,631 @@
+Folder and File Content Report
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Billing\Billing_AllFileDump.txt 
+====================================================== 
+ 
+Folder and File Content Report
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Billing\Billing_AllFileDump.txt 
+====================================================== 
+ 
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Billing\ExtrackAllFiles.bat 
+====================================================== 
+ 
+@echo off
+REM This script will find all files and output their name and content into one file.
+REM The output file will be named [FolderName]_AllFileDump.txt.
+
+REM Get the current folder's name and set it as the output file name with the custom suffix
+for %%I in ("%cd%") do set "outputFile=%%~nI_AllFileDump.txt"
+
+REM Clear the output file to start fresh
+> "%outputFile%" (echo Folder and File Content Report)
+echo. >> "%outputFile%"
+
+REM Loop through all files in the current directory and subdirectories
+for /R . %%F in (*.*) do (
+    echo ====================================================== >> "%outputFile%"
+    echo FILE: %%F >> "%outputFile%"
+    echo ====================================================== >> "%outputFile%"
+    echo. >> "%outputFile%"
+    type "%%F" >> "%outputFile%" 2>nul
+    echo. >> "%outputFile%"
+    echo. >> "%outputFile%"
+)
+
+echo Finished! All content has been extracted to %outputFile% 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Billing\Controllers\WhatsAppMetaWebhookController.cs 
+====================================================== 
+ 
+﻿using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using xbytechat_api.Features.Billing.Services;
+
+namespace xbytechat_api.Features.Billing.Controllers
+{
+    [ApiController]
+    [Route("api/webhooks/whatsapp/meta")]
+    public class WhatsAppMetaWebhookController : ControllerBase
+    {
+        private readonly ILogger<WhatsAppMetaWebhookController> _log;
+        private readonly IBillingIngestService _ingest;
+        private readonly IConfiguration _config;
+        public WhatsAppMetaWebhookController(ILogger<WhatsAppMetaWebhookController> log, IBillingIngestService ingest, IConfiguration config)
+        {
+            _log = log;
+            _ingest = ingest;
+            _config = config;
+        }
+
+        // Meta verification handshake
+        // GET /api/webhooks/whatsapp/meta?hub.mode=subscribe&hub.challenge=...&hub.verify_token=...&businessId=...
+        [HttpGet]
+        public IActionResult Verify([FromQuery(Name = "hub.mode")] string mode,
+                                    [FromQuery(Name = "hub.challenge")] string challenge,
+                                    [FromQuery(Name = "hub.verify_token")] string verifyToken,
+                                    [FromQuery] Guid? businessId = null)
+        {
+            var expected = _config["WhatsApp:MetaVerifyToken"]; // optional; if empty we accept
+            if (!string.IsNullOrWhiteSpace(expected) && !string.Equals(expected, verifyToken))
+            {
+                _log.LogWarning("Meta webhook verify failed. Provided token does not match.");
+                return Unauthorized();
+            }
+            _log.LogInformation("Meta webhook verified. BusinessId={BusinessId}", businessId);
+            return Content(challenge ?? string.Empty, "text/plain");
+        }
+
+        // POST /api/webhooks/whatsapp/meta?businessId=...
+        [HttpPost]
+        public async Task<IActionResult> Post([FromQuery] Guid businessId)
+        {
+            using var reader = new StreamReader(Request.Body);
+            var payload = await reader.ReadToEndAsync();
+
+            _log.LogInformation("Meta webhook payload ({Len} chars) for Biz {Biz}", payload?.Length ?? 0, businessId);
+            await _ingest.IngestFromWebhookAsync(businessId, "META_CLOUD", payload);
+
+            return Ok();
+        }
+
+        // If you need GET verification for Meta webhook, add it here.
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Billing\Controllers\WhatsAppPinnacleWebhookController.cs 
+====================================================== 
+ 
+﻿using System;
+using System.IO;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using xbytechat_api.Features.Billing.Services;
+
+namespace xbytechat_api.Features.Billing.Controllers
+{
+    [ApiController]
+    [Route("api/webhooks/whatsapp/pinnacle")]
+    public class WhatsAppPinnacleWebhookController : ControllerBase
+    {
+        private readonly ILogger<WhatsAppPinnacleWebhookController> _log;
+        private readonly IBillingIngestService _ingest;
+
+        public WhatsAppPinnacleWebhookController(
+            ILogger<WhatsAppPinnacleWebhookController> log,
+            IBillingIngestService ingest)
+        {
+            _log = log;
+            _ingest = ingest;
+        }
+
+        // POST /api/webhooks/whatsapp/pinnacle?businessId=...
+        [HttpPost]
+        public async Task<IActionResult> Post([FromQuery] Guid businessId)
+        {
+            using var reader = new StreamReader(Request.Body);
+            var payload = await reader.ReadToEndAsync();
+
+            _log.LogInformation("Pinnacle webhook payload ({Len} chars) for Biz {Biz}", payload?.Length ?? 0, businessId);
+            await _ingest.IngestFromWebhookAsync(businessId, "PINNACLE", payload);
+
+            return Ok();
+        }
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Billing\DTOs\BillingSnapshotDto.cs 
+====================================================== 
+ 
+﻿using System.Collections.Generic;
+
+namespace xbytechat_api.Features.Billing.DTOs
+{
+    public class BillingSnapshotDto
+    {
+        public int TotalMessages { get; set; }
+        public int ChargeableMessages { get; set; }
+        public int FreeMessages { get; set; }
+        public Dictionary<string, int> CountByCategory { get; set; } = new();    // marketing, utility, authentication, service, free_entry
+        public Dictionary<string, decimal> SpendByCurrency { get; set; } = new();// "USD" => 12.34, "INR" => 250.00
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Billing\Models\ProviderBillingEvent.cs 
+====================================================== 
+ 
+﻿using System;
+
+namespace xbytechat_api.Features.Billing.Models
+{
+    public class ProviderBillingEvent
+    {
+        public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid BusinessId { get; set; }
+
+        // Link if we can; may be null if webhook arrives before we create MessageLog
+        public Guid? MessageLogId { get; set; }
+
+        public string Provider { get; set; } = "";          // "Meta_cloud", "Pinnacle"
+        public string EventType { get; set; } = "";         // "conversation_started", "message_delivered", "pricing_update", etc.
+
+        public string? ProviderMessageId { get; set; }      // "wamid..."
+        public string? ConversationId { get; set; }
+        public string? ConversationCategory { get; set; }
+        public bool? IsChargeable { get; set; }
+        public decimal? PriceAmount { get; set; }
+        public string? PriceCurrency { get; set; }
+
+        public string PayloadJson { get; set; } = "";       // original provider payload for audit
+        public DateTimeOffset OccurredAt { get; set; }      // when provider says it happened
+        public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Billing\Services\BillingIngestService.cs 
+====================================================== 
+ 
+﻿using System;
+using System.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using xbytechat.api; // AppDbContext
+using xbytechat_api.Features.Billing.Models;
+
+namespace xbytechat_api.Features.Billing.Services
+{
+    public class BillingIngestService : IBillingIngestService
+    {
+        private readonly AppDbContext _db;
+        private readonly ILogger<BillingIngestService> _log;
+
+        public BillingIngestService(AppDbContext db, ILogger<BillingIngestService> log)
+        {
+            _db = db;
+            _log = log;
+        }
+
+        public async Task IngestFromSendResponseAsync(Guid businessId, Guid messageLogId, string provider, string rawResponseJson)
+        {
+            // Meta send usually returns only message ID; pricing lands via webhook.
+            // We still extract ProviderMessageId early to link later webhook updates.
+            try
+            {
+                using var doc = JsonDocument.Parse(rawResponseJson);
+                string? providerMessageId =
+                    doc.RootElement.TryGetProperty("messages", out var msgs) && msgs.ValueKind == JsonValueKind.Array && msgs.GetArrayLength() > 0
+                        ? msgs[0].TryGetProperty("id", out var idEl) ? idEl.GetString() : null
+                    : doc.RootElement.TryGetProperty("id", out var idEl2) ? idEl2.GetString()
+                    : null;
+
+                var logRow = await _db.MessageLogs.FirstOrDefaultAsync(x => x.Id == messageLogId && x.BusinessId == businessId);
+                if (logRow != null)
+                {
+                    logRow.Provider = provider;
+                    if (!string.IsNullOrWhiteSpace(providerMessageId))
+                        logRow.ProviderMessageId = providerMessageId;
+                }
+
+                // Store audit event
+                var ev = new ProviderBillingEvent
+                {
+                    BusinessId = businessId,
+                    MessageLogId = messageLogId,
+                    Provider = provider,
+                    EventType = "send_response",
+                    ProviderMessageId = providerMessageId,
+                    PayloadJson = rawResponseJson,
+                    OccurredAt = DateTimeOffset.UtcNow
+                };
+                _db.ProviderBillingEvents.Add(ev);
+
+                await _db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _log.LogWarning(ex, "Failed to ingest send response payload for business {biz}", businessId);
+            }
+        }
+
+        public async Task IngestFromWebhookAsync(Guid businessId, string provider, string payloadJson)
+        {
+            try
+            {
+                using var doc = JsonDocument.Parse(payloadJson);
+                var now = DateTimeOffset.UtcNow;
+
+                if (string.Equals(provider, "META_CLOUD", StringComparison.OrdinalIgnoreCase))
+                {
+                    // Typical Meta structure:
+                    // entry[].changes[].value.statuses[] with:
+                    //  - id (wamid)
+                    //  - pricing { billable, category, amount, currency }
+                    //  - conversation { id, expiration_timestamp }
+                    foreach (var entry in Enumerate(doc.RootElement, "entry"))
+                    {
+                        foreach (var change in Enumerate(entry, "changes"))
+                        {
+                            if (!change.TryGetProperty("value", out var value)) continue;
+
+                            foreach (var st in Enumerate(value, "statuses"))
+                            {
+                                string? providerMessageId = st.TryGetProperty("id", out var idEl) ? idEl.GetString() : null;
+
+                                string? category = st.TryGetProperty("pricing", out var pEl) && pEl.ValueKind == JsonValueKind.Object
+                                    ? pEl.TryGetProperty("category", out var catEl) ? catEl.GetString()?.ToLowerInvariant() : null
+                                    : null;
+
+                                bool? billable = st.TryGetProperty("pricing", out var pEl2) && pEl2.ValueKind == JsonValueKind.Object
+                                    ? pEl2.TryGetProperty("billable", out var bilEl) && (bilEl.ValueKind == JsonValueKind.True || bilEl.ValueKind == JsonValueKind.False)
+                                        ? bilEl.GetBoolean() : (bool?)null
+                                    : (bool?)null;
+
+                                decimal? amount = null;
+                                string? currency = null;
+                                if (st.TryGetProperty("pricing", out var pEl3) && pEl3.ValueKind == JsonValueKind.Object)
+                                {
+                                    if (pEl3.TryGetProperty("amount", out var amtEl) && amtEl.ValueKind == JsonValueKind.Number)
+                                        amount = amtEl.GetDecimal();
+                                    if (pEl3.TryGetProperty("currency", out var curEl))
+                                        currency = curEl.GetString();
+                                }
+
+                                string? conversationId = null;
+                                DateTimeOffset? convStartedAt = null;
+                                if (st.TryGetProperty("conversation", out var convEl) && convEl.ValueKind == JsonValueKind.Object)
+                                {
+                                    if (convEl.TryGetProperty("id", out var cidEl))
+                                        conversationId = cidEl.GetString();
+
+                                    // expiration_timestamp is seconds; start time not directly given.
+                                    if (convEl.TryGetProperty("expiration_timestamp", out var expEl) && expEl.ValueKind == JsonValueKind.Number)
+                                    {
+                                        var exp = DateTimeOffset.FromUnixTimeSeconds(expEl.GetInt64());
+                                        convStartedAt = exp.AddHours(-24);
+                                    }
+                                }
+
+                                // Audit event
+                                var ev = new ProviderBillingEvent
+                                {
+                                    BusinessId = businessId,
+                                    Provider = provider,
+                                    EventType = "pricing_update",
+                                    ProviderMessageId = providerMessageId,
+                                    ConversationId = conversationId,
+                                    ConversationCategory = category,
+                                    IsChargeable = billable,
+                                    PriceAmount = amount,
+                                    PriceCurrency = currency,
+                                    PayloadJson = payloadJson,
+                                    OccurredAt = now
+                                };
+                                _db.ProviderBillingEvents.Add(ev);
+
+                                // Update MessageLog when possible
+                                var logRow = await FindMatchingMessageLog(businessId, providerMessageId, conversationId);
+                                if (logRow != null)
+                                {
+                                    logRow.Provider = provider;
+                                    if (!string.IsNullOrWhiteSpace(providerMessageId))
+                                        logRow.ProviderMessageId = providerMessageId;
+                                    if (billable.HasValue) logRow.IsChargeable = billable.Value;
+                                    if (!string.IsNullOrWhiteSpace(category)) logRow.ConversationCategory = category;
+                                    if (!string.IsNullOrWhiteSpace(conversationId)) logRow.ConversationId = conversationId;
+                                    if (amount.HasValue) logRow.PriceAmount = amount;
+                                    if (!string.IsNullOrWhiteSpace(currency)) logRow.PriceCurrency = currency;
+                                    if (convStartedAt.HasValue) logRow.ConversationStartedAt = convStartedAt;
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (string.Equals(provider, "PINNACLE", StringComparison.OrdinalIgnoreCase))
+                {
+                    // Pinnacle payloads vary, but often include "message_id", "conversation" with id/category and "pricing".
+                    // We'll scan the whole tree for any "pricing" objects, and attempt nearby fields for message id and conversation.
+                    foreach (var pricing in JsonPathAll(doc.RootElement, "pricing"))
+                    {
+                        string? category = pricing.TryGetProperty("category", out var catEl) ? catEl.GetString()?.ToLowerInvariant() : null;
+                        bool? billable = pricing.TryGetProperty("billable", out var bilEl) && (bilEl.ValueKind == JsonValueKind.True || bilEl.ValueKind == JsonValueKind.False)
+                            ? bilEl.GetBoolean() : (bool?)null;
+
+                        decimal? amount = null;
+                        if (pricing.TryGetProperty("amount", out var amtEl) && amtEl.ValueKind == JsonValueKind.Number)
+                            amount = amtEl.GetDecimal();
+                        string? currency = pricing.TryGetProperty("currency", out var curEl) ? curEl.GetString() : null;
+
+                        // Heuristics to pick neighbors in same object
+                        var parent = TryGetParentObject(doc.RootElement, pricing);
+                        string? providerMessageId = TryGetString(parent, "id")
+                                                 ?? TryGetString(parent, "message_id")
+                                                 ?? TryGetString(parent, "wamid");
+                        string? conversationId = TryGetString(parent, "conversation_id")
+                                               ?? TryGetNestedString(parent, "conversation", "id");
+
+                        var ev = new ProviderBillingEvent
+                        {
+                            BusinessId = businessId,
+                            Provider = provider,
+                            EventType = "pricing_update",
+                            ProviderMessageId = providerMessageId,
+                            ConversationId = conversationId,
+                            ConversationCategory = category,
+                            IsChargeable = billable,
+                            PriceAmount = amount,
+                            PriceCurrency = currency,
+                            PayloadJson = payloadJson,
+                            OccurredAt = now
+                        };
+                        _db.ProviderBillingEvents.Add(ev);
+
+                        var logRow = await FindMatchingMessageLog(businessId, providerMessageId, conversationId);
+                        if (logRow != null)
+                        {
+                            logRow.Provider = provider;
+                            if (!string.IsNullOrWhiteSpace(providerMessageId))
+                                logRow.ProviderMessageId = providerMessageId;
+                            if (billable.HasValue) logRow.IsChargeable = billable.Value;
+                            if (!string.IsNullOrWhiteSpace(category)) logRow.ConversationCategory = category;
+                            if (!string.IsNullOrWhiteSpace(conversationId)) logRow.ConversationId = conversationId;
+                            if (amount.HasValue) logRow.PriceAmount = amount;
+                            if (!string.IsNullOrWhiteSpace(currency)) logRow.PriceCurrency = currency;
+                        }
+                    }
+                }
+                else
+                {
+                    // Unknown provider; still store the raw event for audit
+                    _db.ProviderBillingEvents.Add(new ProviderBillingEvent
+                    {
+                        BusinessId = businessId,
+                        Provider = provider,
+                        EventType = "unknown_provider_webhook",
+                        PayloadJson = payloadJson,
+                        OccurredAt = now
+                    });
+                }
+
+                await _db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _log.LogWarning(ex, "Failed to ingest webhook payload for business {biz}", businessId);
+            }
+        }
+
+        // -------- helpers --------
+        private async Task<MessageLog?> FindMatchingMessageLog(Guid businessId, string? providerMessageId, string? conversationId)
+        {
+            if (!string.IsNullOrWhiteSpace(providerMessageId))
+            {
+                var byMsgId = await _db.MessageLogs
+                    .OrderByDescending(x => x.CreatedAt)
+                    .FirstOrDefaultAsync(x => x.BusinessId == businessId && x.ProviderMessageId == providerMessageId);
+                if (byMsgId != null) return byMsgId;
+            }
+
+            if (!string.IsNullOrWhiteSpace(conversationId))
+            {
+                var byConv = await _db.MessageLogs
+                    .OrderByDescending(x => x.CreatedAt)
+                    .FirstOrDefaultAsync(x => x.BusinessId == businessId && x.ConversationId == conversationId);
+                if (byConv != null) return byConv;
+            }
+
+            return null;
+        }
+
+        // Enumerate array property safely
+        private static IEnumerable<JsonElement> Enumerate(JsonElement root, string name)
+        {
+            if (root.ValueKind != JsonValueKind.Object) yield break;
+            if (!root.TryGetProperty(name, out var arr) || arr.ValueKind != JsonValueKind.Array) yield break;
+            foreach (var x in arr.EnumerateArray()) yield return x;
+        }
+
+        // Breadth search for any property named `name` (unique name to avoid ambiguity)
+        private static IEnumerable<JsonElement> JsonPathAll(JsonElement root, string name)
+        {
+            if (root.ValueKind == JsonValueKind.Object)
+            {
+                foreach (var p in root.EnumerateObject())
+                {
+                    if (string.Equals(p.Name, name, StringComparison.OrdinalIgnoreCase))
+                        yield return p.Value;
+
+                    foreach (var x in JsonPathAll(p.Value, name))
+                        yield return x;
+                }
+            }
+            else if (root.ValueKind == JsonValueKind.Array)
+            {
+                foreach (var item in root.EnumerateArray())
+                    foreach (var x in JsonPathAll(item, name))
+                        yield return x;
+            }
+        }
+
+        // Very lightweight "parent" guess: look for an object in ancestry that contains the node reference (best-effort)
+        private static JsonElement? TryGetParentObject(JsonElement root, JsonElement node)
+        {
+            // System.Text.Json doesn't expose parents. We accept best-effort by scanning objects containing 'pricing'
+            if (root.ValueKind == JsonValueKind.Object)
+            {
+                foreach (var p in root.EnumerateObject())
+                {
+                    if (p.Value.ValueKind == JsonValueKind.Object)
+                    {
+                        if (object.ReferenceEquals(p.Value, node)) return root;
+                        var cand = TryGetParentObject(p.Value, node);
+                        if (cand.HasValue) return cand;
+                    }
+                    else if (p.Value.ValueKind == JsonValueKind.Array)
+                    {
+                        foreach (var e in p.Value.EnumerateArray())
+                        {
+                            if (object.ReferenceEquals(e, node)) return root;
+                            var cand = TryGetParentObject(e, node);
+                            if (cand.HasValue) return cand;
+                        }
+                    }
+                }
+            }
+            else if (root.ValueKind == JsonValueKind.Array)
+            {
+                foreach (var e in root.EnumerateArray())
+                {
+                    var cand = TryGetParentObject(e, node);
+                    if (cand.HasValue) return cand;
+                }
+            }
+            return null;
+        }
+
+        private static string? TryGetString(JsonElement? obj, string name)
+        {
+            if (!obj.HasValue || obj.Value.ValueKind != JsonValueKind.Object) return null;
+            return obj.Value.TryGetProperty(name, out var el) ? el.GetString() : null;
+        }
+
+        private static string? TryGetNestedString(JsonElement? obj, string name1, string name2)
+        {
+            if (!obj.HasValue || obj.Value.ValueKind != JsonValueKind.Object) return null;
+            if (!obj.Value.TryGetProperty(name1, out var inner) || inner.ValueKind != JsonValueKind.Object) return null;
+            return inner.TryGetProperty(name2, out var v) ? v.GetString() : null;
+        }
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Billing\Services\BillingReadService.cs 
+====================================================== 
+ 
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using xbytechat.api;
+using xbytechat_api.Features.Billing.DTOs;
+
+namespace xbytechat_api.Features.Billing.Services
+{
+    public class BillingReadService : IBillingReadService
+    {
+        private readonly AppDbContext _db;
+        public BillingReadService(AppDbContext db) => _db = db;
+
+        public async Task<BillingSnapshotDto> GetBusinessBillingSnapshotAsync(Guid businessId, DateOnly from, DateOnly to)
+        {
+            var fromDt = from.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
+            var toDt = to.ToDateTime(TimeOnly.MaxValue, DateTimeKind.Utc);
+
+            var q = _db.MessageLogs.AsNoTracking()
+                    .Where(x => x.BusinessId == businessId && x.CreatedAt >= fromDt && x.CreatedAt <= toDt);
+
+            var list = await q.Select(x => new {
+                x.IsChargeable,
+                x.ConversationCategory,
+                x.PriceAmount,
+                x.PriceCurrency
+            }).ToListAsync();
+
+            var dto = new BillingSnapshotDto
+            {
+                TotalMessages = list.Count,
+                ChargeableMessages = list.Count(x => x.IsChargeable == true),
+                FreeMessages = list.Count(x => x.IsChargeable == false)
+            };
+
+            dto.CountByCategory = list
+                .GroupBy(x => string.IsNullOrWhiteSpace(x.ConversationCategory) ? "unknown" : x.ConversationCategory!.ToLowerInvariant())
+                .ToDictionary(g => g.Key, g => g.Count());
+
+            dto.SpendByCurrency = list
+                .Where(x => x.PriceAmount.HasValue && !string.IsNullOrWhiteSpace(x.PriceCurrency))
+                .GroupBy(x => x.PriceCurrency!)
+                .ToDictionary(g => g.Key, g => g.Sum(v => v.PriceAmount!.Value));
+
+            return dto;
+        }
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Billing\Services\IBillingIngestService.cs 
+====================================================== 
+ 
+﻿using System;
+using System.Threading.Tasks;
+using xbytechat_api.Features.Billing.DTOs;
+
+namespace xbytechat_api.Features.Billing.Services
+{
+    public interface IBillingIngestService
+    {
+        Task IngestFromSendResponseAsync(Guid businessId, Guid messageLogId, string provider, string rawResponseJson);
+        Task IngestFromWebhookAsync(Guid businessId, string provider, string payloadJson);
+        
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\Billing\Services\IBillingReadService.cs 
+====================================================== 
+ 
+﻿using System;
+using System.Threading.Tasks;
+using xbytechat_api.Features.Billing.DTOs;
+
+namespace xbytechat_api.Features.Billing.Services
+{
+    public interface IBillingReadService
+    {
+        Task<BillingSnapshotDto> GetBusinessBillingSnapshotAsync(Guid businessId, DateOnly from, DateOnly to);
+    }
+}
+ 
+ 

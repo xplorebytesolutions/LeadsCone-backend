@@ -1,0 +1,4446 @@
+Folder and File Content Report
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\ExtrackAllFiles.bat 
+====================================================== 
+ 
+@echo off
+REM This script will find all files and output their name and content into one file.
+REM The output file will be named [FolderName]_AllFileDump.txt.
+
+REM Get the current folder's name and set it as the output file name with the custom suffix
+for %%I in ("%cd%") do set "outputFile=%%~nI_AllFileDump.txt"
+
+REM Clear the output file to start fresh
+> "%outputFile%" (echo Folder and File Content Report)
+echo. >> "%outputFile%"
+
+REM Loop through all files in the current directory and subdirectories
+for /R . %%F in (*.*) do (
+    echo ====================================================== >> "%outputFile%"
+    echo FILE: %%F >> "%outputFile%"
+    echo ====================================================== >> "%outputFile%"
+    echo. >> "%outputFile%"
+    type "%%F" >> "%outputFile%" 2>nul
+    echo. >> "%outputFile%"
+    echo. >> "%outputFile%"
+)
+
+echo Finished! All content has been extracted to %outputFile% 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\MessagesEngine_AllFileDump.txt 
+====================================================== 
+ 
+Folder and File Content Report
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\ExtrackAllFiles.bat 
+====================================================== 
+ 
+@echo off
+REM This script will find all files and output their name and content into one file.
+REM The output file will be named [FolderName]_AllFileDump.txt.
+
+REM Get the current folder's name and set it as the output file name with the custom suffix
+for %%I in ("%cd%") do set "outputFile=%%~nI_AllFileDump.txt"
+
+REM Clear the output file to start fresh
+> "%outputFile%" (echo Folder and File Content Report)
+echo. >> "%outputFile%"
+
+REM Loop through all files in the current directory and subdirectories
+for /R . %%F in (*.*) do (
+    echo ====================================================== >> "%outputFile%"
+    echo FILE: %%F >> "%outputFile%"
+    echo ====================================================== >> "%outputFile%"
+    echo. >> "%outputFile%"
+    type "%%F" >> "%outputFile%" 2>nul
+    echo. >> "%outputFile%"
+    echo. >> "%outputFile%"
+)
+
+echo Finished! All content has been extracted to %outputFile% 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\MessagesEngine_AllFileDump.txt 
+====================================================== 
+ 
+Folder and File Content Report
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\Abstractions\IWhatsAppProvider.cs 
+====================================================== 
+ 
+﻿// 📄 File: Features/MessagesEngine/Abstractions/IWhatsAppProvider.cs
+using System.Threading.Tasks;
+using System.Collections.Generic;
+
+namespace xbytechat.api.Features.MessagesEngine.Abstractions
+{
+   
+    public interface IWhatsAppProvider
+    {
+        Task<WaSendResult> SendTextAsync(string to, string body);
+        Task<WaSendResult> SendTemplateAsync(string to, string templateName, string languageCode, IEnumerable<object> components);
+        Task<WaSendResult> SendInteractiveAsync(object fullPayload); // prebuilt object (e.g., image + CTA)
+    }
+}
+
+
+
+//namespace xbytechat.api.Features.MessagesEngine.Abstractions
+//{
+//    public interface IWhatsAppProvider
+//    {
+//        string Provider { get; }
+
+//        Task<WaSendResult> SendTextAsync(string to, string body, CancellationToken ct = default);
+
+//        Task<WaSendResult> SendTemplateAsync(string to, string templateName, string language, object? components, CancellationToken ct = default);
+
+//        // Optional: interactive/image+CTA
+//        Task<WaSendResult> SendInteractiveAsync(object payload, CancellationToken ct = default);
+//    }
+//}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\Abstractions\WaSendResult.cs 
+====================================================== 
+ 
+﻿using System.Net;
+
+namespace xbytechat.api.Features.MessagesEngine.Abstractions
+{
+    public record WaSendResult(
+        bool Success,
+        string Provider,
+        string? ProviderMessageId = null,
+        HttpStatusCode? StatusCode = null,
+        string? RawResponse = null,
+        string? Error = null
+    );
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\Abstractions\WaSendTemplate.cs 
+====================================================== 
+ 
+﻿using System;
+
+namespace xbytechat.api.Features.MessagesEngine.Abstractions
+{
+    public class WaSendTemplate
+    {
+        public Guid BusinessId { get; init; }
+        public string To { get; init; } = "";
+        public string TemplateName { get; init; } = "";
+        public string Language { get; init; } = "en_US";
+        public object? Components { get; init; }
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\Abstractions\WaSendText.cs 
+====================================================== 
+ 
+﻿using System;
+
+namespace xbytechat.api.Features.MessagesEngine.Abstractions
+{
+    public class WaSendText
+    {
+        public Guid BusinessId { get; init; }
+        public string To { get; init; } = "";
+        public string Body { get; init; } = "";
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\Contracts\MessageEnvelope.cs 
+====================================================== 
+ 
+﻿using System.Collections.Generic;
+
+namespace xbytechat.api.Features.MessagesEngine.Contracts
+{
+    /// <summary>
+    /// Provider-agnostic message envelope. Maps to Meta/Pinbot under the hood.
+    /// </summary>
+    public sealed record MessageEnvelope(
+        string To,
+        string Kind,                       // "text" | "template" | "interactive"
+        string? TemplateName = null,
+        string LanguageCode = "en_US",
+        List<object>? Components = null,    // template components
+        object? Interactive = null,         // interactive payload (if any)
+        string? TextBody = null,
+        string? ImageUrl = null
+    );
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\Controllers\MessageEngineController.cs 
+====================================================== 
+ 
+﻿
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using System.Text.Json;
+using xbytechat.api.DTOs.Messages;
+using xbytechat.api.Features.MessagesEngine.DTOs;
+using xbytechat.api.Features.MessagesEngine.Services;
+using xbytechat.api.Features.ReportingModule.Services;
+using xbytechat.api.Helpers;
+using xbytechat.api.Shared;
+
+namespace xbytechat.api.Features.MessagesEngine.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    [Authorize]
+    public class MessageEngineController : ControllerBase
+    {
+        private readonly IMessageEngineService _messageEngineService;
+        private readonly IMessageAnalyticsService _messageAnalyticsServiceervice;
+
+
+        public MessageEngineController(IMessageEngineService messageService, IMessageAnalyticsService messageAnalyticsService)
+        {
+            _messageEngineService = messageService;
+            _messageAnalyticsServiceervice = messageAnalyticsService;
+        }
+        //[HttpPost("send-contentfree-text")]
+        //public async Task<IActionResult> SendTextMessage([FromBody] TextMessageSendDto dto)
+        //{
+        //    if (!ModelState.IsValid)
+        //        return BadRequest(ResponseResult.ErrorInfo("❌ Invalid text message payload."));
+
+        //    try
+        //    {
+        //        var result = await _messageEngineService.SendTextDirectAsync(dto); // 👈 New direct method
+
+        //        return result.Success
+        //            ? Ok(result)
+        //            : BadRequest(ResponseResult.ErrorInfo(result.Message, result.RawResponse));
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($"❌ Exception while sending text message: {ex.Message}");
+        //        return StatusCode(500, ResponseResult.ErrorInfo("🚨 Server error while sending text message.", ex.ToString()));
+        //    }
+        //}
+        [HttpPost("send-contentfree-text")]
+        public async Task<IActionResult> SendTextMessage([FromBody] TextMessageSendDto dto)
+        {
+            // 0) Null/body guard
+            if (dto is null)
+                return BadRequest(ResponseResult.ErrorInfo(
+                    "❌ Invalid request body.",
+                    "Request JSON was null or malformed."));
+
+            // 1) Minimal required-field validation (provider is optional here)
+            var missing = new List<string>();
+            if (string.IsNullOrWhiteSpace(dto.RecipientNumber)) missing.Add("recipientNumber");
+            if (string.IsNullOrWhiteSpace(dto.TextContent)) missing.Add("textContent");
+
+            if (missing.Count > 0)
+            {
+                return BadRequest(ResponseResult.ErrorInfo(
+                    "❌ Invalid text message payload.",
+                    $"Missing/empty: {string.Join(", ", missing)}"
+                ));
+            }
+
+            // 2) Diagnostics while debugging
+            Console.WriteLine($"[SendTextMessage] Incoming: {JsonSerializer.Serialize(dto)}");
+            Console.WriteLine($"[SendTextMessage] provider(raw)='{dto.Provider}' phoneNumberId(raw)='{dto.PhoneNumberId}'");
+
+            try
+            {
+                // 3) Delegate to service (service will resolve provider if missing)
+                var result = await _messageEngineService.SendTextDirectAsync(dto);
+
+                // 4) Return exactly what service produced
+                return result.Success ? Ok(result) : BadRequest(result);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Exception while sending text message: {ex}");
+                return StatusCode(500, ResponseResult.ErrorInfo(
+                    "🚨 Server error while sending text message.", ex.ToString()));
+            }
+        }
+        [HttpPost("send-template-simple")]
+        public async Task<IActionResult> SendTemplateMessageSimple([FromBody] SimpleTemplateMessageDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ResponseResult.ErrorInfo("❌ Invalid template message request."));
+
+            try
+            {
+                var businessIdClaim = User.FindFirst("businessId")?.Value;
+                if (!Guid.TryParse(businessIdClaim, out Guid businessId))
+                    return Unauthorized(ResponseResult.ErrorInfo("❌ Business ID not found in token."));
+
+                var result = await _messageEngineService.SendTemplateMessageSimpleAsync(businessId, dto);
+
+                return result.Success
+                    ? Ok(result)
+                    : BadRequest(ResponseResult.ErrorInfo(result.Message ?? "❌ Failed to send template.", result.RawResponse));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Exception while sending template: {ex.Message}");
+                return StatusCode(500, ResponseResult.ErrorInfo("🚨 Server error while sending template.", ex.ToString()));
+            }
+        }
+
+
+        [HttpPost("send-image-campaign/{campaignId}")]
+        public async Task<IActionResult> SendImageCampaign(Guid campaignId)
+        {
+            try
+            {
+                var businessId = UserClaimHelper.GetBusinessId(User); // ✅ from
+                                                                      // claims
+                var userName = UserClaimHelper.GetUserName(User);     // for logging (if needed)
+
+                var result = await _messageEngineService.SendImageCampaignAsync(campaignId, businessId, userName);
+
+                return result.Success
+                    ? Ok(result)
+                    : BadRequest(result);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("❌ Error while sending image campaign: " + ex.Message);
+                return StatusCode(500, ResponseResult.ErrorInfo("Server error while sending campaign.", ex.ToString()));
+            }
+        }
+        public static class UserClaimHelper
+        {
+            public static Guid GetBusinessId(ClaimsPrincipal user)
+            {
+                var claim = user.Claims.FirstOrDefault(c => c.Type == "businessId");
+                return claim != null ? Guid.Parse(claim.Value) : Guid.Empty;
+            }
+
+            public static string GetUserName(ClaimsPrincipal user)
+            {
+                return user?.Identity?.Name ?? "Unknown";
+            }
+        }
+
+        [HttpPost("send-image-template")]
+        public async Task<IActionResult> SendImageTemplateMessage([FromBody] ImageTemplateMessageDto dto)
+        {
+            Guid businessId;
+            try
+            {
+                businessId = User.GetBusinessId(); // Uses your extension method!
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new { message = ex.Message });
+            }
+
+            var result = await _messageEngineService.SendImageTemplateMessageAsync(dto, businessId);
+
+            if (result.Success)
+                return Ok(new { message = result.Message, raw = result.RawResponse });
+
+            return BadRequest(new { message = result.Message, raw = result.RawResponse });
+        }
+
+
+        //[HttpPost("send-video-template")]
+        //public async Task<IActionResult> SendVideoTemplateMessage([FromBody] VideoTemplateMessageDto dto)
+        //{
+        //    Guid businessId;
+        //    try { businessId = User.GetBusinessId(); }
+        //    catch (UnauthorizedAccessException ex) { return Unauthorized(new { message = ex.Message }); }
+
+        //    var result = await _messageEngineService.SendVideoTemplateMessageAsync(dto, businessId);
+        //    return result.Successin
+        //        ? Ok(new { message = result.Message, raw = result.RawResponse })
+        //        : BadRequest(new { message = result.Message, raw = result.RawResponse });
+        //}
+
+        [HttpGet("recent")]
+        public async Task<IActionResult> GetRecentLogs([FromQuery] int limit = 20)
+        {
+            var businessId = User.GetBusinessId();
+            var logs = await _messageAnalyticsServiceervice.GetRecentLogsAsync(businessId, limit);
+            return Ok(new { success = true, data = logs });
+        }
+
+    }
+} 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\DTOs\AutoSendTemplateMessageDto.cs 
+====================================================== 
+ 
+﻿namespace xbytechat.api.Features.MessagesEngine.DTOs
+{
+    public class AutoSendTemplateMessageDto
+    {
+        public Guid BusinessId { get; set; }
+        public Guid ContactId { get; set; }
+        public string PhoneNumber { get; set; }
+        public Guid TemplateId { get; set; }
+        public string TemplateName { get; set; }
+        public Dictionary<string, string> Placeholders { get; set; } = new();
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\DTOs\CtaButtonDto.cs 
+====================================================== 
+ 
+﻿namespace xbytechat.api.Features.MessagesEngine.DTOs
+{
+    public class CtaButtonDto
+    {
+        public string Title { get; set; } = string.Empty; // e.g., "Buy Now", "View Details"
+        public string Type { get; set; } = string.Empty;
+        public string Value { get; set; } = string.Empty;
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\DTOs\DocumentTemplateDto.cs 
+====================================================== 
+ 
+﻿namespace xbytechat.api.Features.MessagesEngine.DTOs
+{
+    public class DocumentTemplateDto
+    {
+        public string? HeaderDocumentUrl { get; set; }
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\DTOs\DocumentTemplateMessageDto.cs 
+====================================================== 
+ 
+﻿using System;
+using System.Collections.Generic;
+using xbytechat.api.Features.CampaignModule.DTOs; // for CampaignButtonDto in this folder
+
+namespace xbytechat.api.Features.CampaignModule.DTOs
+{
+    /// <summary>
+    /// Payload for sending a template with a DOCUMENT header.
+    /// Aliases provided so code using Parameters/Buttons OR TemplateParameters/ButtonParameters compiles.
+    /// </summary>
+    public sealed class DocumentTemplateMessageDto
+    {
+        public Guid BusinessId { get; set; }
+
+        // Routing / provider
+        public string? Provider { get; set; }            // "META" | "PINNACLE"
+        public string? PhoneNumberId { get; set; }       // Meta WABA phone id (sender)
+
+        // Recipient & template identity
+        public string RecipientNumber { get; set; } = ""; // E.164
+        public string TemplateName { get; set; } = "";
+        public string LanguageCode { get; set; } = "en_US";
+
+        // Header
+        public string? HeaderDocumentUrl { get; set; }
+
+        // Body params (ordered {{1}}..)
+        public List<string> Parameters { get; set; } = new();
+        // Alias for older call sites
+        public List<string> TemplateParameters
+        {
+            get => Parameters;
+            set => Parameters = value ?? new List<string>();
+        }
+
+        // Buttons (we use your actual CampaignButtonDto: ButtonText, ButtonType, TargetUrl)
+        public List<CampaignButtonDto> Buttons { get; set; } = new();
+        // Alias for older call sites
+        public List<CampaignButtonDto> ButtonParameters
+        {
+            get => Buttons;
+            set => Buttons = value ?? new List<CampaignButtonDto>();
+        }
+
+        // Optional extras
+        public Guid? CTAFlowConfigId { get; set; }
+        public string? TemplateBody { get; set; }
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\DTOs\ImageTemplateMessageDto.cs 
+====================================================== 
+ 
+﻿using System.ComponentModel.DataAnnotations;
+using xbytechat.api.Features.CampaignModule.DTOs;
+
+public class ImageTemplateMessageDto
+{
+    public Guid BusinessId { get; set; }
+    public string RecipientNumber { get; set; }
+    public string TemplateName { get; set; }
+    public string LanguageCode { get; set; } = "en_US";
+    public string HeaderImageUrl { get; set; }
+    public List<string> TemplateParameters { get; set; } = new();
+    public List<CampaignButtonDto> ButtonParameters { get; set; } = new();
+
+    // ✅ Add these two for flow tracking
+    public Guid? CTAFlowConfigId { get; set; }
+    public Guid? CTAFlowStepId { get; set; }
+    public string? TemplateBody { get; set; }
+
+
+   // [RegularExpression("^(PINNACLE|META_CLOUD)$")]
+    public string Provider { get; set; } = string.Empty;
+    public string? PhoneNumberId { get; set; }
+   
+
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\DTOs\MessageTypeEnum.cs 
+====================================================== 
+ 
+﻿using System.Text.Json.Serialization;
+
+namespace xbytechat.api.Features.MessagesEngine.DTOs
+{
+    [JsonConverter(typeof(JsonStringEnumConverter))] // Enables string parsing in JSON
+    public enum MessageTypeEnum
+    {
+        Text,
+        Image,
+        Template,
+        Cta
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\DTOs\SendMessageDto.cs 
+====================================================== 
+ 
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using xbytechat.api.Features.MessagesEngine.DTOs.Validation;
+
+namespace xbytechat.api.Features.MessagesEngine.DTOs
+{
+    [ValidateMessageDto] // ✅ Custom validator will enforce conditional field rules
+    public class SendMessageDto
+    {
+        [Required]
+        public Guid BusinessId { get; set; }
+
+        [Required]
+        [Phone]
+        public string RecipientNumber { get; set; } = string.Empty;
+
+        [Required]
+        public MessageTypeEnum MessageType { get; set; }
+
+        // 📝 Text Message
+        public string? TextContent { get; set; }
+
+        // 🖼️ Image Message
+        public string? MediaUrl { get; set; }
+
+        // 📋 Template Message
+        public string? TemplateName { get; set; }
+        public Dictionary<string, string>? TemplateParameters { get; set; }
+
+        // 🛒 CTA Message
+        public List<CtaButtonDto>? CtaButtons { get; set; }
+
+        // ✅ Required: this was missing [Optional but needed for CTA/Template message sending]
+        public List<string>? ButtonParams { get; set; }
+
+        // 📊 Optional Metadata
+        public Guid? CampaignId { get; set; }
+        public Guid? CTAFlowConfigId { get; set; }
+        public Guid? CTAFlowStepId { get; set; }
+
+        public string? SourceModule { get; set; }
+        public string? CustomerId { get; set; }
+        public string? CustomerName { get; set; }
+        public string? CustomerPhone { get; set; }
+        public string? BotId { get; set; }
+        public string? RefMessageId { get; set; }
+        public string? CTATriggeredFrom { get; set; }
+        public DateTime? ScheduledAt { get; set; }
+
+        // ✅ Add these two for flow tracking
+        public string? TemplateBody { get; set; }  // 🔥 Used to render actual message body from placeholders
+
+      //  [RegularExpression("^(PINNACLE|META_CLOUD)$")]
+        public string Provider { get; set; } = string.Empty;
+
+        public string? PhoneNumberId { get; set; }
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\DTOs\SendTemplateMessageSimpleDto.cs 
+====================================================== 
+ 
+﻿namespace xbytechat.api.Features.MessagesEngine.DTOs
+{
+    public class SendTemplateMessageSimpleDto
+    {
+        public Guid BusinessId { get; set; }
+        public string RecipientNumber { get; set; }
+        public string TemplateName { get; set; }
+        public List<string> TemplateParameters { get; set; } = new();
+        // ✅ Add these two for flow tracking
+        public Guid? CTAFlowConfigId { get; set; }
+        public Guid? CTAFlowStepId { get; set; }
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\DTOs\SimpleTemplateMessageDto.cs 
+====================================================== 
+ 
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+
+namespace xbytechat.api.Features.MessagesEngine.DTOs
+{
+    public class SimpleTemplateMessageDto
+    {
+        //public Guid BusinessId { get; set; }
+
+        public string RecipientNumber { get; set; }
+
+        public string TemplateName { get; set; }
+
+        public List<string> TemplateParameters { get; set; } = new();
+        public bool HasStaticButtons { get; set; } = false;
+
+       // [RegularExpression("^(PINNACLE|META_CLOUD)$")]
+        public string Provider { get; set; } = string.Empty;
+        public string? PhoneNumberId { get; set; }
+        // ✅ Add these two for flow tracking
+        public Guid? CTAFlowConfigId { get; set; }
+        public Guid? CTAFlowStepId { get; set; }
+        public string? TemplateBody { get; set; }  // 🔥 Used to render actual message body from placeholders
+
+        public string? LanguageCode { get; set; }
+    }
+}
+
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\DTOs\TemplateForUIResponseDto.cs 
+====================================================== 
+ 
+﻿using xbytechat.api.WhatsAppSettings.DTOs;
+
+public class TemplateForUIResponseDto
+{
+    public string Name { get; set; }
+    public string Language { get; set; }
+    public string Body { get; set; }
+
+    // ✅ Correct naming for frontend
+    public int ParametersCount { get; set; }
+
+    public List<ButtonMetadataDto> ButtonParams { get; set; }
+    public bool HasImageHeader { get; set; } // 🆕 Used to detect image templates
+
+    public string? HeaderKind { get; set; }          // "text" | "image" | "video" | "document" | "none"
+    public bool RequiresHeaderMediaUrl { get; set; } // true for image/video/document
+
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\DTOs\TextMessageSendDto.cs 
+====================================================== 
+ 
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace xbytechat.api.Features.MessagesEngine.DTOs
+{
+    public class TextMessageSendDto
+    {
+        public Guid BusinessId { get; set; }
+
+        public string RecipientNumber { get; set; }
+
+        public string TextContent { get; set; }
+
+        public Guid ContactId { get; set; }
+
+        public string? PhoneNumberId { get; set; }
+        // ✅ NEW: Optional source indicator (e.g., "campaign", "auto-reply", etc.)
+
+        //[RegularExpression("^(PINNACLE|META_CLOUD)$")]
+        //[Required]
+        public string Provider { get; set; } = string.Empty;
+        public string? Source { get; set; }
+
+        // ✅ NEW: Optional message ID for campaign tracing
+        public string? MessageId { get; set; }
+
+        public bool IsSaveContact { get; set; } = false; // default true
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\DTOs\VideoTemplateMessageDto.cs 
+====================================================== 
+ 
+﻿using System;
+using System.Collections.Generic;
+using xbytechat.api.Features.CampaignModule.DTOs;
+
+public class VideoTemplateMessageDto
+{
+    public Guid BusinessId { get; set; }
+    public string RecipientNumber { get; set; } = string.Empty;
+
+    public string TemplateName { get; set; } = string.Empty;
+    public string LanguageCode { get; set; } = "en_US";
+
+    // mirrors HeaderImageUrl
+    public string? HeaderVideoUrl { get; set; }
+
+    public List<string> TemplateParameters { get; set; } = new();
+    public List<CampaignButtonDto> ButtonParameters { get; set; } = new();
+
+    // for flow tracking parity
+    public Guid? CTAFlowConfigId { get; set; }
+    public Guid? CTAFlowStepId { get; set; }
+    public string? TemplateBody { get; set; }
+
+    // same explicit provider knobs you already use
+    public string Provider { get; set; } = string.Empty; // "PINNACLE" | "META_CLOUD"
+    public string? PhoneNumberId { get; set; }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\Factory\IWhatsAppProviderFactory.cs 
+====================================================== 
+ 
+﻿using System.Threading;
+using System.Threading.Tasks;
+using xbytechat.api.Features.MessagesEngine.Abstractions;
+
+namespace xbytechat.api.Features.MessagesEngine.Factory
+{
+    public interface IWhatsAppProviderFactory
+    {
+        //Task<IWhatsAppProvider> CreateAsync(Guid businessId, CancellationToken ct = default);
+        Task<IWhatsAppProvider> CreateAsync(Guid businessId);
+       //Task<IWhatsAppProvider> CreateAsync(Guid businessId, string? phoneNumberId);
+        Task<IWhatsAppProvider> CreateAsync(Guid businessId, string provider, string? phoneNumberId);
+
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\Factory\WhatsAppProviderFactory.cs 
+====================================================== 
+ 
+﻿using System;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using xbytechat.api;
+using xbytechat.api.Features.BusinessModule.Models;
+using xbytechat.api.Features.MessagesEngine.Abstractions;
+using xbytechat.api.Features.MessagesEngine.Providers;
+using xbytechat_api.WhatsAppSettings.Models;
+using static System.Net.WebRequestMethods;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
+namespace xbytechat.api.Features.MessagesEngine.Factory
+{
+    public class WhatsAppProviderFactory : IWhatsAppProviderFactory
+    {
+        private readonly IServiceProvider _sp;
+        private readonly AppDbContext _db;
+        private readonly ILogger<WhatsAppProviderFactory> _logger;
+
+        public WhatsAppProviderFactory(IServiceProvider sp, AppDbContext db, ILogger<WhatsAppProviderFactory> logger)
+        {
+            _sp = sp;
+            _db = db;
+            _logger = logger;
+        }
+
+        public async Task<IWhatsAppProvider> CreateAsync(Guid businessId)
+        {
+            var setting = await _db.WhatsAppSettings
+                .FirstOrDefaultAsync(x => x.BusinessId == businessId && x.IsActive)
+                ?? throw new InvalidOperationException("WhatsApp settings not found for this business.");
+
+            var providerKey = (setting.Provider ?? "meta_cloud").Trim().ToLowerInvariant();
+
+            using var scope = _sp.CreateScope();
+
+            var httpClientFactory = scope.ServiceProvider.GetService<IHttpClientFactory>();
+            var http =
+                httpClientFactory != null
+                    ? httpClientFactory.CreateClient(providerKey == "meta_cloud" ? "wa:meta_cloud" : "wa:pinnacle")
+                    : scope.ServiceProvider.GetRequiredService<HttpClient>();
+
+            return providerKey switch
+            {
+                //"pinnacle" =>
+                //            new PinnacleProvider(http, scope.ServiceProvider.GetRequiredService<ILogger<PinnacleProvider>>(), setting),
+                "pinnacle" => new PinnacleProvider(http, scope.ServiceProvider.GetRequiredService<ILogger<PinnacleProvider>>(), setting),
+                "meta_cloud" =>
+                    new MetaCloudProvider(_db, http, scope.ServiceProvider.GetRequiredService<ILogger<MetaCloudProvider>>(), setting),
+
+                _ => throw new NotSupportedException($"Unsupported WhatsApp provider: {providerKey}")
+            };
+        }
+        //public async Task<IWhatsAppProvider> CreateAsync(Guid businessId, string? phoneNumberId)
+        //{
+        //    var setting = await _db.WhatsAppSettings
+        //        .FirstOrDefaultAsync(x => x.BusinessId == businessId && x.IsActive)
+        //        ?? throw new InvalidOperationException("WhatsApp settings not found for this business.");
+
+        //    // per-send override of the sender number (in-memory only)
+        //    if (!string.IsNullOrWhiteSpace(phoneNumberId))
+        //        setting.PhoneNumberId = phoneNumberId.Trim();
+
+        //    var providerKey = (setting.Provider ?? "meta_cloud").Trim().ToLowerInvariant();
+
+        //    using var scope = _sp.CreateScope();
+
+        //    var httpClientFactory = scope.ServiceProvider.GetService<IHttpClientFactory>();
+        //    var http =
+        //        httpClientFactory != null
+        //            ? httpClientFactory.CreateClient(providerKey == "meta_cloud" ? "wa:meta_cloud" : "wa:pinnacle")
+        //            : scope.ServiceProvider.GetRequiredService<HttpClient>();
+
+        //    return providerKey switch
+        //    {
+        //        "pinnacle" => new PinnacleProvider(http, scope.ServiceProvider.GetRequiredService<ILogger<PinnacleProvider>>(), setting),
+        //        "meta_cloud" => new MetaCloudProvider(_db, http, scope.ServiceProvider.GetRequiredService<ILogger<MetaCloudProvider>>(), setting),
+        //        _ => throw new NotSupportedException($"Unsupported WhatsApp provider: {providerKey}")
+        //    };
+        //}
+        public async Task<IWhatsAppProvider> CreateAsync(Guid businessId, string provider, string? phoneNumberId)
+        {
+            if (string.IsNullOrWhiteSpace(provider))
+                throw new ArgumentException("Provider is required.", nameof(provider));
+            if (provider is not "PINNACLE" and not "META_CLOUD")
+                throw new NotSupportedException($"Unsupported provider: {provider}");
+
+            // If a sender was chosen, ensure it belongs to THIS business+provider
+            if (!string.IsNullOrWhiteSpace(phoneNumberId))
+            {
+                var exists = await _db.WhatsAppPhoneNumbers.AsNoTracking().AnyAsync(n =>
+                    n.BusinessId == businessId && n.Provider == provider && n.PhoneNumberId == phoneNumberId);
+                if (!exists)
+                    throw new InvalidOperationException("Selected PhoneNumberId does not belong to this provider/business.");
+            }
+
+            // Load the settings row for the exact (BusinessId, Provider)
+            var setting = await _db.WhatsAppSettings.FirstOrDefaultAsync(s =>
+                s.BusinessId == businessId && s.Provider == provider && s.IsActive)
+                ?? throw new InvalidOperationException($"WhatsApp settings not found for provider {provider}.");
+
+            // Per-send override – transient only
+            if (!string.IsNullOrWhiteSpace(phoneNumberId))
+                setting.PhoneNumberId = phoneNumberId.Trim();
+
+            if (string.IsNullOrWhiteSpace(setting.ApiUrl))
+                throw new InvalidOperationException("API URL is empty. Save provider settings first.");
+            if (string.IsNullOrWhiteSpace(setting.ApiKey))
+                throw new InvalidOperationException("API Key/Token is empty. Save provider settings first.");
+
+            using var scope = _sp.CreateScope();
+            var http = scope.ServiceProvider
+                .GetRequiredService<IHttpClientFactory>()
+                .CreateClient(provider == "META_CLOUD" ? "wa:meta_cloud" : "wa:pinnacle");
+
+            return provider switch
+            {
+                "PINNACLE" => new PinnacleProvider(http, scope.ServiceProvider.GetRequiredService<ILogger<PinnacleProvider>>(), setting),
+                "META_CLOUD" => new MetaCloudProvider(_db, http, scope.ServiceProvider.GetRequiredService<ILogger<MetaCloudProvider>>(), setting),
+                _ => throw new NotSupportedException($"Unsupported provider: {provider}")
+            };
+        }
+
+    }
+}
+
+
+//// 📄 File: Features/MessagesEngine/Factory/WhatsAppProviderFactory.cs
+//using System;
+//using System.Threading.Tasks;
+//using Microsoft.EntityFrameworkCore;
+//using Microsoft.Extensions.DependencyInjection;
+//using Microsoft.Extensions.Logging;
+//using xbytechat.api;
+//using xbytechat.api.Features.MessagesEngine.Abstractions;
+//using xbytechat.api.Features.MessagesEngine.Providers;
+
+//namespace xbytechat.api.Features.MessagesEngine.Factory
+//{
+
+//    public class WhatsAppProviderFactory : IWhatsAppProviderFactory
+//    {
+//        private readonly IServiceProvider _sp;
+//        private readonly AppDbContext _db;
+//        private readonly ILogger<WhatsAppProviderFactory> _logger;
+
+//        public WhatsAppProviderFactory(IServiceProvider sp, AppDbContext db, ILogger<WhatsAppProviderFactory> logger)
+//        {
+//            _sp = sp;
+//            _db = db;
+//            _logger = logger;
+//        }
+
+//        public async Task<IWhatsAppProvider> CreateAsync(Guid businessId)
+//        {
+//            var setting = await _db.WhatsAppSettings.FirstOrDefaultAsync(x => x.BusinessId == businessId && x.IsActive)
+//                          ?? throw new InvalidOperationException("WhatsApp settings not found for this business.");
+
+//            var providerKey = (setting.Provider ?? "meta_cloud").Trim().ToLowerInvariant();
+
+//            // Create a new scope to inject the per-tenant setting into provider constructor
+//            var scope = _sp.CreateScope();
+//            var http = scope.ServiceProvider.GetRequiredService<HttpClient>();
+
+//            return providerKey switch
+//            {
+//                "pinnacle" => new PinbotProvider(http, scope.ServiceProvider.GetRequiredService<ILogger<PinbotProvider>>(), setting),
+//                "meta_cloud" => new MetaCloudProvider(_db, http, scope.ServiceProvider.GetRequiredService<ILogger<MetaCloudProvider>>(), setting),
+//                _ => throw new NotSupportedException($"Unsupported WhatsApp provider: {providerKey}")
+//            };
+//        }
+//    }
+//}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\Outbox\OutboxMessage.cs 
+====================================================== 
+ 
+﻿using System;
+
+namespace xbytechat.api.Features.MessagesEngine.Outbox
+{
+    public enum OutboxStatus
+    {
+        Queued = 0,
+        Sending = 1,
+        Sent = 2,
+        Failed = 3
+    }
+
+    public class OutboxMessage
+    {
+        public Guid Id { get; set; }
+        public Guid BusinessId { get; set; }
+        public Guid? CampaignId { get; set; }
+        public Guid? ContactId { get; set; }
+
+        public string RecipientNumber { get; set; } = "";
+        public string ProviderKey { get; set; } = ""; // "meta_cloud" | "pinnacle" (optional hint)
+        public string PayloadJson { get; set; } = ""; // serialized MessageEnvelope
+        public string CorrelationId { get; set; } = ""; // for idempotency & tracing
+
+        public OutboxStatus Status { get; set; } = OutboxStatus.Queued;
+        public int AttemptCount { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime? NextAttemptAt { get; set; } = DateTime.UtcNow;
+        public string? LastError { get; set; }
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\PayloadBuilders\CtaMessagePayloadBuilder.cs 
+====================================================== 
+ 
+﻿using xbytechat.api.Features.MessagesEngine.DTOs;
+
+namespace xbytechat.api.Features.MessagesEngine.PayloadBuilders
+{
+    public class CtaMessagePayloadBuilder : IWhatsAppPayloadBuilder
+    {
+        public object BuildPayload(SendMessageDto dto)
+        {
+            return new
+            {
+                messaging_product = "whatsapp",
+                to = dto.RecipientNumber,
+                type = "interactive",
+                interactive = new
+                {
+                    type = "button",
+                    body = new { text = dto.TextContent },
+                    action = new
+                    {
+                        buttons = dto.CtaButtons?.Select(b => new
+                        {
+                            type = "reply",
+                            reply = new
+                            {
+                                id = b.Value,
+                                title = b.Title
+                            }
+                        }).ToList()
+                    }
+                }
+            };
+        }
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\PayloadBuilders\ImageMessagePayloadBuilder.cs 
+====================================================== 
+ 
+﻿using xbytechat.api.Features.MessagesEngine.DTOs;
+
+namespace xbytechat.api.Features.MessagesEngine.PayloadBuilders
+{
+    public class ImageMessagePayloadBuilder : IWhatsAppPayloadBuilder
+    {
+        public object BuildPayload(SendMessageDto dto)
+        {
+            return new
+            {
+                messaging_product = "whatsapp",
+                to = dto.RecipientNumber,
+                type = "image",
+                image = new
+                {
+                    link = dto.MediaUrl
+                }
+            };
+        }
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\PayloadBuilders\IWhatsAppPayloadBuilder.cs 
+====================================================== 
+ 
+﻿using xbytechat.api.Features.MessagesEngine.DTOs;
+
+namespace xbytechat.api.Features.MessagesEngine.PayloadBuilders
+{
+    public interface IWhatsAppPayloadBuilder
+    {
+        object BuildPayload(SendMessageDto dto);
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\PayloadBuilders\MessagePayloadBuilder.cs 
+====================================================== 
+ 
+﻿// Features/MessagesEngine/PayloadBuilders/MessagePayloadBuilder.cs
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace xbytechat.api.Features.MessagesEngine.PayloadBuilders
+{
+    public static class MessagePayloadBuilder
+    {
+        // New: a single canonical builder that understands our CSV-materialized shapes.
+        public static object BuildTemplatePayload(
+            string toPhoneE164,
+            string templateName,
+            string languageCode,
+            string headerType,                 // "none"|"text"|"image"|"video"|"document"
+            string? headerMediaUrl,            // for image/video/document
+            IReadOnlyList<string> bodyParams,  // {{1}}..{{N}}
+            IReadOnlyList<string>? headerTextParams, // header text {{n}} if headerType=="text"
+            IReadOnlyDictionary<string, string>? buttonUrlParams // keys: "button1.url_param".."button3.url_param"
+        )
+        {
+            var components = new List<object>();
+
+            // 1) HEADER
+            switch ((headerType ?? "none").ToLowerInvariant())
+            {
+                case "text":
+                    if (headerTextParams != null && headerTextParams.Count > 0)
+                    {
+                        components.Add(new
+                        {
+                            type = "header",
+                            parameters = headerTextParams.Select(v => new { type = "text", text = v ?? string.Empty }).ToArray()
+                        });
+                    }
+                    break;
+
+                case "image":
+                    if (!string.IsNullOrWhiteSpace(headerMediaUrl))
+                    {
+                        components.Add(new
+                        {
+                            type = "header",
+                            parameters = new object[]
+                            {
+                                new { type = "image", image = new { link = headerMediaUrl } }
+                            }
+                        });
+                    }
+                    break;
+
+                case "video":
+                    if (!string.IsNullOrWhiteSpace(headerMediaUrl))
+                    {
+                        components.Add(new
+                        {
+                            type = "header",
+                            parameters = new object[]
+                            {
+                                new { type = "video", video = new { link = headerMediaUrl } }
+                            }
+                        });
+                    }
+                    break;
+
+                case "document":
+                    if (!string.IsNullOrWhiteSpace(headerMediaUrl))
+                    {
+                        components.Add(new
+                        {
+                            type = "header",
+                            parameters = new object[]
+                            {
+                                new { type = "document", document = new { link = headerMediaUrl } }
+                            }
+                        });
+                    }
+                    break;
+            }
+
+            // 2) BODY
+            if (bodyParams != null && bodyParams.Count > 0)
+            {
+                components.Add(new
+                {
+                    type = "body",
+                    parameters = bodyParams.Select(v => new { type = "text", text = v ?? string.Empty }).ToArray()
+                });
+            }
+
+            // 3) BUTTONS (URL dynamic only)
+            // Expect buttonUrlParams: button{1..3}.url_param -> string
+            if (buttonUrlParams != null && buttonUrlParams.Count > 0)
+            {
+                var buttons = new List<object>();
+
+                for (var pos = 1; pos <= 3; pos++)
+                {
+                    var key = $"button{pos}.url_param";
+                    if (buttonUrlParams.TryGetValue(key, out var val) && !string.IsNullOrWhiteSpace(val))
+                    {
+                        buttons.Add(new
+                        {
+                            type = "button",
+                            sub_type = "url",
+                            index = pos - 1, // Meta expects 0-based index
+                            parameters = new object[]
+                            {
+                                new { type = "text", text = val }
+                            }
+                        });
+                    }
+                }
+
+                if (buttons.Count > 0)
+                {
+                    components.AddRange(buttons);
+                }
+            }
+
+            // Meta/Pinnacle style template envelope
+            var payload = new
+            {
+                messaging_product = "whatsapp",
+                to = toPhoneE164,
+                type = "template",
+                template = new
+                {
+                    name = templateName,
+                    language = new { code = languageCode }, // << not hardcoded
+                    components = components.ToArray()
+                }
+            };
+
+            return payload;
+        }
+    }
+}
+
+
+//using xbytechat.api.Features.CampaignModule.Models;
+//using xbytechat.api.Shared.utility;
+
+//namespace xbytechat.api.Features.MessagesEngine.PayloadBuilders
+//{
+//    public static class MessagePayloadBuilder
+//    {
+//        /// <summary>
+//        /// Builds a WhatsApp template message payload for image header + buttons.
+//        /// </summary>
+//        public static object BuildImageTemplatePayload(
+//            string templateName,
+//            string languageCode,
+//            string recipientNumber,
+//            List<string> templateParams,
+//            string? imageUrl,
+//            List<CampaignButton>? buttons
+//        )
+//        {
+//            var components = new List<object>();
+
+//            // ✅ Body with template params
+//            if (templateParams != null && templateParams.Any())
+//            {
+//                components.Add(new
+//                {
+//                    type = "body",
+//                    parameters = templateParams.Select(p => new { type = "text", text = p }).ToArray()
+//                });
+//            }
+
+//            // ✅ Header image if present
+//            if (!string.IsNullOrWhiteSpace(imageUrl))
+//            {
+//                components.Add(new
+//                {
+//                    type = "header",
+//                    parameters = new[]
+//                    {
+//                    new { type = "image", image = new { link = imageUrl } }
+//                }
+//                });
+//            }
+
+//            // ✅ CTA buttons
+//            if (buttons != null && buttons.Any())
+//            {
+//                var buttonComponents = buttons
+//                    .OrderBy(b => b.Position)
+//                    .Take(3)
+//                    .Select((btn, index) => new
+//                    {
+//                        type = "button",
+//                        sub_type = btn.Type, // "url" or "phone_number"
+//                        index = index.ToString(),
+//                        parameters = new[]
+//                        {
+//                        new { type = "text", text = btn.Value }
+//                        }
+//                    });
+
+//                components.AddRange(buttonComponents);
+//            }
+
+//            // ✅ Final WhatsApp Template Payload
+//            return new
+//            {
+//                messaging_product = "whatsapp",
+//                to = recipientNumber,
+//                type = "template",
+//                template = new
+//                {
+//                    name = templateName,
+//                    language = new { code = languageCode },
+//                    components = components
+//                }
+//            };
+//        }
+//    }
+
+//} 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\PayloadBuilders\TemplateMessagePayloadBuilder.cs 
+====================================================== 
+ 
+﻿using xbytechat.api.Features.MessagesEngine.DTOs;
+
+namespace xbytechat.api.Features.MessagesEngine.PayloadBuilders
+{
+    public class TemplateMessagePayloadBuilder : IWhatsAppPayloadBuilder
+    {
+        public object BuildPayload(SendMessageDto dto)
+        {
+            if (dto == null) throw new ArgumentNullException(nameof(dto));
+            if (string.IsNullOrWhiteSpace(dto.TemplateName))
+                throw new ArgumentException("TemplateName is required.");
+            if (dto.TemplateParameters == null || dto.TemplateParameters.Count == 0)
+                throw new ArgumentException("TemplateParameters are required for template messages.");
+
+            // Sort by placeholder index like {{1}}, {{2}}, guarding against bad keys
+            var bodyParams = dto.TemplateParameters
+                .Select(kvp =>
+                {
+                    var key = kvp.Key?.Trim('{', '}');
+                    _ = int.TryParse(key, out var idx);
+                    return (idx, kvp.Value);
+                })
+                .OrderBy(t => t.idx)
+                .Select(t => new { type = "text", text = t.Value })
+                .ToArray();
+
+            var components = new List<object>
+            {
+                new { type = "body", parameters = bodyParams }
+            };
+
+            if (dto.ButtonParams != null && dto.ButtonParams.Any())
+            {
+                for (int i = 0; i < dto.ButtonParams.Count; i++)
+                {
+                    components.Add(new
+                    {
+                        type = "button",
+                        sub_type = "url",
+                        index = i.ToString(),
+                        parameters = new[]
+                        {
+                            new { type = "text", text = dto.ButtonParams[i] }
+                        }
+                    });
+                }
+            }
+
+            return new
+            {
+                messaging_product = "whatsapp",
+                to = dto.RecipientNumber,
+                type = "template",
+                template = new
+                {
+                    name = dto.TemplateName,
+                    language = new { code = "en_US" },
+                    components
+                }
+            };
+        }
+    }
+}
+
+
+//using xbytechat.api.Features.MessagesEngine.DTOs;
+//using xbytechat.api.Helpers;
+
+//namespace xbytechat.api.Features.MessagesEngine.PayloadBuilders
+//{
+//    public class TemplateMessagePayloadBuilder : IWhatsAppPayloadBuilder
+//    {
+//        public object BuildPayload(SendMessageDto dto)
+//        {
+//            var components = new List<object>();
+
+//            // ✅ BODY PARAMETERS: Insert dynamic values into the template body
+//            // WhatsApp expects these to be in order ({{1}}, {{2}}, etc.)
+//            if (dto.TemplateParameters == null || dto.TemplateParameters.Count == 0)
+//                return ResponseResult.ErrorInfo("❌ Missing template parameters.");
+//            if (dto.TemplateParameters != null && dto.TemplateParameters.Any())
+//                {
+//                var bodyParams = dto.TemplateParameters
+//                    .OrderBy(kvp => int.Parse(kvp.Key.Trim('{', '}'))) // 🔢 Extract and sort by index
+//                    .Select(kvp => new
+//                    {
+//                        type = "text",
+//                        text = kvp.Value
+//                    }).ToArray();
+
+//                components.Add(new
+//                {
+//                    type = "body",
+//                    parameters = bodyParams
+//                });
+//            }
+
+//            // ✅ BUTTON PARAMETERS: For templates with dynamic URL buttons (index-based)
+//            if (dto.ButtonParams != null && dto.ButtonParams.Any())
+//            {
+//                for (int i = 0; i < dto.ButtonParams.Count; i++)
+//                {
+//                    components.Add(new
+//                    {
+//                        type = "button",
+//                        sub_type = "url",
+//                        index = i.ToString(), // WhatsApp requires index as a string
+//                        parameters = new[]
+//                        {
+//                            new
+//                            {
+//                                type = "text",
+//                                text = dto.ButtonParams[i]
+//                            }
+//                        }
+//                    });
+//                }
+//            }
+
+//            // ✅ FINAL WHATSAPP TEMPLATE PAYLOAD
+//            var payload = new
+//            {
+//                messaging_product = "whatsapp",
+//                to = dto.RecipientNumber,
+//                type = "template",
+//                template = new
+//                {
+//                    name = dto.TemplateName,
+//                    language = new { code = "en_US" },
+//                    components = components
+//                }
+//            };
+
+//            // 🪵 Debug log for developer console (optional)
+//            Console.WriteLine("📦 Built WhatsApp Template Payload:");
+//            Console.WriteLine(System.Text.Json.JsonSerializer.Serialize(payload, new System.Text.Json.JsonSerializerOptions
+//            {
+//                WriteIndented = true
+//            }));
+
+//            return payload;
+//        }
+//    }
+//}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\PayloadBuilders\TemplateStaticButtonPayloadBuilder.cs 
+====================================================== 
+ 
+﻿using xbytechat.api.Features.MessagesEngine.DTOs;
+
+namespace xbytechat.api.Features.MessagesEngine.PayloadBuilders
+{
+    public class TemplateStaticButtonPayloadBuilder
+    {
+        public static object Build(SendTemplateMessageSimpleDto dto)
+        {
+            var components = new List<object>();
+
+            // ✅ Add Body Params
+            if (dto.TemplateParameters != null && dto.TemplateParameters.Any())
+            {
+                components.Add(new
+                {
+                    type = "body",
+                    parameters = dto.TemplateParameters.Select(p => new
+                    {
+                        type = "text",
+                        text = p
+                    }).ToArray()
+                });
+            }
+
+            // ⚠️ DO NOT add button components for static buttons
+            // Meta will render them automatically if template has static buttons defined
+            // You can later add logic here for dynamic buttons if needed
+
+            return new
+            {
+                messaging_product = "whatsapp",
+                to = dto.RecipientNumber,
+                type = "template",
+                template = new
+                {
+                    name = dto.TemplateName,
+                    language = new { code = "en_US" },
+                    components = components
+                }
+            };
+        }
+    }
+}
+
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\PayloadBuilders\TextMessagePayloadBuilder.cs 
+====================================================== 
+ 
+﻿using xbytechat.api.Features.MessagesEngine.DTOs;
+
+namespace xbytechat.api.Features.MessagesEngine.PayloadBuilders
+{
+    public class TextMessagePayloadBuilder : IWhatsAppPayloadBuilder
+    {
+        public object BuildPayload(SendMessageDto dto)
+        {
+            return new
+            {
+                messaging_product = "whatsapp",
+                to = dto.RecipientNumber,
+                type = "text",
+                text = new
+                {
+                    body = dto.TextContent
+                }
+            };
+        }
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\Providers\MetaCloudProvider.cs 
+====================================================== 
+ 
+﻿// 📄 File: Features/MessagesEngine/Providers/MetaCloudProvider.cs
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using xbytechat.api;
+using xbytechat.api.Features.MessagesEngine.Abstractions;
+using xbytechat_api.WhatsAppSettings.Models;
+
+namespace xbytechat.api.Features.MessagesEngine.Providers
+{
+    public class MetaCloudProvider : IWhatsAppProvider
+    {
+        private readonly AppDbContext _db; // kept for future auditing/log enrichment
+        private readonly HttpClient _http;
+        private readonly ILogger<MetaCloudProvider> _logger;
+        private readonly WhatsAppSettingEntity _setting;
+
+        // ✅ Ignore nulls to avoid sending "components": null etc.
+        private static readonly JsonSerializerOptions _jsonOpts = new()
+        {
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+        };
+
+        public MetaCloudProvider(
+            AppDbContext db,
+            HttpClient http,
+            ILogger<MetaCloudProvider> logger,
+            WhatsAppSettingEntity setting)
+        {
+            _db = db;
+            _http = http;
+            _logger = logger;
+            _setting = setting;
+        }
+
+        private string BuildUrl()
+        {
+            var baseUrl = string.IsNullOrWhiteSpace(_setting.ApiUrl)
+                ? "https://graph.facebook.com/v18.0"
+                : _setting.ApiUrl.TrimEnd('/');
+
+            if (string.IsNullOrWhiteSpace(_setting.PhoneNumberId))
+            {
+                _logger.LogError("MetaCloudProvider: PhoneNumberId is missing for BusinessId {BusinessId}", _setting.BusinessId);
+                return $"{baseUrl}/-/messages"; // inert path; will fail fast with clear logs
+            }
+
+            return $"{baseUrl}/{_setting.PhoneNumberId}/messages";
+        }
+
+        private async Task<WaSendResult> PostAsync(object payload)
+        {
+            var url = BuildUrl();
+            var json = JsonSerializer.Serialize(payload, _jsonOpts);
+
+            using var req = new HttpRequestMessage(HttpMethod.Post, url);
+            req.Content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            if (!string.IsNullOrWhiteSpace(_setting.ApiKey))
+            {
+                req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _setting.ApiKey);
+            }
+            else
+            {
+                _logger.LogWarning("MetaCloudProvider: ApiToken is empty for BusinessId {BusinessId}", _setting.BusinessId);
+            }
+
+            var res = await _http.SendAsync(req);
+            var body = await res.Content.ReadAsStringAsync();
+
+            if (!res.IsSuccessStatusCode)
+            {
+                _logger.LogWarning("MetaCloud send failed (HTTP {Status}): {Body}", (int)res.StatusCode, body);
+                return new WaSendResult(
+                    Success: false,
+                    Provider: "MetaCloud",
+                    ProviderMessageId: null,
+                    StatusCode: res.StatusCode,
+                    RawResponse: body,
+                    Error: res.ReasonPhrase
+                );
+            }
+
+            string? id = null;
+            try
+            {
+                var root = JsonNode.Parse(body);
+                id = root?["messages"]?[0]?["id"]?.GetValue<string>();
+            }
+            catch
+            {
+                // Keep raw; ID stays null
+            }
+
+            return new WaSendResult(
+                Success: true,
+                Provider: "MetaCloud",
+                ProviderMessageId: id,
+                StatusCode: res.StatusCode,
+                RawResponse: body,
+                Error: null
+            );
+        }
+
+        public Task<WaSendResult> SendTextAsync(string to, string body)
+            => PostAsync(new
+            {
+                messaging_product = "whatsapp",
+                to,
+                type = "text",
+                text = new { preview_url = false, body }
+            });
+
+        public Task<WaSendResult> SendTemplateAsync(string to, string templateName, string languageCode, IEnumerable<object> components)
+            => PostAsync(new
+            {
+                messaging_product = "whatsapp",
+                to,
+                type = "template",
+                template = new
+                {
+                    name = templateName,
+                    language = new { code = languageCode },      // ✅ Meta needs { code: "en_US" }
+                    components = components ?? System.Linq.Enumerable.Empty<object>() // ✅ never null
+                }
+            });
+
+        public Task<WaSendResult> SendInteractiveAsync(object fullPayload)
+            => PostAsync(fullPayload);
+    }
+}
+
+
+//// 📄 File: Features/MessagesEngine/Providers/MetaCloudProvider.cs
+//using System.Collections.Generic;
+//using System.Net;
+//using System.Net.Http;
+//using System.Net.Http.Headers;
+//using System.Text;
+//using System.Text.Json;
+//using System.Text.Json.Nodes;
+//using System.Threading.Tasks;
+//using Microsoft.Extensions.Logging;
+//using xbytechat.api;
+//using xbytechat.api.Features.MessagesEngine.Abstractions;
+//using xbytechat_api.WhatsAppSettings.Models;
+
+//namespace xbytechat.api.Features.MessagesEngine.Providers
+//{
+//    public class MetaCloudProvider : IWhatsAppProvider
+//    {
+//        private readonly AppDbContext _db; // kept for future auditing/log enrichment
+//        private readonly HttpClient _http;
+//        private readonly ILogger<MetaCloudProvider> _logger;
+//        private readonly WhatsAppSettingEntity _setting;
+
+//        public MetaCloudProvider(
+//            AppDbContext db,
+//            HttpClient http,
+//            ILogger<MetaCloudProvider> logger,
+//            WhatsAppSettingEntity setting)
+//        {
+//            _db = db;
+//            _http = http;
+//            _logger = logger;
+//            _setting = setting;
+//        }
+
+//        private string BuildUrl()
+//        {
+//            // Minimal defensive checks – fail fast with clear logs
+//            var baseUrl = string.IsNullOrWhiteSpace(_setting.ApiUrl)
+//                ? "https://graph.facebook.com/v18.0"
+//                : _setting.ApiUrl.TrimEnd('/');
+
+//            if (string.IsNullOrWhiteSpace(_setting.PhoneNumberId))
+//            {
+//                _logger.LogError("MetaCloudProvider: PhoneNumberId is missing for BusinessId {BusinessId}", _setting.BusinessId);
+//                // We return an error result instead of throwing (provider contract returns WaSendResult)
+//                // Caller will translate to ResponseResult.ErrorInfo.
+//                return $"{baseUrl}/-/messages"; // inert path; PostAsync will still be called and return error
+//            }
+
+//            return $"{baseUrl}/{_setting.PhoneNumberId}/messages";
+//        }
+
+//        private async Task<WaSendResult> PostAsync(object payload)
+//        {
+//            var url = BuildUrl();
+//            var json = JsonSerializer.Serialize(payload);
+
+//            using var req = new HttpRequestMessage(HttpMethod.Post, url);
+//            req.Content = new StringContent(json, Encoding.UTF8, "application/json");
+
+//            if (!string.IsNullOrWhiteSpace(_setting.ApiToken))
+//            {
+//                req.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _setting.ApiToken);
+//            }
+//            else
+//            {
+//                _logger.LogWarning("MetaCloudProvider: ApiToken is empty for BusinessId {BusinessId}", _setting.BusinessId);
+//            }
+
+//            var res = await _http.SendAsync(req);
+//            var body = await res.Content.ReadAsStringAsync();
+
+//            if (!res.IsSuccessStatusCode)
+//            {
+//                _logger.LogWarning("MetaCloud send failed (HTTP {Status}): {Body}", (int)res.StatusCode, body);
+
+//                return new WaSendResult(
+//                    Success: false,
+//                    Provider: "MetaCloud",
+//                    ProviderMessageId: null,
+//                    StatusCode: res.StatusCode,
+//                    RawResponse: body,
+//                    Error: res.ReasonPhrase
+//                );
+//            }
+
+//            string? id = null;
+//            try
+//            {
+//                var root = JsonNode.Parse(body);
+//                id = root?["messages"]?[0]?["id"]?.GetValue<string>();
+//            }
+//            catch
+//            {
+//                // Keep raw; ID stays null
+//            }
+
+//            return new WaSendResult(
+//                Success: true,
+//                Provider: "MetaCloud",
+//                ProviderMessageId: id,
+//                StatusCode: res.StatusCode,
+//                RawResponse: body,
+//                Error: null
+//            );
+//        }
+
+//        public Task<WaSendResult> SendTextAsync(string to, string body)
+//            => PostAsync(new
+//            {
+//                messaging_product = "whatsapp",
+//                to,
+//                type = "text",
+//                text = new { preview_url = false, body }
+//            });
+
+//        public Task<WaSendResult> SendTemplateAsync(string to, string templateName, string languageCode, IEnumerable<object> components)
+//            => PostAsync(new
+//            {
+//                messaging_product = "whatsapp",
+//                to,
+//                type = "template",
+//                template = new
+//                {
+//                    name = templateName,
+//                    language = new { code = languageCode },
+//                    components
+//                }
+//            });
+
+//        public Task<WaSendResult> SendInteractiveAsync(object fullPayload)
+//            => PostAsync(fullPayload);
+//    }
+//}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\Providers\PinbotProvider.cs 
+====================================================== 
+ 
+﻿// 📄 File: Features/MessagesEngine/Providers/PinbotProvider.cs
+using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using xbytechat.api.Features.MessagesEngine.Abstractions;
+using xbytechat_api.WhatsAppSettings.Models;
+
+namespace xbytechat.api.Features.MessagesEngine.Providers
+{
+    public class PinbotProvider : IWhatsAppProvider
+    {
+        private readonly HttpClient _http;
+        private readonly ILogger<PinbotProvider> _logger;
+        private readonly WhatsAppSettingEntity _setting;
+
+        public PinbotProvider(
+            HttpClient http,
+            ILogger<PinbotProvider> logger,
+            WhatsAppSettingEntity setting)
+        {
+            _http = http;
+            _logger = logger;
+            _setting = setting;
+        }
+
+        // Pinbot path segment can be WABA ID *or* PhoneNumberId depending on their account setup.
+        // Prefer PhoneNumberId, fall back to WabaId.
+        private string? ResolvePathIdOrNull()
+        {
+            if (!string.IsNullOrWhiteSpace(_setting.PhoneNumberId)) return _setting.PhoneNumberId!;
+            if (!string.IsNullOrWhiteSpace(_setting.WabaId)) return _setting.WabaId!;
+            return null;
+        }
+
+        private string BuildUrl(string pathId)
+        {
+            var baseUrl = string.IsNullOrWhiteSpace(_setting.ApiUrl)
+                ? "https://partnersv1.pinbot.ai"
+                : _setting.ApiUrl.TrimEnd('/');
+
+            // Pinbot uses /v3/{id}/messages (id can be WABA ID or PhoneNumberId)
+            return $"{baseUrl}/{pathId}/messages";
+        }
+
+        private async Task<WaSendResult> PostAsync(object payload)
+        {
+            var pathId = ResolvePathIdOrNull();
+            if (string.IsNullOrWhiteSpace(pathId))
+            {
+                const string err = "Pinnacle: PhoneNumberId or WabaId is required.";
+                _logger.LogError(err);
+                return new WaSendResult(
+                    Success: false,
+                    Provider: "Pinnacle",
+                    ProviderMessageId: null,
+                    StatusCode: null,
+                    RawResponse: null,
+                    Error: err
+                );
+            }
+
+            var url = BuildUrl(pathId);
+            var json = JsonSerializer.Serialize(payload);
+
+            using var req = new HttpRequestMessage(HttpMethod.Post, url);
+            req.Content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            // Pinbot requires apikey header (no Bearer token)
+            if (!string.IsNullOrWhiteSpace(_setting.ApiKey))
+            {
+                req.Headers.TryAddWithoutValidation("apikey", _setting.ApiKey);
+            }
+            else
+            {
+                _logger.LogWarning("PinbotProvider: ApiKey is empty for BusinessId {BusinessId}", _setting.BusinessId);
+            }
+
+            var res = await _http.SendAsync(req);
+            var body = await res.Content.ReadAsStringAsync();
+
+            if (!res.IsSuccessStatusCode)
+            {
+                _logger.LogWarning("Pinbot send failed (HTTP {Status}): {Body}", (int)res.StatusCode, body);
+                return new WaSendResult(
+                    Success: false,
+                    Provider: "Pinbot",
+                    ProviderMessageId: null,
+                    StatusCode: res.StatusCode,
+                    RawResponse: body,
+                    Error: res.ReasonPhrase
+                );
+            }
+
+            string? id = null;
+            try
+            {
+                // Pinbot often mirrors Meta's envelope, but be defensive.
+                var root = JsonNode.Parse(body);
+                id = root?["messages"]?[0]?["id"]?.GetValue<string>()
+                     ?? root?["message"]?["id"]?.GetValue<string>();
+            }
+            catch
+            {
+                // keep raw; ID remains null
+            }
+
+            return new WaSendResult(
+                Success: true,
+                Provider: "Pinbot",
+                ProviderMessageId: id,
+                StatusCode: res.StatusCode,
+                RawResponse: body,
+                Error: null
+            );
+        }
+
+        public Task<WaSendResult> SendTextAsync(string to, string body)
+            => PostAsync(new
+            {
+                messaging_product = "whatsapp",
+                to,
+                type = "text",
+                text = new { body }
+            });
+
+        public Task<WaSendResult> SendTemplateAsync(string to, string templateName, string languageCode, IEnumerable<object> components)
+            => PostAsync(new
+            {
+                messaging_product = "whatsapp",
+                to,
+                type = "template",
+                template = new
+                {
+                    name = templateName,
+                    language = new { code = languageCode },
+                    components
+                }
+            });
+
+        public Task<WaSendResult> SendInteractiveAsync(object fullPayload)
+            => PostAsync(fullPayload);
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\Providers\PinnacleProvider.cs 
+====================================================== 
+ 
+﻿// 📄 File: Features/MessagesEngine/Providers/PinnacleProvider.cs
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using xbytechat.api.Features.MessagesEngine.Abstractions;
+using xbytechat_api.WhatsAppSettings.Models;
+
+namespace xbytechat.api.Features.MessagesEngine.Providers
+{
+    public class PinnacleProvider : IWhatsAppProvider
+    {
+        private readonly HttpClient _http;
+        private readonly ILogger<PinnacleProvider> _logger;
+        private readonly WhatsAppSettingEntity _setting;
+
+        private static readonly JsonSerializerOptions _jsonOpts = new()
+        {
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+        };
+
+        public PinnacleProvider(HttpClient http, ILogger<PinnacleProvider> logger, WhatsAppSettingEntity setting)
+        {
+            _http = http;
+            _logger = logger;
+            _setting = setting;
+        }
+
+        private string? ResolvePathIdOrNull()
+        {
+            if (!string.IsNullOrWhiteSpace(_setting.PhoneNumberId)) return _setting.PhoneNumberId!;
+            if (!string.IsNullOrWhiteSpace(_setting.WabaId)) return _setting.WabaId!;
+            return null;
+        }
+
+        private string BuildBaseUrl()
+        {
+            var baseUrl = string.IsNullOrWhiteSpace(_setting.ApiUrl)
+                ? "https://partnersv1.pinbot.ai"
+                : _setting.ApiUrl.TrimEnd('/');
+
+            if (!baseUrl.EndsWith("/v3"))
+                baseUrl += "/v3";
+
+            return baseUrl;
+        }
+
+        // 🔒 Hard-append apikey ALWAYS (no conditions)
+        private string BuildSendUrlWithApiKey(string pathId)
+        {
+            // NEW LOGIC: Check if the 'pathId' is already a full URL.
+            // This is how we detect our tracking links.
+            if (Uri.IsWellFormedUriString(pathId, UriKind.Absolute))
+            {
+                // If it's a full URL, use it directly without modification.
+                return pathId;
+            }
+
+            // OLD LOGIC: If it's just a path ID, build the full Pinnacle API URL.
+            var baseUrl = string.IsNullOrWhiteSpace(_setting.ApiUrl)
+                ? "https://partnersv1.pinbot.ai"
+                : _setting.ApiUrl.TrimEnd('/');
+
+            if (!baseUrl.EndsWith("/v3"))
+                baseUrl += "/v3";
+
+            return $"{baseUrl}/{pathId}/messages?apikey={System.Uri.EscapeDataString(_setting.ApiKey)}";
+        }
+
+        private async Task<WaSendResult> PostAsync(object payload)
+        {
+            var pathId = ResolvePathIdOrNull();
+            if (string.IsNullOrWhiteSpace(pathId))
+            {
+                const string err = "Pinnacle: PhoneNumberId or WabaId is required.";
+                _logger.LogError(err);
+                return new WaSendResult(false, "Pinnacle", null, null, null, err);
+            }
+
+            if (string.IsNullOrWhiteSpace(_setting.ApiKey))
+            {
+                const string err = "Pinnacle: ApiKey is missing in WhatsApp settings.";
+                _logger.LogError(err);
+                return new WaSendResult(false, "Pinnacle", null, null, null, err);
+            }
+
+            var url = BuildSendUrlWithApiKey(pathId);
+            var json = JsonSerializer.Serialize(payload, _jsonOpts);
+
+            using var req = new HttpRequestMessage(HttpMethod.Post, url);
+            req.Content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            // ✅ Put key in ALL the places some tenants require
+            req.Headers.Remove("apikey");
+            req.Headers.Remove("x-api-key");
+            req.Headers.TryAddWithoutValidation("apikey", _setting.ApiKey);
+            req.Headers.TryAddWithoutValidation("x-api-key", _setting.ApiKey);
+            req.Headers.Authorization = new AuthenticationHeaderValue("Apikey", _setting.ApiKey);
+            req.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+            // 🔍 PROVE the headers exist BEFORE sending
+            var headerNames = req.Headers.Select(h => $"{h.Key}:{string.Join(",", h.Value.Select(v => v.Length > 4 ? v[..4] + "..." : v))}").ToArray();
+            _logger.LogInformation("Pinnacle POST {Url} | Headers => {Headers}", url, string.Join(" | ", headerNames));
+            var querycode=req.Content.ReadAsStringAsync().Result;
+            var res = await _http.SendAsync(req);
+            var body = await res.Content.ReadAsStringAsync();
+
+            if (!res.IsSuccessStatusCode)
+            {
+                _logger.LogWarning("Pinnacle send failed (HTTP {Status}): {Body}", (int)res.StatusCode, body);
+                return new WaSendResult(false, "Pinnacle", null, res.StatusCode, body, res.ReasonPhrase);
+            }
+
+            string? id = TryGetPinnMessageId(body);
+            return new WaSendResult(true, "Pinnacle", id, res.StatusCode, body, null);
+        }
+
+        public Task<WaSendResult> SendTextAsync(string to, string body)
+            => PostAsync(new
+            {
+                messaging_product = "whatsapp",
+                to,
+                type = "text",
+                text = new { preview_url = false, body }
+            });
+
+        public Task<WaSendResult> SendTemplateAsync(string to, string templateName, string languageCode, IEnumerable<object> components)
+        {
+            components ??= Enumerable.Empty<object>();
+            var langValue = languageCode; // use exact string from template metadata
+            return PostAsync(new
+            {
+                messaging_product = "whatsapp",
+                to,
+                type = "template",
+                template = new
+                {
+                    name = templateName,
+                    language = langValue,
+                    components
+                }
+            });
+        }
+
+        private static string? TryGetPinnMessageId(string json)
+        {
+            try
+            {
+                using var doc = JsonDocument.Parse(json);
+                var root = doc.RootElement;
+                if (root.TryGetProperty("messages", out var msgs) &&
+                    msgs.ValueKind == JsonValueKind.Array &&
+                    msgs.GetArrayLength() > 0 &&
+                    msgs[0].TryGetProperty("id", out var id0)) return id0.GetString();
+
+                if (root.TryGetProperty("message", out var msg) &&
+                    msg.ValueKind == JsonValueKind.Object)
+                {
+                    if (msg.TryGetProperty("id", out var id1)) return id1.GetString();
+                    if (msg.TryGetProperty("messageId", out var id2)) return id2.GetString();
+                }
+                if (root.TryGetProperty("message_id", out var id3)) return id3.GetString();
+                if (root.TryGetProperty("messageId", out var id4)) return id4.GetString();
+                if (root.TryGetProperty("data", out var data) &&
+                    data.ValueKind == JsonValueKind.Object &&
+                    data.TryGetProperty("messageId", out var id5)) return id5.GetString();
+                if (root.TryGetProperty("id", out var idTop)) return idTop.GetString();
+            }
+            catch { }
+            return null;
+        }
+
+        public Task<WaSendResult> SendInteractiveAsync(object fullPayload) => PostAsync(fullPayload);
+    }
+}
+
+
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\Services\IMessageEngineService.cs 
+====================================================== 
+ 
+﻿// ✅ Step 1: Final interface
+using xbytechat.api.Features.MessagesEngine.DTOs;
+using xbytechat.api.Helpers;
+using System.Threading.Tasks;
+using System.IO.Pipelines;
+using xbytechat.api.Features.MessageManagement.DTOs;
+using xbytechat.api.Features.CampaignModule.DTOs;
+
+namespace xbytechat.api.Features.MessagesEngine.Services
+{
+    public interface IMessageEngineService
+    {
+
+        Task<ResponseResult> SendTemplateMessageAsync(SendMessageDto dto); //
+        Task<ResponseResult> SendTextDirectAsync(TextMessageSendDto dto);
+        Task<ResponseResult> SendAutomationReply(TextMessageSendDto dto);
+        Task<ResponseResult> SendTemplateMessageSimpleAsync(Guid businessId, SimpleTemplateMessageDto dto);
+        Task<ResponseResult> SendImageCampaignAsync(Guid campaignId, Guid businessId, string triggeredBy);
+        Task<ResponseResult> SendImageTemplateMessageAsync(ImageTemplateMessageDto dto, Guid businessId);
+       // Task<ResponseResult> SendPayloadAsync(Guid businessId, object payload);
+        Task<ResponseResult> SendPayloadAsync(
+         Guid businessId,
+         string provider,          // "PINNACLE" or "META_CLOUD"
+         object payload,
+         string? phoneNumberId = null);
+        Task<ResponseResult> SendVideoTemplateMessageAsync(VideoTemplateMessageDto dto, Guid businessId);
+        Task<ResponseResult> SendDocumentTemplateMessageAsync(
+           DocumentTemplateMessageDto dto,
+           Guid businessId);
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\Services\ITemplateMessageSender.cs 
+====================================================== 
+ 
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using xbytechat.api.Features.MessagesEngine.DTOs;
+using xbytechat.api.Shared;
+using xbytechat.api.CRM.Models;
+using xbytechat.api.Features.CampaignModule.Models;
+using xbytechat.api.Helpers;
+
+namespace xbytechat.api.Features.MessagesEngine.Services
+{
+    public interface ITemplateMessageSender
+    {
+        Task<ResponseResult> SendTemplateMessageToContactAsync(
+           Guid businessId,
+           Contact contact,
+           string templateName,
+           List<string> templateParams,
+           string? imageUrl = null,
+           List<CampaignButton>? buttons = null,
+           string? source = null,
+           Guid? refMessageId = null
+       );
+
+        Task<ResponseResult> SendTemplateCampaignAsync(Campaign campaign);
+    }
+}
+
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\Services\MessageEngineService.cs 
+====================================================== 
+ 
+﻿// 📄 File: Features/MessagesEngine/Services/MessageEngineService.cs
+using Newtonsoft.Json;
+using Microsoft.EntityFrameworkCore;
+using xbytechat.api.Features.MessagesEngine.DTOs;
+using xbytechat.api.Features.MessagesEngine.PayloadBuilders;
+using xbytechat.api.Features.PlanManagement.Services;
+using xbytechat.api.Helpers;
+using xbytechat.api.Shared;
+using xbytechat.api;
+using xbytechat_api.WhatsAppSettings.Models;
+using xbytechat.api.Features.CampaignModule.DTOs;
+using xbytechat.api.Features.CampaignTracking.Models;
+using System.Net.Http;
+using xbytechat.api.Shared.utility;
+using Microsoft.AspNetCore.SignalR;
+using xbytechat.api.Features.Inbox.Hubs;
+using System.Text.Json;
+using xbytechat.api.Features.Webhooks.Services.Resolvers;
+using xbytechat.api.CRM.Interfaces;
+using xbytechat.api.Features.MessageManagement.DTOs;
+using xbytechat.api.Features.ReportingModule.DTOs;
+
+// ✅ provider abstraction + factory
+using xbytechat.api.Features.MessagesEngine.Abstractions;
+using xbytechat.api.Features.MessagesEngine.Factory;
+using System.Net.Http.Headers;
+using System.Text;
+using xbytechat.api.CRM.Models;
+using System.Collections.Concurrent;
+using xbytechat.api.WhatsAppSettings.DTOs;
+using xbytechat.api.Features.CampaignModule.Models;
+using xbytechat.api.Features.CTAFlowBuilder.Services;
+
+namespace xbytechat.api.Features.MessagesEngine.Services
+{
+    public class MessageEngineService : IMessageEngineService
+    {
+        private readonly AppDbContext _db;
+        private readonly HttpClient _http; // kept for other internal calls if any
+        private readonly TextMessagePayloadBuilder _textBuilder;
+        private readonly ImageMessagePayloadBuilder _imageBuilder;
+        private readonly TemplateMessagePayloadBuilder _templateBuilder;
+        private readonly CtaMessagePayloadBuilder _ctaBuilder;
+        private readonly IPlanManager _planManager;
+        private readonly IHubContext<InboxHub> _hubContext;
+        private readonly IMessageIdResolver _messageIdResolver;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IContactService _contactService;
+        private readonly ConcurrentDictionary<Guid, (IReadOnlyList<WhatsAppSettingEntity> setting, DateTime expiresAt)>
+ _settingsCache = new();
+        // 🔄 Basic cache for WhatsApp settings to reduce DB load (kept for other paths)
+        //private static readonly Dictionary<Guid, (WhatsAppSettingEntity setting, DateTime expiresAt)> _settingsCache = new();
+
+        private readonly IWhatsAppProviderFactory _providerFactory;
+        private readonly ILogger<MessageEngineService> _logger;
+        public MessageEngineService(
+            AppDbContext db,
+            HttpClient http,
+            TextMessagePayloadBuilder textBuilder,
+            ImageMessagePayloadBuilder imageBuilder,
+            TemplateMessagePayloadBuilder templateBuilder,
+            CtaMessagePayloadBuilder ctaBuilder,
+            IPlanManager planManager,
+            IHubContext<InboxHub> hubContext,
+            IMessageIdResolver messageIdResolver,
+            IHttpContextAccessor httpContextAccessor,
+            IContactService contactService,
+            IWhatsAppProviderFactory providerFactory,
+            ILogger<MessageEngineService> logger
+        )
+        {
+            _db = db;
+            _http = http;
+            _textBuilder = textBuilder;
+            _imageBuilder = imageBuilder;
+            _templateBuilder = templateBuilder;
+            _ctaBuilder = ctaBuilder;
+            _planManager = planManager;
+            _hubContext = hubContext;
+            _messageIdResolver = messageIdResolver;
+            _httpContextAccessor = httpContextAccessor;
+            _contactService = contactService;
+            _providerFactory = providerFactory;
+            _logger = logger;
+        }
+
+        // INSERT: near other helpers / utilities
+        private static string ResolveGreeting(string? profileName, string? contactName)
+        {
+            var s = (profileName ?? contactName)?.Trim();
+            return string.IsNullOrEmpty(s) ? "there" : s;
+        }
+
+        private static void EnsureArgsLength(List<string> args, int slot1Based)
+        {
+            while (args.Count < slot1Based) args.Add(string.Empty);
+        }
+
+        // ✅ Public helper so both Flow + Campaign send paths can use it
+        public async Task<List<string>> ApplyProfileNameAsync(
+            Guid businessId,
+            Guid contactId,
+            bool useProfileName,
+            int? profileNameSlot,
+            List<string> args,
+            CancellationToken ct = default)
+        {
+            if (!useProfileName || !(profileNameSlot is int slot) || slot < 1)
+                return args;
+
+            // pull once from DB (cheap; uses your existing index on BusinessId/Id)
+            var contact = await _db.Contacts
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.BusinessId == businessId && c.Id == contactId, ct);
+
+            var greet = ResolveGreeting(contact?.ProfileName, contact?.Name);
+
+            EnsureArgsLength(args, slot);
+            args[slot - 1] = greet;
+
+            return args;
+        }
+
+
+        public async Task<ResponseResult> SendPayloadAsync(Guid businessId, string provider, object payload,         // "PINNACLE" or "META_CLOUD"object payload,
+        string? phoneNumberId = null)
+        {
+            // Validate provider (no server-side normalization)
+            if (string.IsNullOrWhiteSpace(provider) ||
+                (provider != "PINNACLE" && provider != "META_CLOUD"))
+            {
+                return ResponseResult.ErrorInfo("❌ Invalid provider.",
+                    "Provider must be exactly 'PINNACLE' or 'META_CLOUD'.");
+            }
+
+            // Route to the correct provider + optional sender override
+            return await SendViaProviderAsync(
+                businessId,
+                provider,
+                p => p.SendInteractiveAsync(payload),
+                phoneNumberId
+            );
+        }
+
+
+
+
+
+        // MessageEngineService.cs
+       
+        private static string NormalizeProviderOrThrow(string? p)
+        {
+            if (string.IsNullOrWhiteSpace(p))
+                throw new ArgumentException("Provider is required.");
+
+            var u = p.Trim().ToUpperInvariant();
+            // Map common aliases -> canonical constants
+            return u switch
+            {
+                "META" => "META_CLOUD",
+                "META_CLOUD" => "META_CLOUD",
+                "PINNACLE" => "PINNACLE",
+                _ => throw new ArgumentException($"Invalid provider: {p}")
+            };
+        }
+
+        private async Task<ResponseResult> SendViaProviderAsync(
+        Guid businessId,
+        string provider,                                // explicit
+        Func<IWhatsAppProvider, Task<WaSendResult>> action,
+        string? phoneNumberId = null)
+        {
+            try
+            {
+                // normalize + validate provider once
+                var normalizedProvider = NormalizeProviderOrThrow(provider);   // 👈
+
+                // For both META_CLOUD and PINNACLE we require a sender id
+                if (string.IsNullOrWhiteSpace(phoneNumberId))
+                    return ResponseResult.ErrorInfo(
+                        "❌ Campaign has no sender number.",
+                        "Missing PhoneNumberId");
+
+                // Build the right provider instance bound to this business + number
+                var wa = await _providerFactory.CreateAsync(
+                    businessId,
+                    normalizedProvider,
+                    phoneNumberId);
+
+                var res = await action(wa);
+
+                if (!res.Success)
+                    return ResponseResult.ErrorInfo("❌ WhatsApp API returned an error.", res.Error, res.RawResponse);
+
+                var rr = ResponseResult.SuccessInfo("✅ Message sent successfully", data: null, raw: res.RawResponse);
+                rr.MessageId = string.IsNullOrWhiteSpace(res.ProviderMessageId)
+                    ? TryExtractMetaWamid(res.RawResponse)
+                    : res.ProviderMessageId;
+                return rr;
+            }
+            catch (ArgumentException ex) // from NormalizeProviderOrThrow
+            {
+                return ResponseResult.ErrorInfo("❌ Invalid provider.", ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return ResponseResult.ErrorInfo("❌ Provider configuration error.", ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return ResponseResult.ErrorInfo("❌ Provider call failed.", ex.Message);
+            }
+        }
+
+        private static string? TryExtractMetaWamid(string? raw)
+        {
+            if (string.IsNullOrWhiteSpace(raw)) return null;
+            var s = raw.TrimStart();
+            if (!s.StartsWith("{")) return null;
+            try
+            {
+                using var doc = System.Text.Json.JsonDocument.Parse(s);
+                if (doc.RootElement.TryGetProperty("messages", out var msgs) &&
+                    msgs.ValueKind == System.Text.Json.JsonValueKind.Array &&
+                    msgs.GetArrayLength() > 0 &&
+                    msgs[0].TryGetProperty("id", out var idProp))
+                {
+                    return idProp.GetString();
+                }
+            }
+            catch { }
+            return null;
+        }
+        // ---------- CSV-materialized variables helpers (for campaign recipients) ----------
+        private static string[] ReadBodyParams(string? json)
+        {
+            if (string.IsNullOrWhiteSpace(json)) return Array.Empty<string>();
+            try
+            {
+                return System.Text.Json.JsonSerializer.Deserialize<string[]>(json) ?? Array.Empty<string>();
+            }
+            catch { return Array.Empty<string>(); }
+        }
+
+        private static Dictionary<string, string> ReadVarDict(string? json)
+        {
+            if (string.IsNullOrWhiteSpace(json))
+                return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            try
+            {
+                return System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(json)
+                       ?? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            }
+            catch
+            {
+                return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            }
+        }
+
+        private static List<string> BuildHeaderTextParams(IDictionary<string, string> kv)
+        {
+            // Accept either "header.text.{n}" or "headerpara{n}"
+            var matches = kv.Keys
+                .Select(k => new
+                {
+                    k,
+                    m = System.Text.RegularExpressions.Regex.Match(
+                        k, @"^(?:header(?:\.text)?\.)?(\d+)$|^header(?:\.text)?\.(\d+)$|^headerpara(\d+)$",
+                        System.Text.RegularExpressions.RegexOptions.IgnoreCase)
+                })
+                .Where(x => x.m.Success)
+                .Select(x =>
+                {
+                    // pull the first captured number
+                    for (int g = 1; g < x.m.Groups.Count; g++)
+                        if (x.m.Groups[g].Success) return int.Parse(x.m.Groups[g].Value);
+                    return 0;
+                })
+                .Where(n => n > 0)
+                .Distinct()
+                .OrderBy(n => n)
+                .ToList();
+
+            if (matches.Count == 0) return new List<string>();
+
+            var list = new List<string>(new string[matches.Last()]);
+            for (int i = 1; i <= list.Count; i++)
+            {
+                var k1 = $"header.text.{i}";
+                var k2 = $"headerpara{i}";
+                if (!kv.TryGetValue(k1, out var v))
+                    kv.TryGetValue(k2, out v);
+                list[i - 1] = v ?? string.Empty;
+            }
+
+            return list;
+        }
+
+        private static IReadOnlyDictionary<string, string> BuildButtonUrlParams(IDictionary<string, string> kv)
+        {
+            // Normalize to "button{pos}.url_param"
+            var map = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            for (int pos = 1; pos <= 3; pos++)
+            {
+                var k1 = $"button{pos}.url_param"; // canonical
+                var k2 = $"buttonpara{pos}";       // alias fallback
+                if (kv.TryGetValue(k1, out var v1) && !string.IsNullOrWhiteSpace(v1))
+                    map[k1] = v1;
+                else if (kv.TryGetValue(k2, out var v2) && !string.IsNullOrWhiteSpace(v2))
+                    map[k1] = v2;
+            }
+            return map;
+        }
+
+
+        public async Task<ResponseResult> SendTemplateMessageAsync(SendMessageDto dto)
+        {
+            try
+            {
+                Console.WriteLine($"📨 Sending template message to {dto.RecipientNumber} via BusinessId {dto.BusinessId}");
+
+                if (dto.MessageType != MessageTypeEnum.Template)
+                    return ResponseResult.ErrorInfo("Only template messages are supported in this method.");
+
+                // ✅ Validate provider (UPPERCASE only, no normalization)
+                if (string.IsNullOrWhiteSpace(dto.Provider) ||
+                    (dto.Provider != "PINNACLE" && dto.Provider != "META_CLOUD"))
+                {
+                    return ResponseResult.ErrorInfo("❌ Invalid provider.",
+                        "Provider must be exactly 'PINNACLE' or 'META_CLOUD'.");
+                }
+
+                // ✅ Quota
+                var quotaCheck = await _planManager.CheckQuotaBeforeSendingAsync(dto.BusinessId);
+                if (!quotaCheck.Success)
+                {
+                    Console.WriteLine($"❌ Quota check failed: {quotaCheck.Message}");
+                    return quotaCheck;
+                }
+
+                // ✅ Build template components from dto.TemplateParameters
+                var bodyParams = (dto.TemplateParameters?.Values?.ToList() ?? new List<string>())
+                    .Select(p => new { type = "text", text = p })
+                    .ToArray();
+
+                var components = new List<object>();
+                if (bodyParams.Length > 0)
+                {
+                    components.Add(new { type = "body", parameters = bodyParams });
+                }
+
+                // 🚀 Send to provider — explicit provider + optional sender override
+                var sendResult = await SendViaProviderAsync(
+                    dto.BusinessId,
+                    dto.Provider, // <-- REQUIRED now
+                    p => p.SendTemplateAsync(dto.RecipientNumber, dto.TemplateName!, "en_US", components),
+                    dto.PhoneNumberId // <-- optional; relies on default if null
+                );
+
+                // ✅ Build rendered body
+                var resolvedBody = TemplateParameterHelper.FillPlaceholders(
+                    dto.TemplateBody ?? "",
+                    dto.TemplateParameters?.Values.ToList() ?? new List<string>());
+
+                // 📝 Log result (store provider raw payload)
+                var log = new MessageLog
+                {
+                    Id = Guid.NewGuid(),
+                    BusinessId = dto.BusinessId,
+                    RecipientNumber = dto.RecipientNumber,
+                    MessageContent = dto.TemplateName ?? "N/A",
+                    RenderedBody = resolvedBody,
+                    MediaUrl = null,
+                    Status = sendResult.Success ? "Sent" : "Failed",
+                    ErrorMessage = sendResult.Success ? null : sendResult.Message,
+                    RawResponse = sendResult.RawResponse, // <-- not JsonConvert of wrapper
+                    MessageId = sendResult.MessageId,
+                    CreatedAt = DateTime.UtcNow,
+                    SentAt = DateTime.UtcNow,
+                    CTAFlowConfigId = dto.CTAFlowConfigId,
+                    CTAFlowStepId = dto.CTAFlowStepId,
+                };
+
+                await _db.MessageLogs.AddAsync(log);
+
+                // 📉 Decrement remaining quota
+                var planInfo = await _db.BusinessPlanInfos
+                    .FirstOrDefaultAsync(p => p.BusinessId == dto.BusinessId);
+
+                if (planInfo != null && planInfo.RemainingMessages > 0)
+                {
+                    planInfo.RemainingMessages -= 1;
+                    planInfo.UpdatedAt = DateTime.UtcNow;
+                }
+
+                await _db.SaveChangesAsync();
+
+                // 📡 SignalR push
+                await _hubContext.Clients
+                    .Group($"business_{dto.BusinessId}")
+                    .SendAsync("ReceiveMessage", new
+                    {
+                        Id = log.Id,
+                        RecipientNumber = log.RecipientNumber,
+                        MessageContent = log.RenderedBody,
+                        MediaUrl = log.MediaUrl,
+                        Status = log.Status,
+                        CreatedAt = log.CreatedAt,
+                        SentAt = log.SentAt
+                    });
+
+                return ResponseResult.SuccessInfo("✅ Template message sent successfully.", sendResult, log.RawResponse);
+            }
+            catch (Exception ex)
+            {
+                var errorId = Guid.NewGuid();
+                Console.WriteLine($"🧨 Error ID: {errorId}\n{ex}");
+
+                await _db.MessageLogs.AddAsync(new MessageLog
+                {
+                    Id = Guid.NewGuid(),
+                    BusinessId = dto.BusinessId,
+                    RecipientNumber = dto.RecipientNumber,
+                    MessageContent = dto.TemplateName ?? "N/A",
+                    RenderedBody = TemplateParameterHelper.FillPlaceholders(
+                        dto.TemplateBody ?? "",
+                        dto.TemplateParameters?.Values.ToList() ?? new List<string>()),
+                    Status = "Failed",
+                    ErrorMessage = ex.Message,
+                    RawResponse = ex.ToString(),
+                    CreatedAt = DateTime.UtcNow
+                });
+
+                await _db.SaveChangesAsync();
+
+                return ResponseResult.ErrorInfo(
+                    $"❌ Exception occurred while sending template message. [Ref: {errorId}]",
+                    ex.ToString());
+            }
+        }
+
+        //public async Task<ResponseResult> SendVideoTemplateMessageAsync(VideoTemplateMessageDto dto, Guid businessId)
+        //{
+        //    try
+        //    {
+        //        if (string.IsNullOrWhiteSpace(dto.Provider) || (dto.Provider != "PINNACLE" && dto.Provider != "META_CLOUD"))
+        //            return ResponseResult.ErrorInfo("❌ Invalid provider.", "Provider must be exactly 'PINNACLE' or 'META_CLOUD'.");
+
+        //        var components = new List<object>();
+
+        //        if (!string.IsNullOrWhiteSpace(dto.HeaderVideoUrl))
+        //        {
+        //            components.Add(new
+        //            {
+        //                type = "header",
+        //                parameters = new[] { new { type = "video", video = new { link = dto.HeaderVideoUrl! } } }
+        //            });
+        //        }
+
+        //        components.Add(new
+        //        {
+        //            type = "body",
+        //            parameters = (dto.TemplateParameters ?? new List<string>())
+        //                .Select(p => new { type = "text", text = p })
+        //                .ToArray()
+        //        });
+
+        //        var btns = dto.ButtonParameters ?? new List<CampaignButtonDto>();
+        //        for (int i = 0; i < btns.Count && i < 3; i++)
+        //        {
+        //            var btn = btns[i];
+        //            var subType = btn.ButtonType?.ToLowerInvariant();
+        //            if (string.IsNullOrWhiteSpace(subType)) continue;
+
+        //            var button = new Dictionary<string, object>
+        //            {
+        //                ["type"] = "button",
+        //                ["sub_type"] = subType,
+        //                ["index"] = i.ToString()
+        //            };
+
+        //            if (subType == "quick_reply" && !string.IsNullOrWhiteSpace(btn.TargetUrl))
+        //                button["parameters"] = new[] { new { type = "payload", payload = btn.TargetUrl! } };
+        //            else if (subType == "url" && !string.IsNullOrWhiteSpace(btn.TargetUrl))
+        //                button["parameters"] = new[] { new { type = "text", text = btn.TargetUrl! } };
+
+        //            components.Add(button);
+        //        }
+
+        //        var lang = string.IsNullOrWhiteSpace(dto.LanguageCode) ? "en_US" : dto.LanguageCode!;
+        //        //var sendResult = await SendViaProviderAsync(
+        //        //    businessId,
+        //        //    dto.Provider,
+        //        //    p => p.SendTemplateAsync(dto.RecipientNumber, dto.TemplateName, lang, components),
+        //        //    dto.PhoneNumberId
+        //        //);
+        //        // ✅ build proper WhatsApp payload (language must be an object)
+        //        var payload = new
+        //        {
+        //            messaging_product = "whatsapp",
+        //            to = dto.RecipientNumber,
+        //            type = "template",
+        //            template = new
+        //            {
+        //                name = dto.TemplateName,
+        //                language = new { code = lang },   // <-- key fix
+        //                components = components
+        //            }
+        //        };
+
+        //        var sendResult = await SendPayloadAsync(
+        //            businessId,
+        //            dto.Provider,
+        //            payload,
+        //            dto.PhoneNumberId
+        //        );
+
+        //        var renderedBody = TemplateParameterHelper.FillPlaceholders(
+        //            dto.TemplateBody ?? "",
+        //            dto.TemplateParameters ?? new List<string>());
+
+        //        var log = new MessageLog
+        //        {
+        //            Id = Guid.NewGuid(),
+        //            BusinessId = businessId,
+        //            RecipientNumber = dto.RecipientNumber,
+        //            MessageContent = dto.TemplateName,
+        //            MediaUrl = dto.HeaderVideoUrl,
+        //            RenderedBody = renderedBody,
+        //            Status = sendResult.Success ? "Sent" : "Failed",
+        //            ErrorMessage = sendResult.Success ? null : sendResult.Message,
+        //            RawResponse = sendResult.RawResponse,
+        //            MessageId = sendResult.MessageId,
+        //            SentAt = DateTime.UtcNow,
+        //            CreatedAt = DateTime.UtcNow,
+        //            CTAFlowConfigId = dto.CTAFlowConfigId,
+        //            CTAFlowStepId = dto.CTAFlowStepId
+        //        };
+
+        //        await _db.MessageLogs.AddAsync(log);
+        //        await _db.SaveChangesAsync();
+
+        //        return new ResponseResult
+        //        {
+        //            Success = sendResult.Success,
+        //            Message = sendResult.Success ? "✅ Template sent successfully." : (sendResult.Message ?? "❌ WhatsApp API returned an error."),
+        //            Data = new { Success = sendResult.Success, MessageId = sendResult.MessageId, LogId = log.Id },
+        //            RawResponse = sendResult.RawResponse,
+        //            MessageId = sendResult.MessageId,
+        //            LogId = log.Id
+        //        };
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        try
+        //        {
+        //            await _db.MessageLogs.AddAsync(new MessageLog
+        //            {
+        //                Id = Guid.NewGuid(),
+        //                BusinessId = businessId,
+        //                RecipientNumber = dto.RecipientNumber,
+        //                MessageContent = dto.TemplateName,
+        //                RenderedBody = TemplateParameterHelper.FillPlaceholders(dto.TemplateBody ?? "", dto.TemplateParameters ?? new List<string>()),
+        //                MediaUrl = dto.HeaderVideoUrl,
+        //                Status = "Failed",
+        //                ErrorMessage = ex.Message,
+        //                CreatedAt = DateTime.UtcNow,
+        //                CTAFlowConfigId = dto.CTAFlowConfigId,
+        //                CTAFlowStepId = dto.CTAFlowStepId
+        //            });
+        //            await _db.SaveChangesAsync();
+        //        }
+        //        catch { /* ignore */ }
+
+        //        return ResponseResult.ErrorInfo("❌ Template send failed", ex.Message);
+        //    }
+        //}
+        public async Task<ResponseResult> SendVideoTemplateMessageAsync(VideoTemplateMessageDto dto, Guid businessId)
+        {
+            try
+            {
+                // ── 0) Basic validation + normalization
+                var provider = (dto.Provider ?? "META_CLOUD").Trim().ToUpperInvariant();
+                if (provider != "PINNACLE" && provider != "META_CLOUD")
+                    return ResponseResult.ErrorInfo("❌ Invalid provider.", "Provider must be exactly 'PINNACLE' or 'META_CLOUD'.");
+
+                if (string.IsNullOrWhiteSpace(dto.RecipientNumber))
+                    return ResponseResult.ErrorInfo("❌ Missing recipient number.");
+
+                if (string.IsNullOrWhiteSpace(dto.TemplateName))
+                    return ResponseResult.ErrorInfo("❌ Missing template name.");
+
+                if (string.IsNullOrWhiteSpace(dto.HeaderVideoUrl))
+                    return ResponseResult.ErrorInfo("🚫 Missing HeaderVideoUrl (must be a direct HTTPS link to a video file).");
+
+                var langCode = string.IsNullOrWhiteSpace(dto.LanguageCode) ? "en_US" : dto.LanguageCode!.Trim();
+
+                // ── 1) Build WhatsApp components
+                var components = new List<object>();
+
+                // header → video
+                components.Add(new
+                {
+                    type = "header",
+                    parameters = new object[]
+                    {
+                new { type = "video", video = new { link = dto.HeaderVideoUrl! } }
+                    }
+                });
+
+                // body → text params
+                var bodyParams = (dto.TemplateParameters ?? new List<string>())
+                    .Select(p => new { type = "text", text = p })
+                    .ToArray();
+
+                components.Add(new { type = "body", parameters = bodyParams });
+
+                // buttons (max 3)
+                var btns = (dto.ButtonParameters ?? new List<CampaignButtonDto>()).Take(3).ToList();
+                for (int i = 0; i < btns.Count; i++)
+                {
+                    var b = btns[i];
+                    var sub = (b.ButtonType ?? "").Trim().ToLowerInvariant();
+                    if (string.IsNullOrEmpty(sub)) continue;
+
+                    var button = new Dictionary<string, object>
+                    {
+                        ["type"] = "button",
+                        ["sub_type"] = sub,
+                        ["index"] = i.ToString()
+                    };
+
+                    if (sub == "url" && !string.IsNullOrWhiteSpace(b.TargetUrl))
+                    {
+                        button["parameters"] = new object[] { new { type = "text", text = b.TargetUrl! } };
+                    }
+                    else if (sub == "quick_reply" && !string.IsNullOrWhiteSpace(b.TargetUrl))
+                    {
+                        // For quick replies, providers expect a payload string
+                        button["parameters"] = new object[] { new { type = "payload", payload = b.TargetUrl! } };
+                    }
+
+                    components.Add(button);
+                }
+
+                // ── 2) Full WhatsApp template payload (language is an OBJECT)
+                var payload = new
+                {
+                    messaging_product = "whatsapp",
+                    to = dto.RecipientNumber!,
+                    type = "template",
+                    template = new
+                    {
+                        name = dto.TemplateName!,
+                        language = new { code = langCode },  // ✅ required object shape
+                        components = components
+                    }
+                };
+
+                // ── 3) Send via provider (pass through PhoneNumberId when supplied)
+                //var sendResult = await _messageEngineService.SendPayloadAsync(
+                //    businessId,
+                //    provider,
+                //    payload,
+                //    dto.PhoneNumberId
+                //);
+                var sendResult = await SendPayloadAsync(businessId, provider, payload, dto.PhoneNumberId);
+                // ── 4) Persist message log (best-effort)
+                var renderedBody = TemplateParameterHelper.FillPlaceholders(
+                    dto.TemplateBody ?? "",
+                    dto.TemplateParameters ?? new List<string>());
+
+                var log = new MessageLog
+                {
+                    Id = Guid.NewGuid(),
+                    BusinessId = businessId,
+                    RecipientNumber = dto.RecipientNumber!,
+                    MessageContent = dto.TemplateName!,
+                    MediaUrl = dto.HeaderVideoUrl,        // mirrors header media
+                    RenderedBody = renderedBody,
+                    Status = sendResult.Success ? "Sent" : "Failed",
+                    ErrorMessage = sendResult.ErrorMessage ?? (sendResult.Success ? null : "WhatsApp API returned an error."),
+                    RawResponse = sendResult.RawResponse,
+                    MessageId = sendResult.MessageId,
+                    SentAt = DateTime.UtcNow,
+                    CreatedAt = DateTime.UtcNow,
+                    CTAFlowConfigId = dto.CTAFlowConfigId,
+                    CTAFlowStepId = dto.CTAFlowStepId
+                };
+
+                await _db.MessageLogs.AddAsync(log);
+                await _db.SaveChangesAsync();
+
+                return new ResponseResult
+                {
+                    Success = sendResult.Success,
+                    Message = sendResult.Success ? "✅ Template sent successfully." : (sendResult.ErrorMessage ?? "❌ WhatsApp API returned an error."),
+                    Data = new { Success = sendResult.Success, MessageId = sendResult.MessageId, LogId = log.Id },
+                    RawResponse = sendResult.RawResponse,
+                    MessageId = sendResult.MessageId,
+                    LogId = log.Id
+                };
+            }
+            catch (Exception ex)
+            {
+                // failure log (best effort)
+                try
+                {
+                    await _db.MessageLogs.AddAsync(new MessageLog
+                    {
+                        Id = Guid.NewGuid(),
+                        BusinessId = businessId,
+                        RecipientNumber = dto.RecipientNumber ?? "",
+                        MessageContent = dto.TemplateName ?? "",
+                        RenderedBody = TemplateParameterHelper.FillPlaceholders(dto.TemplateBody ?? "", dto.TemplateParameters ?? new List<string>()),
+                        MediaUrl = dto.HeaderVideoUrl,
+                        Status = "Failed",
+                        ErrorMessage = ex.Message,
+                        CreatedAt = DateTime.UtcNow,
+                        CTAFlowConfigId = dto.CTAFlowConfigId,
+                        CTAFlowStepId = dto.CTAFlowStepId
+                    });
+                    await _db.SaveChangesAsync();
+                }
+                catch { /* ignore */ }
+
+                return ResponseResult.ErrorInfo("❌ Template send failed", ex.Message);
+            }
+        }
+
+        private async Task<IReadOnlyList<WhatsAppSettingEntity>> GetBusinessWhatsAppSettingsAsync(Guid businessId)
+        {
+            if (_settingsCache.TryGetValue(businessId, out var cached) && cached.expiresAt > DateTime.UtcNow)
+                return cached.setting;
+
+            // Load all settings rows for this business (supports multiple providers)
+            var items = await _db.WhatsAppSettings
+                .Where(s => s.BusinessId == businessId)
+                .ToListAsync();
+
+            if (items == null || items.Count == 0)
+                throw new Exception("WhatsApp settings not found.");
+
+            var ro = items.AsReadOnly();
+            _settingsCache[businessId] = (ro, DateTime.UtcNow.AddMinutes(5));
+            return ro;
+        }
+
+
+        public async Task<ResponseResult> SendTextDirectAsync(TextMessageSendDto dto)
+        {
+            try
+            {
+                var businessId = _httpContextAccessor.HttpContext?.User?.GetBusinessId()
+                    ?? throw new UnauthorizedAccessException("❌ Cannot resolve BusinessId from context.");
+
+                // --- Resolve/validate provider & sender -------------------------------
+                // Normalize inbound (trim+upper) but DO NOT silently map unknown values
+                string? provider = dto.Provider?.Trim().ToUpperInvariant();
+                string? phoneNumberId = string.IsNullOrWhiteSpace(dto.PhoneNumberId)
+                    ? null
+                    : dto.PhoneNumberId!.Trim();
+
+                // If provider not supplied, try to resolve from active settings:
+                // - Prefer a row that already has a default sender (PhoneNumberId not null)
+                // - If multiple rows and none has default, ask the caller to specify
+                xbytechat_api.WhatsAppSettings.Models.WhatsAppSettingEntity? chosenSetting = null;
+
+                if (string.IsNullOrWhiteSpace(provider))
+                {
+                    var candidates = await _db.WhatsAppSettings
+                        .AsNoTracking()
+                        .Where(s => s.BusinessId == businessId && s.IsActive)
+                        .OrderByDescending(s => s.PhoneNumberId != null)          // prefer defaulted
+                        //.ThenByDescending(s => s.UpdatedAt ?? s.CreatedAt)
+                        .ThenByDescending(s => (s.UpdatedAt > s.CreatedAt ? s.UpdatedAt : s.CreatedAt))
+
+                        .ToListAsync();
+
+                    if (candidates.Count == 0)
+                        return ResponseResult.ErrorInfo("❌ WhatsApp settings not found for this business.");
+
+                    if (candidates.Count > 1 && candidates.All(s => s.PhoneNumberId == null))
+                        return ResponseResult.ErrorInfo("❌ Multiple providers are active but no default sender is set. Please pass Provider (PINNACLE/META_CLOUD) or set a Default number.");
+
+                    chosenSetting = candidates[0];
+                    provider = (chosenSetting.Provider ?? "").Trim().ToUpperInvariant();
+                    if (string.IsNullOrWhiteSpace(phoneNumberId) && !string.IsNullOrWhiteSpace(chosenSetting.PhoneNumberId))
+                        phoneNumberId = chosenSetting.PhoneNumberId!.Trim();
+                }
+
+                // Final provider check (must be one of the two)
+                if (provider != "PINNACLE" && provider != "META_CLOUD")
+                {
+                    return ResponseResult.ErrorInfo(
+                        "❌ Invalid provider.",
+                        "Provider must be exactly 'PINNACLE' or 'META_CLOUD'."
+                    );
+                }
+
+                // If provider was supplied but no sender, we can still inherit the default
+                if (string.IsNullOrWhiteSpace(phoneNumberId))
+                {
+                    // Try to find a default sender for the chosen provider
+                    var defaultRow = await _db.WhatsAppSettings
+                        .AsNoTracking()
+                        .Where(s => s.BusinessId == businessId &&
+                                    s.IsActive &&
+                                    s.Provider == provider &&
+                                    s.PhoneNumberId != null)
+                        .OrderByDescending(s => (s.UpdatedAt > s.CreatedAt ? s.UpdatedAt : s.CreatedAt))
+
+                        //.OrderByDescending(s => s.UpdatedAt ?? s.CreatedAt)
+
+                        .FirstOrDefaultAsync();
+
+                    if (defaultRow != null)
+                        phoneNumberId = defaultRow.PhoneNumberId!.Trim();
+                }
+                // ----------------------------------------------------------------------
+
+                Guid? contactId = null;
+
+                // 1) Try to find contact by business + phone (indexed)
+                var contact = await _db.Contacts.FirstOrDefaultAsync(c =>
+                    c.BusinessId == businessId && c.PhoneNumber == dto.RecipientNumber);
+
+                if (contact != null)
+                {
+                    // 2) Touch last-contacted when reusing an existing contact
+                    contactId = contact.Id;
+                    contact.LastContactedAt = DateTime.UtcNow;
+                }
+                else if (dto.IsSaveContact)
+                {
+                    // 3) Create a new contact if requested
+                    contact = new Contact
+                    {
+                        Id = Guid.NewGuid(),
+                        BusinessId = businessId,
+                        Name = "WhatsApp User",
+                        PhoneNumber = dto.RecipientNumber,
+                        CreatedAt = DateTime.UtcNow,
+                        LastContactedAt = DateTime.UtcNow
+                    };
+                    _db.Contacts.Add(contact);
+                    contactId = contact.Id;
+                }
+
+                // 4) Persist contact changes (create or timestamp update)
+                await _db.SaveChangesAsync();
+
+                // 🚀 Send via provider — explicit provider + optional sender override
+                var sendResult = await SendViaProviderAsync(
+                    businessId,
+                    provider!,                                                     // validated value
+                    p => p.SendTextAsync(dto.RecipientNumber, dto.TextContent),
+                    phoneNumberId                                                  // optional
+                );
+
+                // 🔎 Extract provider message id (fallback to Meta messages[0].id if needed)
+                string? messageId = sendResult.MessageId;
+                if (string.IsNullOrWhiteSpace(messageId) && !string.IsNullOrWhiteSpace(sendResult.RawResponse))
+                {
+                    try
+                    {
+                        var raw = sendResult.RawResponse!.TrimStart();
+                        if (raw.StartsWith("{"))
+                        {
+                            using var parsed = System.Text.Json.JsonDocument.Parse(raw);
+                            if (parsed.RootElement.TryGetProperty("messages", out var msgs)
+                                && msgs.ValueKind == System.Text.Json.JsonValueKind.Array
+                                && msgs.GetArrayLength() > 0
+                                && msgs[0].TryGetProperty("id", out var idProp))
+                            {
+                                messageId = idProp.GetString();
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"⚠️ JSON parsing failed: {ex.Message} | Raw: {sendResult.RawResponse}");
+                    }
+                }
+
+                // 📝 Log the message
+                var log = new MessageLog
+                {
+                    Id = Guid.NewGuid(),
+                    BusinessId = businessId,
+                    RecipientNumber = dto.RecipientNumber,
+                    MessageContent = dto.TextContent,
+                    RenderedBody = dto.TextContent,
+                    ContactId = contactId,
+                    MediaUrl = null,
+                    Status = sendResult.Success ? "Sent" : "Failed",
+                    ErrorMessage = sendResult.Success ? null : sendResult.Message,
+                    RawResponse = sendResult.RawResponse,
+                    CreatedAt = DateTime.UtcNow,
+                    SentAt = DateTime.UtcNow,
+                    MessageId = messageId
+                };
+
+                await _db.MessageLogs.AddAsync(log);
+                await _db.SaveChangesAsync();
+
+                // 🔗 Optional campaign mapping
+                Guid? campaignSendLogId = null;
+                if (dto.Source == "campaign" && !string.IsNullOrEmpty(messageId))
+                {
+                    try
+                    {
+                        campaignSendLogId = await _messageIdResolver.ResolveCampaignSendLogIdAsync(messageId);
+                        Console.WriteLine($"📦 CampaignSendLog resolved: {campaignSendLogId}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"⚠️ Failed to resolve campaign log for {messageId}: {ex.Message}");
+                    }
+                }
+
+                return new ResponseResult
+                {
+                    Success = sendResult.Success,
+                    Message = sendResult.Success
+                                ? "✅ Text message sent successfully."
+                                : (sendResult.Message ?? "❌ WhatsApp API returned an error."),
+                    Data = new
+                    {
+                        Success = sendResult.Success,
+                        MessageId = messageId,
+                        LogId = log.Id,
+                        CampaignSendLogId = campaignSendLogId
+                    },
+                    RawResponse = sendResult.RawResponse,
+                    MessageId = messageId,
+                    LogId = log.Id
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Exception in SendTextDirectAsync: {ex.Message}");
+
+                try
+                {
+                    var businessId = _httpContextAccessor.HttpContext?.User?.GetBusinessId()
+                        ?? throw new UnauthorizedAccessException("❌ Cannot resolve BusinessId in failure path.");
+
+                    await _db.MessageLogs.AddAsync(new MessageLog
+                    {
+                        Id = Guid.NewGuid(),
+                        BusinessId = businessId,
+                        RecipientNumber = dto.RecipientNumber,
+                        MessageContent = dto.TextContent,
+                        Status = "Failed",
+                        ErrorMessage = ex.Message,
+                        CreatedAt = DateTime.UtcNow
+                    });
+
+                    await _db.SaveChangesAsync();
+                }
+                catch (Exception logEx)
+                {
+                    Console.WriteLine($"❌ Failed to log failure to DB: {logEx.Message}");
+                }
+
+                return ResponseResult.ErrorInfo("❌ Failed to send text message.", ex.ToString());
+            }
+        }
+
+        public async Task<ResponseResult> SendAutomationReply(TextMessageSendDto dto)
+        {
+            try
+            {
+                var businessId =
+                    dto.BusinessId != Guid.Empty
+                        ? dto.BusinessId
+                        : _httpContextAccessor.HttpContext?.User?.GetBusinessId()
+                          ?? throw new UnauthorizedAccessException("❌ Cannot resolve BusinessId from context or DTO.");
+
+                // ✅ Validate provider (no server-side normalization)
+                if (string.IsNullOrWhiteSpace(dto.Provider) ||
+                    (dto.Provider != "PINNACLE" && dto.Provider != "META_CLOUD"))
+                {
+                    return ResponseResult.ErrorInfo("❌ Invalid provider.",
+                        "Provider must be exactly 'PINNACLE' or 'META_CLOUD'.");
+                }
+
+                Guid? contactId = null;
+                try
+                {
+                    var contact = await _contactService.FindOrCreateAsync(businessId, dto.RecipientNumber);
+                    contactId = contact.Id;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"⚠️ Failed to resolve or create contact: {ex.Message}");
+                }
+
+                // 🚀 Send via provider — explicit provider + optional sender override
+                var sendResult = await SendViaProviderAsync(
+                    businessId,
+                    dto.Provider,
+                    p => p.SendTextAsync(dto.RecipientNumber, dto.TextContent),
+                    dto.PhoneNumberId
+                );
+
+                // 🔎 Try to get a provider message id (use provider-provided id first, then Meta fallback)
+                string? messageId = sendResult.MessageId;
+                var raw = sendResult.RawResponse;
+                if (string.IsNullOrWhiteSpace(messageId) && !string.IsNullOrWhiteSpace(raw))
+                {
+                    try
+                    {
+                        var s = raw.TrimStart();
+                        if (s.StartsWith("{"))
+                        {
+                            using var parsed = JsonDocument.Parse(s);
+                            if (parsed.RootElement.TryGetProperty("messages", out var messages) &&
+                                messages.ValueKind == JsonValueKind.Array &&
+                                messages.GetArrayLength() > 0 &&
+                                messages[0].TryGetProperty("id", out var idProp))
+                            {
+                                messageId = idProp.GetString();
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"⚠️ JSON parsing failed: {ex.Message} | Raw: {raw}");
+                    }
+                }
+
+                // 📝 Log result (store raw provider payload; don’t serialize the wrapper)
+                var log = new MessageLog
+                {
+                    Id = Guid.NewGuid(),
+                    BusinessId = businessId,
+                    RecipientNumber = dto.RecipientNumber,
+                    MessageContent = dto.TextContent,
+                    RenderedBody = dto.TextContent,
+                    ContactId = contactId,
+                    MediaUrl = null,
+                    Status = sendResult.Success ? "Sent" : "Failed",
+                    ErrorMessage = sendResult.Success ? null : sendResult.Message,
+                    RawResponse = sendResult.RawResponse,
+                    CreatedAt = DateTime.UtcNow,
+                    SentAt = DateTime.UtcNow,
+                    MessageId = messageId
+                };
+
+                await _db.MessageLogs.AddAsync(log);
+                await _db.SaveChangesAsync();
+
+                Guid? campaignSendLogId = null;
+                if (dto.Source == "campaign" && !string.IsNullOrEmpty(messageId))
+                {
+                    try
+                    {
+                        campaignSendLogId = await _messageIdResolver.ResolveCampaignSendLogIdAsync(messageId);
+                        Console.WriteLine($"📦 CampaignSendLog resolved: {campaignSendLogId}");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"⚠️ Failed to resolve campaign log for {messageId}: {ex.Message}");
+                    }
+                }
+
+                return new ResponseResult
+                {
+                    Success = sendResult.Success,
+                    Message = sendResult.Success
+                        ? "✅ Text message sent successfully."
+                        : (sendResult.Message ?? "❌ WhatsApp API returned an error."),
+                    Data = new
+                    {
+                        Success = sendResult.Success,
+                        MessageId = messageId,
+                        LogId = log.Id,
+                        CampaignSendLogId = campaignSendLogId
+                    },
+                    RawResponse = sendResult.RawResponse,
+                    MessageId = messageId,
+                    LogId = log.Id
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Exception in SendAutomationReply: {ex.Message}");
+
+                try
+                {
+                    var businessId =
+                        dto.BusinessId != Guid.Empty
+                            ? dto.BusinessId
+                            : _httpContextAccessor.HttpContext?.User?.GetBusinessId()
+                              ?? throw new UnauthorizedAccessException("❌ Cannot resolve BusinessId in failure path.");
+
+                    await _db.MessageLogs.AddAsync(new MessageLog
+                    {
+                        Id = Guid.NewGuid(),
+                        BusinessId = businessId,
+                        RecipientNumber = dto.RecipientNumber,
+                        MessageContent = dto.TextContent,
+                        Status = "Failed",
+                        ErrorMessage = ex.Message,
+                        CreatedAt = DateTime.UtcNow
+                    });
+
+                    await _db.SaveChangesAsync();
+                }
+                catch (Exception logEx)
+                {
+                    Console.WriteLine($"❌ Failed to log failure to DB: {logEx.Message}");
+                }
+
+                return ResponseResult.ErrorInfo("❌ Failed to send text message.", ex.ToString());
+            }
+        }
+        public async Task<ResponseResult> SendTemplateMessageSimpleAsync(Guid businessId, SimpleTemplateMessageDto dto)
+        {
+            try
+            {
+                // 0) Soft-resolve provider & sender (no hard early return)
+                var provider = (dto.Provider ?? string.Empty).Trim().ToUpperInvariant();
+                var phoneNumberId = dto.PhoneNumberId;
+
+                if (provider != "PINNACLE" && provider != "META_CLOUD")
+                {
+                    // Try active WhatsAppSettings first (usually the “current” sender)
+                    var ws = await _db.WhatsAppSettings
+                        .AsNoTracking()
+                        .Where(x => x.BusinessId == businessId && x.IsActive)
+                        .OrderByDescending(x => x.UpdatedAt ?? x.CreatedAt)
+                        .FirstOrDefaultAsync();
+
+                    if (ws != null)
+                    {
+                        provider = (ws.Provider ?? string.Empty).Trim().ToUpperInvariant();
+                        if (string.IsNullOrWhiteSpace(phoneNumberId))
+                            phoneNumberId = ws.PhoneNumberId;
+                    }
+
+                    // Fallback to WhatsAppPhoneNumbers (prefer default, then stable order)
+                    if (provider != "PINNACLE" && provider != "META_CLOUD")
+                    {
+                        var pn = await _db.WhatsAppPhoneNumbers
+                            .AsNoTracking()
+                            .Where(n => n.BusinessId == businessId && n.IsActive)
+                            .OrderByDescending(n => n.IsDefault)
+                            .ThenBy(n => n.WhatsAppBusinessNumber)
+                            .Select(n => new { n.Provider, n.PhoneNumberId })
+                            .FirstOrDefaultAsync();
+
+                        if (pn != null)
+                        {
+                            provider = (pn.Provider ?? string.Empty).Trim().ToUpperInvariant();
+                            if (string.IsNullOrWhiteSpace(phoneNumberId))
+                                phoneNumberId = pn.PhoneNumberId;
+                        }
+                    }
+                }
+
+                // If still unknown, fail clearly (we tried our best)
+                if (provider != "PINNACLE" && provider != "META_CLOUD")
+                {
+                    return ResponseResult.ErrorInfo("❌ Missing provider.",
+                        "No active WhatsApp sender found. Configure a PINNACLE or META_CLOUD sender for this business.");
+                }
+
+                // 1) Build minimal components (body only)
+                var components = new List<object>();
+                var parameters = (dto.TemplateParameters ?? new List<string>())
+                    .Select(p => new { type = "text", text = p })
+                    .ToArray();
+
+                if (parameters.Length > 0)
+                {
+                    components.Add(new { type = "body", parameters });
+                }
+
+                // 2) Always send via provider — explicit provider + sender override (if given/resolved)
+                var lang = string.IsNullOrWhiteSpace(dto.LanguageCode) ? "en_US" : dto.LanguageCode!;
+                _logger?.LogInformation("➡️ SEND-INTENT tmpl={Template} to={To} provider={Provider} pnid={PhoneNumberId}",
+                    dto.TemplateName, dto.RecipientNumber, provider, phoneNumberId ?? "(default)");
+
+                var sendResult = await SendViaProviderAsync(
+                    businessId,
+                    provider, // explicit, resolved above
+                    p => p.SendTemplateAsync(dto.RecipientNumber, dto.TemplateName, lang, components),
+                    phoneNumberId // explicit; lets the adapter pick the correct sender
+                );
+
+                // 3) Log message (store provider raw response, not the whole wrapper)
+                var log = new MessageLog
+                {
+                    Id = Guid.NewGuid(),
+                    BusinessId = businessId,
+                    RecipientNumber = dto.RecipientNumber,
+                    MessageContent = dto.TemplateName,
+                    RenderedBody = TemplateParameterHelper.FillPlaceholders(
+                        dto.TemplateBody ?? string.Empty,
+                        dto.TemplateParameters ?? new List<string>()),
+
+                    // Optional flow context from DTO (if this simple send was triggered by a flow)
+                    CTAFlowConfigId = dto.CTAFlowConfigId,
+                    CTAFlowStepId = dto.CTAFlowStepId,
+
+                    // Helpful for downstream analysis
+                    Provider = provider,
+                    ProviderMessageId = sendResult.MessageId,
+
+                    Status = sendResult.Success ? "Sent" : "Failed",
+                    ErrorMessage = sendResult.Success ? null : sendResult.Message,
+                    RawResponse = sendResult.RawResponse,
+                    MessageId = sendResult.MessageId,
+                    SentAt = sendResult.Success ? DateTime.UtcNow : (DateTime?)null,
+                    CreatedAt = DateTime.UtcNow,
+                    Source = "api" // or "simple_send"
+                };
+
+                await _db.MessageLogs.AddAsync(log);
+                await _db.SaveChangesAsync();
+
+                return new ResponseResult
+                {
+                    Success = sendResult.Success,
+                    Message = sendResult.Success
+                        ? "✅ Template sent successfully."
+                        : (sendResult.Message ?? "❌ WhatsApp API returned an error."),
+                    Data = new
+                    {
+                        Success = sendResult.Success,
+                        MessageId = sendResult.MessageId,
+                        LogId = log.Id
+                    },
+                    RawResponse = sendResult.RawResponse,
+                    MessageId = sendResult.MessageId,
+                    LogId = log.Id
+                };
+            }
+            catch (Exception ex)
+            {
+                // Best-effort failure log
+                try
+                {
+                    await _db.MessageLogs.AddAsync(new MessageLog
+                    {
+                        Id = Guid.NewGuid(),
+                        BusinessId = businessId,
+                        RecipientNumber = dto.RecipientNumber,
+                        MessageContent = dto.TemplateName,
+                        RenderedBody = TemplateParameterHelper.FillPlaceholders(
+                            dto.TemplateBody ?? string.Empty,
+                            dto.TemplateParameters ?? new List<string>()),
+                        Status = "Failed",
+                        ErrorMessage = ex.Message,
+                        CreatedAt = DateTime.UtcNow,
+                        Source = "api"
+                    });
+                    await _db.SaveChangesAsync();
+                }
+                catch { /* ignore log errors */ }
+
+                return ResponseResult.ErrorInfo("❌ Template send failed", ex.Message);
+            }
+        }
+
+
+        //public async Task<ResponseResult> SendTemplateMessageSimpleAsync(Guid businessId, SimpleTemplateMessageDto dto)
+        //{
+        //    try
+        //    {
+        //        // 0) Validate provider (no server-side normalization)
+        //        if (string.IsNullOrWhiteSpace(dto.Provider) ||
+        //            (dto.Provider != "PINNACLE" && dto.Provider != "META_CLOUD"))
+        //        {
+        //            return ResponseResult.ErrorInfo("❌ Invalid provider.",
+        //                "Provider must be exactly 'PINNACLE' or 'META_CLOUD'.");
+        //        }
+
+        //        // 1) Build minimal components (body only)
+        //        var components = new List<object>();
+        //        var parameters = (dto.TemplateParameters ?? new List<string>())
+        //            .Select(p => new { type = "text", text = p })
+        //            .ToArray();
+
+        //        if (parameters.Length > 0)
+        //        {
+        //            components.Add(new { type = "body", parameters });
+        //        }
+
+        //        // 2) Send via provider — explicit provider + optional sender override
+        //        var lang = string.IsNullOrWhiteSpace(dto.LanguageCode) ? "en_US" : dto.LanguageCode!;
+        //        var sendResult = await SendViaProviderAsync(
+        //            businessId,
+        //            dto.Provider, // <-- explicit provider
+        //            p => p.SendTemplateAsync(dto.RecipientNumber, dto.TemplateName, lang, components),
+        //            dto.PhoneNumberId // <-- optional sender override
+        //        );
+
+        //        // 3) Log message (store provider raw response, not the whole wrapper)
+        //        var log = new MessageLog
+        //        {
+        //            Id = Guid.NewGuid(),
+        //            BusinessId = businessId,
+        //            RecipientNumber = dto.RecipientNumber,
+        //            MessageContent = dto.TemplateName,
+        //            RenderedBody = TemplateParameterHelper.FillPlaceholders(dto.TemplateBody ?? "", dto.TemplateParameters ?? new List<string>()),
+        //            Status = sendResult.Success ? "Sent" : "Failed",
+        //            ErrorMessage = sendResult.Success ? null : sendResult.Message,
+        //            RawResponse = sendResult.RawResponse,
+        //            MessageId = sendResult.MessageId,     // capture if available
+        //            SentAt = DateTime.UtcNow,
+        //            CreatedAt = DateTime.UtcNow
+        //        };
+
+        //        await _db.MessageLogs.AddAsync(log);
+        //        await _db.SaveChangesAsync();
+
+        //        return new ResponseResult
+        //        {
+        //            Success = sendResult.Success,
+        //            Message = sendResult.Success
+        //                ? "✅ Template sent successfully."
+        //                : (sendResult.Message ?? "❌ WhatsApp API returned an error."),
+        //            Data = new
+        //            {
+        //                Success = sendResult.Success,
+        //                MessageId = sendResult.MessageId,
+        //                LogId = log.Id
+        //            },
+        //            RawResponse = sendResult.RawResponse,
+        //            MessageId = sendResult.MessageId,
+        //            LogId = log.Id
+        //        };
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Best-effort failure log
+        //        try
+        //        {
+        //            await _db.MessageLogs.AddAsync(new MessageLog
+        //            {
+        //                Id = Guid.NewGuid(),
+        //                BusinessId = businessId,
+        //                RecipientNumber = dto.RecipientNumber,
+        //                MessageContent = dto.TemplateName,
+        //                RenderedBody = TemplateParameterHelper.FillPlaceholders(dto.TemplateBody ?? "", dto.TemplateParameters ?? new List<string>()),
+        //                Status = "Failed",
+        //                ErrorMessage = ex.Message,
+        //                CreatedAt = DateTime.UtcNow
+        //            });
+        //            await _db.SaveChangesAsync();
+        //        }
+        //        catch { /* ignore log errors */ }
+
+        //        return ResponseResult.ErrorInfo("❌ Template send failed", ex.Message);
+        //    }
+        //}
+
+        public async Task<ResponseResult> SendImageCampaignAsync(Guid campaignId, Guid businessId, string sentBy)
+        {
+            try
+            {
+                var campaign = await _db.Campaigns
+                    .Include(c => c.MultiButtons)
+                    .FirstOrDefaultAsync(c => c.Id == campaignId && c.BusinessId == businessId);
+
+                if (campaign == null)
+                    return ResponseResult.ErrorInfo("❌ Campaign not found or unauthorized.");
+
+                var recipients = await _db.CampaignRecipients
+                    .Include(r => r.Contact)
+                    .Where(r => r.CampaignId == campaignId && r.BusinessId == businessId)
+                    .ToListAsync();
+
+                if (recipients.Count == 0)
+                    return ResponseResult.ErrorInfo("⚠️ No recipients assigned to this campaign.");
+
+                if (string.IsNullOrWhiteSpace(campaign.ImageCaption))
+                    return ResponseResult.ErrorInfo("❌ Campaign caption (ImageCaption) is required.");
+
+                var validButtons = campaign.MultiButtons
+                    ?.Where(b => !string.IsNullOrWhiteSpace(b.Title))
+                    .Select(b => new CtaButtonDto { Title = b.Title, Value = b.Value })
+                    .ToList();
+
+                if (validButtons == null || validButtons.Count == 0)
+                    return ResponseResult.ErrorInfo("❌ At least one CTA button with a valid title is required.");
+
+                int successCount = 0, failCount = 0;
+
+                foreach (var recipient in recipients)
+                {
+                    if (recipient.Contact == null || string.IsNullOrWhiteSpace(recipient.Contact.PhoneNumber))
+                    {
+                        Console.WriteLine($"⚠️ Skipping invalid contact: {recipient.Id}");
+                        failCount++;
+                        continue;
+                    }
+
+                    var dto = new SendMessageDto
+                    {
+                        BusinessId = businessId,
+                        RecipientNumber = recipient.Contact.PhoneNumber,
+                        MessageType = MessageTypeEnum.Image,
+                        MediaUrl = campaign.ImageUrl,
+                        TextContent = campaign.MessageTemplate,
+                        CtaButtons = validButtons,
+
+                        CampaignId = campaign.Id,
+                        SourceModule = "image-campaign",
+                        CustomerId = recipient.Contact.Id.ToString(),
+                        CustomerName = recipient.Contact.Name,
+                        CustomerPhone = recipient.Contact.PhoneNumber,
+                        CTATriggeredFrom = "campaign"
+                    };
+
+                    var result = await SendImageWithCtaAsync(dto);
+
+                    var sendLog = new CampaignSendLog
+                    {
+                        Id = Guid.NewGuid(),
+                        CampaignId = campaign.Id,
+                        ContactId = recipient.Contact.Id,
+                        RecipientId = recipient.Id,
+                        MessageLogId = result?.LogId,
+                        SendStatus = result.Success ? "Sent" : "Failed",
+                        SentAt = DateTime.UtcNow,
+                        CreatedBy = sentBy,
+                        BusinessId = businessId,
+                    };
+
+                    await _db.CampaignSendLogs.AddAsync(sendLog);
+
+                    if (result.Success) successCount++;
+                    else failCount++;
+                }
+
+                await _db.SaveChangesAsync();
+
+                return ResponseResult.SuccessInfo($"✅ Campaign sent.\n📤 Success: {successCount}, ❌ Failed: {failCount}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Error sending image campaign: {ex.Message}");
+                return ResponseResult.ErrorInfo("❌ Unexpected error while sending image campaign.", ex.ToString());
+            }
+        }
+        // Features/MessageManagement/Services/MessageEngineService.cs
+        /// <summary>
+        /// Sends a TEMPLATE campaign using CSV-materialized variables stored on CampaignRecipients:
+        /// - ResolvedParametersJson (string[] for body {{n}})
+        /// - ResolvedButtonUrlsJson (dict for header.text.{n} and button{pos}.url_param)
+        /// Uses campaign-level HeaderKind + HeaderMediaUrl for media headers.
+        /// </summary>
+        // Sends a TEMPLATE campaign using materialized per-recipient values from CSV.
+        // - Reads CampaignRecipients.ResolvedParametersJson (string[] for body {{n}})
+        // - Reads CampaignRecipients.ResolvedButtonUrlsJson (dict: "button{1..3}.url_param", optional "header.image_url")
+        // - Uses Campaign.ImageUrl as header media if present; otherwise uses header.image_url from the dict if provided.
+        public async Task<ResponseResult> SendTemplateCampaignAsync(Guid campaignId, Guid businessId, string sentBy)
+        {
+            try
+            {
+                // 1) Load campaign (minimal fields we need)
+                var campaign = await _db.Campaigns
+                    .AsNoTracking()
+                    .Where(c => c.Id == campaignId && c.BusinessId == businessId)
+                    .Select(c => new
+                    {
+                        c.Id,
+                        c.BusinessId,
+                        c.MessageTemplate,
+                        c.TemplateId,
+                        c.Provider,
+                        c.PhoneNumberId,
+                        c.ImageUrl // used as header media if template expects image
+                    })
+                    .FirstOrDefaultAsync();
+
+                if (campaign == null)
+                    return ResponseResult.ErrorInfo("❌ Campaign not found or unauthorized.");
+
+                // Template name
+                var templateName = !string.IsNullOrWhiteSpace(campaign.TemplateId)
+                    ? campaign.TemplateId!
+                    : (campaign.MessageTemplate ?? "").Trim();
+
+                if (string.IsNullOrWhiteSpace(templateName))
+                    return ResponseResult.ErrorInfo("❌ Campaign has no template selected.");
+
+                // 2) Determine language (fallback en_US)
+                var lang = await _db.WhatsAppTemplates
+                    .AsNoTracking()
+                    .Where(w => w.BusinessId == businessId && w.Name == templateName)
+                    .OrderByDescending(w => (w.UpdatedAt > w.CreatedAt ? w.UpdatedAt : w.CreatedAt))
+                    .Select(w => w.Language)
+                    .FirstOrDefaultAsync();
+
+                if (string.IsNullOrWhiteSpace(lang)) lang = "en_US";
+
+                // 3) Load recipients with materialized vars + phone
+                var recipients = await _db.CampaignRecipients
+                    .AsNoTracking()
+                    .Include(r => r.AudienceMember)
+                    .Include(r => r.Contact) // optional fallback for phone
+                    .Where(r => r.CampaignId == campaignId && r.BusinessId == businessId)
+                    .Select(r => new
+                    {
+                        r.Id,
+                        r.ResolvedParametersJson,   // string[]
+                        r.ResolvedButtonUrlsJson,   // dict
+                        Phone = r.AudienceMember != null && !string.IsNullOrEmpty(r.AudienceMember.PhoneE164)
+                                ? r.AudienceMember.PhoneE164
+                                : (r.Contact != null ? r.Contact.PhoneNumber : null)
+                    })
+                    .ToListAsync();
+
+                if (recipients.Count == 0)
+                    return ResponseResult.ErrorInfo("⚠️ No recipients materialized for this campaign.");
+
+                // 4) Provider and sender validation (no normalization here)
+                var provider = (campaign.Provider ?? "").Trim().ToUpperInvariant();
+                if (provider != "PINNACLE" && provider != "META_CLOUD")
+                    return ResponseResult.ErrorInfo("❌ Invalid provider on campaign. Must be 'PINNACLE' or 'META_CLOUD'.");
+
+                var phoneNumberId = string.IsNullOrWhiteSpace(campaign.PhoneNumberId)
+                    ? null
+                    : campaign.PhoneNumberId!.Trim();
+
+                if (string.IsNullOrWhiteSpace(phoneNumberId))
+                    return ResponseResult.ErrorInfo("❌ Campaign has no sender number (PhoneNumberId).");
+
+                int success = 0, fail = 0;
+
+                foreach (var r in recipients)
+                {
+                    if (string.IsNullOrWhiteSpace(r.Phone))
+                    {
+                        fail++;
+                        continue;
+                    }
+
+                    // Deserialize materialized values
+                    string[] bodyParams;
+                    try
+                    {
+                        bodyParams = string.IsNullOrWhiteSpace(r.ResolvedParametersJson)
+                            ? Array.Empty<string>()
+                            : System.Text.Json.JsonSerializer.Deserialize<string[]>(r.ResolvedParametersJson!) ?? Array.Empty<string>();
+                    }
+                    catch { bodyParams = Array.Empty<string>(); }
+
+                    Dictionary<string, string> buttonVars;
+                    try
+                    {
+                        buttonVars = string.IsNullOrWhiteSpace(r.ResolvedButtonUrlsJson)
+                            ? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                            : System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(r.ResolvedButtonUrlsJson!)
+                              ?? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+                    }
+                    catch
+                    {
+                        buttonVars = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+                    }
+
+                    // 5) Build WhatsApp components
+                    var components = new List<object>();
+
+                    // Header (image) — priority: Campaign.ImageUrl -> header.image_url in dict
+                    var headerImage = !string.IsNullOrWhiteSpace(campaign.ImageUrl) ? campaign.ImageUrl
+                                   : (buttonVars.TryGetValue("header.image_url", out var hv) && !string.IsNullOrWhiteSpace(hv) ? hv : null);
+
+                    if (!string.IsNullOrWhiteSpace(headerImage))
+                    {
+                        components.Add(new
+                        {
+                            type = "header",
+                            parameters = new object[]
+                            {
+                        new { type = "image", image = new { link = headerImage! } }
+                            }
+                        });
+                    }
+
+                    // Body params
+                    if (bodyParams.Length > 0)
+                    {
+                        var bp = bodyParams.Select(p => new { type = "text", text = p ?? "" }).ToArray();
+                        components.Add(new { type = "body", parameters = bp });
+                    }
+
+                    // Dynamic URL buttons (button{1..3}.url_param)
+                    for (int pos = 1; pos <= 3; pos++)
+                    {
+                        var key = $"button{pos}.url_param";
+                        if (buttonVars.TryGetValue(key, out var urlParam) && !string.IsNullOrWhiteSpace(urlParam))
+                        {
+                            components.Add(new
+                            {
+                                type = "button",
+                                sub_type = "url",
+                                index = (pos - 1).ToString(), // Meta expects 0-based string index
+                                parameters = new object[] { new { type = "text", text = urlParam } }
+                            });
+                        }
+                    }
+
+                    // 6) Full payload
+                    var payload = new
+                    {
+                        messaging_product = "whatsapp",
+                        to = r.Phone!,
+                        type = "template",
+                        template = new
+                        {
+                            name = templateName,
+                            language = new { code = lang },
+                            components = components
+                        }
+                    };
+
+                    // 7) Send via provider
+                    var result = await SendPayloadAsync(businessId, provider, payload, phoneNumberId);
+                    if (result.Success) success++; else fail++;
+
+                    // OPTIONAL: you can write a CampaignSendLog here, mirroring your image path.
+                    // (Omitted to keep this tight; add if you want parity with image campaigns)
+                }
+
+                return ResponseResult.SuccessInfo($"✅ Template campaign sent. 📤 Success: {success}, ❌ Failed: {fail}");
+            }
+            catch (Exception ex)
+            {
+                return ResponseResult.ErrorInfo("❌ Error sending template campaign.", ex.ToString());
+            }
+        }
+
+
+
+
+
+        public async Task<ResponseResult> SendImageWithCtaAsync(SendMessageDto dto)
+        {
+            try
+            {
+                Console.WriteLine($"📤 Sending image+CTA to {dto.RecipientNumber}");
+
+                // ✅ Validate inputs
+                if (string.IsNullOrWhiteSpace(dto.TextContent))
+                    return ResponseResult.ErrorInfo("❌ Image message caption (TextContent) cannot be empty.");
+
+                if (string.IsNullOrWhiteSpace(dto.Provider) ||
+                    (dto.Provider != "PINNACLE" && dto.Provider != "META_CLOUD"))
+                {
+                    return ResponseResult.ErrorInfo("❌ Invalid provider.",
+                        "Provider must be exactly 'PINNACLE' or 'META_CLOUD'.");
+                }
+
+                // ✅ CTA buttons (1–3)
+                var validButtons = dto.CtaButtons?
+                    .Where(b => !string.IsNullOrWhiteSpace(b.Title))
+                    .Take(3)
+                    .Select((btn, index) => new
+                    {
+                        type = "reply",
+                        reply = new
+                        {
+                            id = $"btn_{index + 1}_{Guid.NewGuid():N}".Substring(0, 16),
+                            title = btn.Title
+                        }
+                    })
+                    .ToList();
+
+                if (validButtons == null || validButtons.Count == 0)
+                    return ResponseResult.ErrorInfo("❌ At least one CTA button with a valid title is required.");
+
+                // 📦 Interactive payload (Meta-friendly; other providers can proxy)
+                var payload = new
+                {
+                    messaging_product = "whatsapp",
+                    to = dto.RecipientNumber,
+                    type = "interactive",
+                    interactive = new
+                    {
+                        type = "button",
+                        body = new { text = dto.TextContent },
+                        action = new { buttons = validButtons }
+                    },
+                    image = string.IsNullOrWhiteSpace(dto.MediaUrl) ? null : new { link = dto.MediaUrl }
+                };
+
+                // 🚀 Send via provider — EXPLICIT provider + optional sender override
+                var sendResult = await SendViaProviderAsync(
+                    dto.BusinessId,
+                    dto.Provider,
+                    p => p.SendInteractiveAsync(payload),
+                    dto.PhoneNumberId  // null → use provider’s default sender
+                );
+
+                // 🔎 MessageId: provider id first, then Meta fallback
+                string? messageId = sendResult.MessageId;
+                if (string.IsNullOrWhiteSpace(messageId) && !string.IsNullOrWhiteSpace(sendResult.RawResponse))
+                {
+                    try
+                    {
+                        var raw = sendResult.RawResponse.TrimStart();
+                        if (raw.StartsWith("{"))
+                        {
+                            using var doc = System.Text.Json.JsonDocument.Parse(raw);
+                            if (doc.RootElement.TryGetProperty("messages", out var msgs) &&
+                                msgs.ValueKind == System.Text.Json.JsonValueKind.Array &&
+                                msgs.GetArrayLength() > 0 &&
+                                msgs[0].TryGetProperty("id", out var idProp))
+                            {
+                                messageId = idProp.GetString();
+                            }
+                        }
+                    }
+                    catch { /* best-effort */ }
+                }
+
+                // 📝 Log (store RAW provider payload)
+                var log = new MessageLog
+                {
+                    Id = Guid.NewGuid(),
+                    BusinessId = dto.BusinessId,
+                    RecipientNumber = dto.RecipientNumber,
+                    MessageContent = dto.TextContent ?? "[Image with CTA]",
+                    RenderedBody = dto.TextContent ?? "",
+                    MediaUrl = dto.MediaUrl,
+                    Status = sendResult.Success ? "Sent" : "Failed",
+                    ErrorMessage = sendResult.Success ? null : sendResult.Message,
+                    RawResponse = sendResult.RawResponse,
+                    MessageId = messageId,
+                    CreatedAt = DateTime.UtcNow,
+                    SentAt = DateTime.UtcNow,
+                    CTAFlowConfigId = dto.CTAFlowConfigId,
+                    CTAFlowStepId = dto.CTAFlowStepId,
+                };
+
+                await _db.MessageLogs.AddAsync(log);
+                await _db.SaveChangesAsync();
+
+                return new ResponseResult
+                {
+                    Success = sendResult.Success,
+                    Message = sendResult.Success
+                        ? "✅ Image+CTA message sent."
+                        : (sendResult.Message ?? "❌ WhatsApp API returned an error."),
+                    Data = new
+                    {
+                        Success = sendResult.Success,
+                        MessageId = messageId,
+                        LogId = log.Id
+                    },
+                    RawResponse = sendResult.RawResponse,
+                    MessageId = messageId,
+                    LogId = log.Id
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("❌ Exception in SendImageWithCtaAsync: " + ex.Message);
+
+                await _db.MessageLogs.AddAsync(new MessageLog
+                {
+                    Id = Guid.NewGuid(),
+                    BusinessId = dto.BusinessId,
+                    RecipientNumber = dto.RecipientNumber,
+                    MessageContent = dto.TextContent ?? "[Image CTA Failed]",
+                    RenderedBody = dto.TextContent ?? "[Failed image CTA]",
+                    Status = "Failed",
+                    ErrorMessage = ex.Message,
+                    RawResponse = ex.ToString(),
+                    CreatedAt = DateTime.UtcNow,
+                    CTAFlowConfigId = dto.CTAFlowConfigId,
+                    CTAFlowStepId = dto.CTAFlowStepId,
+                });
+
+                await _db.SaveChangesAsync();
+
+                return ResponseResult.ErrorInfo("❌ Failed to send image+CTA.", ex.ToString());
+            }
+        }
+
+
+        public async Task<ResponseResult> SendImageTemplateMessageAsync(ImageTemplateMessageDto dto, Guid businessId)
+        {
+            try
+            {
+                // ✅ Validate provider (no normalization here)
+                if (string.IsNullOrWhiteSpace(dto.Provider) ||
+                    (dto.Provider != "PINNACLE" && dto.Provider != "META_CLOUD"))
+                {
+                    return ResponseResult.ErrorInfo("❌ Invalid provider.",
+                        "Provider must be exactly 'PINNACLE' or 'META_CLOUD'.");
+                }
+
+                // 1) Build components
+                var components = new List<object>();
+
+                if (!string.IsNullOrWhiteSpace(dto.HeaderImageUrl))
+                {
+                    components.Add(new
+                    {
+                        type = "header",
+                        parameters = new[]
+                        {
+                    new { type = "image", image = new { link = dto.HeaderImageUrl! } }
+                }
+                    });
+                }
+
+                components.Add(new
+                {
+                    type = "body",
+                    parameters = (dto.TemplateParameters ?? new List<string>())
+                        .Select(p => new { type = "text", text = p })
+                        .ToArray()
+                });
+
+                // Buttons (dynamic up to 3; null-safe)
+                var btns = dto.ButtonParameters ?? new List<CampaignButtonDto>();
+                for (int i = 0; i < btns.Count && i < 3; i++)
+                {
+                    var btn = btns[i];
+                    var subType = btn.ButtonType?.ToLowerInvariant();
+                    if (string.IsNullOrWhiteSpace(subType)) continue;
+
+                    var button = new Dictionary<string, object>
+                    {
+                        ["type"] = "button",
+                        ["sub_type"] = subType,
+                        ["index"] = i.ToString()
+                    };
+
+                    if (subType == "quick_reply" && !string.IsNullOrWhiteSpace(btn.TargetUrl))
+                    {
+                        button["parameters"] = new[] { new { type = "payload", payload = btn.TargetUrl! } };
+                    }
+                    else if (subType == "url" && !string.IsNullOrWhiteSpace(btn.TargetUrl))
+                    {
+                        button["parameters"] = new[] { new { type = "text", text = btn.TargetUrl! } };
+                    }
+
+                    components.Add(button);
+                }
+
+                var lang = string.IsNullOrWhiteSpace(dto.LanguageCode) ? "en_US" : dto.LanguageCode!;
+
+                // 2) Send via provider — EXPLICIT provider + optional sender override
+                var sendResult = await SendViaProviderAsync(
+                    businessId,
+                    dto.Provider,
+                    p => p.SendTemplateAsync(dto.RecipientNumber, dto.TemplateName, lang, components),
+                    dto.PhoneNumberId // null => provider default sender
+                );
+
+                // 3) Build rendered body
+                var renderedBody = TemplateParameterHelper.FillPlaceholders(
+                    dto.TemplateBody ?? "",
+                    dto.TemplateParameters ?? new List<string>());
+
+                // 4) Log raw provider payload and message id (if any)
+                var log = new MessageLog
+                {
+                    Id = Guid.NewGuid(),
+                    BusinessId = businessId,
+                    RecipientNumber = dto.RecipientNumber,
+                    MessageContent = dto.TemplateName,
+                    MediaUrl = dto.HeaderImageUrl,
+                    RenderedBody = renderedBody,
+                    Status = sendResult.Success ? "Sent" : "Failed",
+                    ErrorMessage = sendResult.Success ? null : sendResult.Message,
+                    RawResponse = sendResult.RawResponse,     // store raw provider payload, not wrapper
+                    MessageId = sendResult.MessageId,
+                    CreatedAt = DateTime.UtcNow,
+                    SentAt = DateTime.UtcNow,
+                    CTAFlowConfigId = dto.CTAFlowConfigId,
+                    CTAFlowStepId = dto.CTAFlowStepId,
+                };
+
+                await _db.MessageLogs.AddAsync(log);
+                await _db.SaveChangesAsync();
+
+                return new ResponseResult
+                {
+                    Success = sendResult.Success,
+                    Message = sendResult.Success
+                        ? "✅ Image template sent successfully."
+                        : (sendResult.Message ?? "❌ WhatsApp API returned an error."),
+                    Data = new { Success = sendResult.Success, MessageId = sendResult.MessageId, LogId = log.Id },
+                    RawResponse = sendResult.RawResponse,
+                    MessageId = sendResult.MessageId,
+                    LogId = log.Id
+                };
+            }
+            catch (Exception ex)
+            {
+                await _db.MessageLogs.AddAsync(new MessageLog
+                {
+                    Id = Guid.NewGuid(),
+                    BusinessId = dto.BusinessId,
+                    RecipientNumber = dto.RecipientNumber,
+                    MessageContent = dto.TemplateName,
+                    RenderedBody = TemplateParameterHelper.FillPlaceholders(dto.TemplateBody ?? "", dto.TemplateParameters ?? new List<string>()),
+                    MediaUrl = dto.HeaderImageUrl,
+                    Status = "Failed",
+                    ErrorMessage = ex.Message,
+                    RawResponse = ex.ToString(),
+                    CreatedAt = DateTime.UtcNow,
+                    CTAFlowConfigId = dto.CTAFlowConfigId,
+                    CTAFlowStepId = dto.CTAFlowStepId,
+                });
+
+                await _db.SaveChangesAsync();
+                return ResponseResult.ErrorInfo("❌ Error sending image template.", ex.ToString());
+            }
+        }
+
+        public async Task<IEnumerable<RecentMessageLogDto>> GetLogsByBusinessIdAsync(Guid businessId)
+        {
+            var logs = await _db.MessageLogs
+                .Where(m => m.BusinessId == businessId)
+                .OrderByDescending(m => m.CreatedAt)
+                .Take(1000)
+                .Select(m => new RecentMessageLogDto
+                {
+                    Id = m.Id,
+                    RecipientNumber = m.RecipientNumber,
+                    MessageContent = m.MessageContent,
+                    Status = m.Status,
+                    CreatedAt = m.CreatedAt,
+                    SentAt = m.SentAt,
+                    ErrorMessage = m.ErrorMessage
+                })
+                .ToListAsync();
+
+            return logs;
+        }
+
+        public Task<ResponseResult> SendDocumentTemplateMessageAsync(DocumentTemplateMessageDto dto, Guid businessId)
+        {
+            throw new NotImplementedException();
+        }
+    
+    }
+}
+
+
+
+
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\Services\TemplateMessageSender.cs 
+====================================================== 
+ 
+﻿// 📄 File: Features/MessagesEngine/Services/TemplateMessageSender.cs
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using xbytechat.api.CRM.Models;
+using xbytechat.api.Features.CampaignModule.Models;
+using xbytechat.api.Features.CampaignTracking.Models;
+using xbytechat.api.Features.MessagesEngine.Services;
+using xbytechat.api.Helpers;
+
+//using xbytechat.api.Helpers;
+using xbytechat.api.Shared;
+using xbytechat.api.Shared.utility;
+using xbytechat.api.WhatsAppSettings.DTOs;
+using xbytechat_api.WhatsAppSettings.Services;
+
+namespace xbytechat.api.Features.MessagesEngine.Services
+{
+    public class TemplateMessageSender : ITemplateMessageSender
+    {
+        private readonly AppDbContext _db;
+        private readonly HttpClient _httpClient;
+        private readonly ILogger<TemplateMessageSender> _logger;
+        private readonly IWhatsAppTemplateFetcherService _templateService;
+
+        public TemplateMessageSender(
+            AppDbContext db,
+            HttpClient httpClient,
+            ILogger<TemplateMessageSender> logger,
+            IWhatsAppTemplateFetcherService templateService)
+        {
+            _db = db;
+            _httpClient = httpClient;
+            _logger = logger;
+            _templateService = templateService;
+        }
+
+        public async Task<ResponseResult> SendTemplateMessageToContactAsync(
+            Guid businessId,
+            Contact contact,
+            string templateName,
+            List<string> templateParams,
+            string? imageUrl = null,
+            List<CampaignButton>? buttons = null,
+            string? source = null,
+            Guid? refMessageId = null)
+        {
+            var setting = await _db.WhatsAppSettings.FirstOrDefaultAsync(s => s.BusinessId == businessId && s.IsActive);
+            if (setting == null)
+                return ResponseResult.ErrorInfo("WhatsApp settings not found for this business.");
+
+            var template = await _templateService.GetTemplateByNameAsync(businessId, templateName, includeButtons: true);
+            if (template == null)
+                return ResponseResult.ErrorInfo("Template not found or invalid.");
+
+            var payload = new Dictionary<string, object>
+            {
+                ["messaging_product"] = "whatsapp",
+                ["to"] = contact.PhoneNumber,
+                ["type"] = "template",
+                ["template"] = new
+                {
+                    name = template.Name,
+                    language = new { code = template.Language },
+                    components = BuildTemplateComponents(template, templateParams, imageUrl, buttons)
+                }
+            };
+
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", setting.ApiKey);
+            var json = JsonSerializer.Serialize(payload);
+            var response = await _httpClient.PostAsync(
+                $"{setting.ApiUrl?.TrimEnd('/') ?? "https://graph.facebook.com/v18.0"}/{setting.PhoneNumberId}/messages",
+                new StringContent(json, Encoding.UTF8, "application/json"));
+
+            var responseBody = await response.Content.ReadAsStringAsync();
+            var status = response.IsSuccessStatusCode ? "Sent" : "Failed";
+
+            await _db.MessageLogs.AddAsync(new MessageLog
+            {
+                Id = Guid.NewGuid(),
+                BusinessId = businessId,
+                ContactId = contact.Id,
+                MessageContent = template.Name,
+                MediaUrl = imageUrl,
+                Status = status,
+                RawResponse = responseBody,
+                ErrorMessage = response.IsSuccessStatusCode ? null : responseBody,
+                Source = source,
+                RefMessageId = refMessageId,
+                CreatedAt = DateTime.UtcNow,
+                SentAt = DateTime.UtcNow
+            });
+
+            await _db.SaveChangesAsync();
+            return response.IsSuccessStatusCode
+                ? ResponseResult.SuccessInfo("✅ Message sent successfully", null, responseBody)
+                : ResponseResult.ErrorInfo("❌ Message failed", null, responseBody);
+
+        }
+
+        public async Task<ResponseResult> SendTemplateCampaignAsync(Campaign campaign)
+        {
+            if (campaign == null || campaign.IsDeleted)
+                return ResponseResult.ErrorInfo("Invalid or deleted campaign.");
+
+            var contacts = await _db.CampaignRecipients
+                .Include(r => r.Contact)
+                .Where(r => r.CampaignId == campaign.Id && r.Contact != null)
+                .ToListAsync();
+
+            if (!contacts.Any())
+                return ResponseResult.ErrorInfo("No contacts found for this campaign.");
+
+            var templateName = campaign.TemplateId;
+            var templateParams = TemplateParameterHelper.ParseTemplateParams(campaign.TemplateParameters);
+            var templateMeta = await _templateService.GetTemplateByNameAsync(campaign.BusinessId, templateName, includeButtons: true);
+
+            if (templateMeta == null)
+                return ResponseResult.ErrorInfo("Template metadata not found.");
+
+            int success = 0, failed = 0;
+
+            foreach (var r in contacts)
+            {
+                var result = await SendTemplateMessageToContactAsync(
+                    campaign.BusinessId,
+                    r.Contact,
+                    templateName,
+                    templateParams,
+                    campaign.ImageUrl,
+                    campaign.MultiButtons?.ToList(),
+                    source: "campaign",
+                    refMessageId: campaign.Id);
+
+                await _db.CampaignSendLogs.AddAsync(new CampaignSendLog
+                {
+                    Id = Guid.NewGuid(),
+                    CampaignId = campaign.Id,
+                    ContactId = r.ContactId,
+                    RecipientId = r.Id,
+                    MessageBody = campaign.MessageBody ?? templateName,
+                    TemplateId = templateName,
+                    SendStatus = result.Success ? "Sent" : "Failed",
+                    CreatedAt = DateTime.UtcNow,
+                    SentAt = DateTime.UtcNow,
+                    CreatedBy = campaign.CreatedBy
+                });
+
+                if (result.Success) success++;
+                else failed++;
+            }
+
+            await _db.SaveChangesAsync();
+            return ResponseResult.SuccessInfo($"📤 Sent to {success}, ❌ Failed for {failed}.");
+        }
+
+        private List<object> BuildTemplateComponents(
+            TemplateMetadataDto template,
+            List<string> paramsList,
+            string? imageUrl,
+            List<CampaignButton>? buttons)
+        {
+            var components = new List<object>();
+
+            if (template.HasImageHeader && !string.IsNullOrWhiteSpace(imageUrl))
+            {
+                components.Add(new
+                {
+                    type = "header",
+                    parameters = new[] { new { type = "image", image = new { link = imageUrl } } }
+                });
+            }
+
+            if (paramsList.Any())
+            {
+                components.Add(new
+                {
+                    type = "body",
+                    parameters = paramsList.Select(p => new { type = "text", text = p }).ToList()
+                });
+            }
+
+            if (buttons != null && buttons.Any())
+            {
+                for (int i = 0; i < buttons.Count; i++)
+                {
+                    var btn = buttons[i];
+                    components.Add(new
+                    {
+                        type = "button",
+                        sub_type = btn.Type?.ToLower() == "url" ? "url" : "quick_reply",
+                        index = i.ToString(),
+                        parameters = new[] {
+                            new {
+                                type = "text",
+                                text = btn.Value ?? btn.Title
+                            }
+                        }
+                    });
+                }
+            }
+
+            return components;
+        }
+    }
+}
+ 
+ 
+====================================================== 
+FILE: D:\xbytechat\xbytechat-api\xbytechat-api\Features\MessagesEngine\Validators\ValidateMessageDtoAttribute.cs 
+====================================================== 
+ 
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using xbytechat.api.Features.MessagesEngine.DTOs;
+
+namespace xbytechat.api.Features.MessagesEngine.DTOs.Validation
+{
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    public class ValidateMessageDtoAttribute : ValidationAttribute
+    {
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
+        {
+            if (value is not SendMessageDto dto)
+                return ValidationResult.Success;
+
+            switch (dto.MessageType)
+            {
+                case MessageTypeEnum.Text:
+                    if (string.IsNullOrWhiteSpace(dto.TextContent))
+                        return new ValidationResult("TextContent is required for text messages.", new[] { nameof(dto.TextContent) });
+                    break;
+
+                case MessageTypeEnum.Image:
+                    if (string.IsNullOrWhiteSpace(dto.MediaUrl))
+                        return new ValidationResult("MediaUrl is required for image messages.", new[] { nameof(dto.MediaUrl) });
+                    break;
+
+                case MessageTypeEnum.Template:
+                    if (string.IsNullOrWhiteSpace(dto.TemplateName))
+                        return new ValidationResult("TemplateName is required for template messages.", new[] { nameof(dto.TemplateName) });
+                    break;
+
+                case MessageTypeEnum.Cta:
+                    if (dto.CtaButtons == null || dto.CtaButtons.Count == 0)
+                        return new ValidationResult("CtaButtons is required for CTA messages.", new[] { nameof(dto.CtaButtons) });
+                    break;
+            }
+
+            return ValidationResult.Success;
+        }
+    }
+}
+ 
+ 
