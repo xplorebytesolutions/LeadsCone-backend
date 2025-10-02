@@ -13,9 +13,9 @@ namespace xbytechat.api.Features.Tracking.Services
             CancellationToken ct);
 
         Task<MessageLogFacetsDto> GetFacetsAsync(
-    Guid businessId,
-    DateTime? fromUtc,
-    CancellationToken ct);
+            Guid businessId,
+            DateTime? fromUtc,
+            CancellationToken ct);
 
     }
 }
