@@ -150,5 +150,17 @@ namespace xbytechat.api.Features.Tracking.Controllers
                 Detail = "Implement in MessageLogsReportController.ExportPdf using a PDF library."
             });
         }
+        [HttpGet("facets")]
+        [ProducesResponseType(typeof(MessageLogFacetsDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> Facets([FromQuery] int fromDays = 90, CancellationToken ct = default)
+        {
+            var businessId = User.GetBusinessId();
+            if (businessId == Guid.Empty) return Unauthorized();
+
+            var fromUtc = DateTime.UtcNow.AddDays(-Math.Abs(fromDays));
+            var facets = await _service.GetFacetsAsync(businessId, fromUtc, ct);
+            return Ok(facets);
+        }
     }
 }
