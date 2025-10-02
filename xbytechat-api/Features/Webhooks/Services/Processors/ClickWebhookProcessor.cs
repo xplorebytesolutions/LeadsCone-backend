@@ -451,76 +451,87 @@ namespace xbytechat.api.Features.Webhooks.Services.Processors
                     {
                         _logger.LogWarning(exSave, "⚠️ Failed to persist FlowExecutionLog (click). Continuing…");
                     }
-                    // ===== RUNNING CTA JOURNEY STATE UPSERT =====
+                    // ===== RUNNING CTA JOURNEY STATE UPSERT (ONLY IF THIS BIZ IS CONFIGURED) =====
                     string runningJourney;
-                    try
+
+                    // Check once if this business is configured to receive CTAJourney.
+                    // If not, we won't touch ContactJourneyStates at all.
+                    bool shouldTrackState = await _context.CustomerWebhookConfigs
+                        .AsNoTracking()
+                        .AnyAsync(x => x.BusinessId == businessId && x.IsActive);
+
+                    if (shouldTrackState)
                     {
-                        // load current state for (business, flow, phone)
-                        var state = await _context.ContactJourneyStates
-                            .SingleOrDefaultAsync(s =>
-                                s.BusinessId == businessId &&
-                                s.FlowId == flowId &&
-                                s.ContactPhone == fromDigits);
-
-                        if (state == null)
+                        try
                         {
-                            // first click -> start with this button text (original casing)
-                            state = new ContactJourneyState
-                            {
-                                Id = Guid.NewGuid(),
-                                BusinessId = businessId,
-                                FlowId = flowId,
-                                ContactPhone = fromDigits,
-                                JourneyText = buttonText ?? string.Empty,
-                                ClickCount = 1,
-                                LastButtonText = buttonText,
-                                CreatedAt = DateTime.UtcNow,
-                                UpdatedAt = DateTime.UtcNow
-                            };
-                            _context.ContactJourneyStates.Add(state);
-                            await _context.SaveChangesAsync();
-                            runningJourney = state.JourneyText;
-                            _logger.LogInformation("🧵 Journey init: {Journey} (biz={Biz}, flow={Flow}, phone={Phone})",
-                                runningJourney, businessId, flowId, fromDigits);
-                        }
-                        else
-                        {
-                            // append if not already present (case-insensitive, keep original casing)
-                            var parts = (state.JourneyText ?? string.Empty)
-                                .Split('/', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-                                .ToList();
+                            // load current state for (business, flow, phone)
+                            var state = await _context.ContactJourneyStates
+                                .SingleOrDefaultAsync(s =>
+                                    s.BusinessId == businessId &&
+                                    s.FlowId == flowId &&
+                                    s.ContactPhone == fromDigits);
 
-                            var exists = parts.Any(p => string.Equals(p, buttonText, StringComparison.OrdinalIgnoreCase));
-                            // check duplicare step
-                            // if (!exists && !string.IsNullOrWhiteSpace(buttonText))
-                            if (!string.IsNullOrWhiteSpace(buttonText))
+                            if (state == null)
                             {
-                                parts.Add(buttonText!);
-                                // optional safety: cap to last 15 entries to avoid unbounded growth
+                                // first click -> start with this button text (original casing)
+                                state = new ContactJourneyState
+                                {
+                                    Id = Guid.NewGuid(),
+                                    BusinessId = businessId,
+                                    FlowId = flowId,
+                                    ContactPhone = fromDigits,
+                                    JourneyText = buttonText ?? string.Empty,
+                                    ClickCount = 1,
+                                    LastButtonText = buttonText,
+                                    CreatedAt = DateTime.UtcNow,
+                                    UpdatedAt = DateTime.UtcNow
+                                };
+                                _context.ContactJourneyStates.Add(state);
+                                await _context.SaveChangesAsync();
+                                runningJourney = state.JourneyText;
+                                _logger.LogInformation("🧵 Journey init: {Journey} (biz={Biz}, flow={Flow}, phone={Phone})",
+                                    runningJourney, businessId, flowId, fromDigits);
+                            }
+                            else
+                            {
+                                // append EVERY press (duplicates allowed), keep original casing
+                                var parts = (state.JourneyText ?? string.Empty)
+                                    .Split('/', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                                    .ToList();
+
+                                if (!string.IsNullOrWhiteSpace(buttonText))
+                                    parts.Add(buttonText!);
+
+                                // optional safety: cap growth
                                 const int cap = 15;
                                 if (parts.Count > cap) parts = parts.Skip(parts.Count - cap).ToList();
 
                                 state.JourneyText = string.Join('/', parts);
+                                state.ClickCount += 1;
+                                state.LastButtonText = buttonText;
+                                state.UpdatedAt = DateTime.UtcNow;
+
+                                await _context.SaveChangesAsync();
+                                runningJourney = state.JourneyText ?? string.Empty;
+
+                                _logger.LogInformation("🧵 Journey update: {Journey} (biz={Biz}, flow={Flow}, phone={Phone})",
+                                    runningJourney, businessId, flowId, fromDigits);
                             }
-
-                            state.ClickCount += 1;
-                            state.LastButtonText = buttonText;
-                            state.UpdatedAt = DateTime.UtcNow;
-
-                            await _context.SaveChangesAsync();
-                            runningJourney = state.JourneyText ?? string.Empty;
-
-                            _logger.LogInformation("🧵 Journey update: {Journey} (biz={Biz}, flow={Flow}, phone={Phone})",
-                                runningJourney, businessId, flowId, fromDigits);
+                        }
+                        catch (Exception exState)
+                        {
+                            _logger.LogWarning(exState, "⚠️ Failed to upsert ContactJourneyState.");
+                            // fall back to this click only
+                            runningJourney = buttonText ?? string.Empty;
                         }
                     }
-                    catch (Exception exState)
+                    else
                     {
-                        _logger.LogWarning(exState, "⚠️ Failed to upsert ContactJourneyState.");
-                        // fall back to this click only
+                        // Business not configured → do NOT save any state. Just use the current button for emit.
                         runningJourney = buttonText ?? string.Empty;
                     }
                     // ===== END RUNNING CTA JOURNEY STATE UPSERT =====
+
 
                     // ===== CTAJourney EMIT (running journey) =====
                     try
