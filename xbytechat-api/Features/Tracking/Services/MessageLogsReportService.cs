@@ -182,7 +182,7 @@ namespace xbytechat.api.Features.Tracking.Services
 
             // SenderIds come from Campaign.PhoneNumberId (if available)
 
-            var wabaIds = await _db.WhatsAppPhoneNumbers
+            var senderIds = await _db.WhatsAppPhoneNumbers
             .AsNoTracking()
             .Where(w => w.BusinessId == businessId && w.WhatsAppBusinessNumber != null)
             .Select(w => w.PhoneNumberId!)
@@ -190,16 +190,16 @@ namespace xbytechat.api.Features.Tracking.Services
             .OrderBy(x => x)
             .ToArrayAsync(ct);
 
-            var senderIds = await (
-                from m in baseQ
-                join c0 in _db.Campaigns.AsNoTracking() on m.CampaignId equals c0.Id into cj
-                from c in cj.DefaultIfEmpty()
-                where c != null && c.PhoneNumberId != null
-                select c.PhoneNumberId!
-            )
-            .Distinct()
-            .OrderBy(x => x)
-            .ToArrayAsync(ct);
+            //var senderIds = await (
+            //    from m in baseQ
+            //    join c0 in _db.Campaigns.AsNoTracking() on m.CampaignId equals c0.Id into cj
+            //    from c in cj.DefaultIfEmpty()
+            //    where c != null && c.PhoneNumberId != null
+            //    select c.PhoneNumberId!
+            //)
+            //.Distinct()
+            //.OrderBy(x => x)
+            //.ToArrayAsync(ct);
 
             // Channels = provider (prefer campaign.provider, else message.provider)
             var channels = await (
