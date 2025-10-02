@@ -1,6 +1,6 @@
 {
   "name": "xbytechat-api/Services",
-  "generatedAt": "2025-09-12 10:33:04 +00:00",
+  "generatedAt": "2025-10-02 10:25:32 +00:00",
   "files": [
     {
       "path": "xbytechat-api/Services/MessageModule/Implementations/MessageService.cs",

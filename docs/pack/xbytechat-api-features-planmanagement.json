@@ -1,14 +1,7 @@
 {
   "name": "xbytechat-api/Features/PlanManagement",
-  "generatedAt": "2025-09-12 10:33:04 +00:00",
+  "generatedAt": "2025-10-02 10:25:32 +00:00",
   "files": [
-    {
-      "path": "xbytechat-api/Features/PlanManagement/extract_all.bat",
-      "sha256": "e15d73a156320cb7235895198a4cd732b5731cda51944f0dfe4e1da83d1e2d5e",
-      "language": "bat",
-      "size": 731,
-      "content": "@echo off\nREM This script will find all files and output their name and content into one file.\n\nset \"outputFile=All_Content.txt\"\n\nREM Clear the output file to start fresh\n> \"%outputFile%\" (echo Folder and File Content Report)\necho. >> \"%outputFile%\"\n\nREM Loop through all files in the current directory and subdirectories\nfor /R . %%F in (*.*) do (\n    echo ====================================================== >> \"%outputFile%\"\n    echo FILE: %%F >> \"%outputFile%\"\n    echo ====================================================== >> \"%outputFile%\"\n    echo. >> \"%outputFile%\"\n    type \"%%F\" >> \"%outputFile%\"\n    echo. >> \"%outputFile%\"\n    echo. >> \"%outputFile%\"\n)\n\necho Finished! All content has been extracted to %outputFile%"
-    },
     {
       "path": "xbytechat-api/Features/PlanManagement/Models/BusinessPlanInfo.cs",
       "sha256": "4a8d4603750b0630eec386cbb831948aaa2cc2f5872d4e1b178da2b9a6952bc7",

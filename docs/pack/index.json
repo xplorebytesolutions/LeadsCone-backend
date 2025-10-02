@@ -1,91 +1,67 @@
 {
   "version": "2.3-sliced",
-  "generatedAt": "2025-09-12 10:33:04 +00:00",
+  "generatedAt": "2025-10-02 10:25:32 +00:00",
   "modules": [
     {
       "name": "xbytechat-api",
       "slug": "xbytechat-api",
       "mode": "parts",
-      "totalBytes": 6368295,
-      "partCount": 13,
+      "totalBytes": 4147502,
+      "partCount": 9,
       "parts": [
         {
           "n": 1,
           "href": "/busiorbit-api/pack/xbytechat-api/parts/1.json",
-          "bytes": 562167,
-          "fileCount": 202
+          "bytes": 553387,
+          "fileCount": 196
         },
         {
           "n": 2,
           "href": "/busiorbit-api/pack/xbytechat-api/parts/2.json",
-          "bytes": 563046,
-          "fileCount": 224
+          "bytes": 563182,
+          "fileCount": 95
         },
         {
           "n": 3,
           "href": "/busiorbit-api/pack/xbytechat-api/parts/3.json",
-          "bytes": 504238,
-          "fileCount": 21
+          "bytes": 511806,
+          "fileCount": 168
         },
         {
           "n": 4,
           "href": "/busiorbit-api/pack/xbytechat-api/parts/4.json",
-          "bytes": 539712,
-          "fileCount": 8
+          "bytes": 562056,
+          "fileCount": 95
         },
         {
           "n": 5,
           "href": "/busiorbit-api/pack/xbytechat-api/parts/5.json",
-          "bytes": 550096,
-          "fileCount": 8
+          "bytes": 456647,
+          "fileCount": 6
         },
         {
           "n": 6,
           "href": "/busiorbit-api/pack/xbytechat-api/parts/6.json",
-          "bytes": 557530,
-          "fileCount": 8
+          "bytes": 460251,
+          "fileCount": 6
         },
         {
           "n": 7,
           "href": "/busiorbit-api/pack/xbytechat-api/parts/7.json",
-          "bytes": 550737,
-          "fileCount": 7
+          "bytes": 468895,
+          "fileCount": 6
         },
         {
           "n": 8,
           "href": "/busiorbit-api/pack/xbytechat-api/parts/8.json",
-          "bytes": 470204,
-          "fileCount": 7
+          "bytes": 559079,
+          "fileCount": 65
         },
         {
           "n": 9,
           "href": "/busiorbit-api/pack/xbytechat-api/parts/9.json",
-          "bytes": 445622,
-          "fileCount": 6
-        },
-        {
-          "n": 10,
-          "href": "/busiorbit-api/pack/xbytechat-api/parts/10.json",
-          "bytes": 450654,
-          "fileCount": 6
-        },
-        {
-          "n": 11,
-          "href": "/busiorbit-api/pack/xbytechat-api/parts/11.json",
-          "bytes": 452996,
-          "fileCount": 6
-        },
-        {
-          "n": 12,
-          "href": "/busiorbit-api/pack/xbytechat-api/parts/12.json",
-          "bytes": 562097,
-          "fileCount": 10
-        },
-        {
-          "n": 13,
-          "href": "/busiorbit-api/pack/xbytechat-api/parts/13.json",
-          "bytes": 159196,
-          "fileCount": 45
+          "bytes": 12199,
+          "fileCount": 4
         }
       ]
     },
@@ -118,7 +94,7 @@
       "slug": "xbytechat-api-authmodule",
       "mode": "single",
       "fileCount": 15,
-      "bytes": 82267,
+      "bytes": 76474,
       "href": "/busiorbit-api/pack/xbytechat-api-authmodule.json"
     },
     {
@@ -133,8 +109,8 @@
       "name": "xbytechat-api/CRM",
       "slug": "xbytechat-api-crm",
       "mode": "single",
-      "fileCount": 33,
-      "bytes": 92876,
+      "fileCount": 34,
+      "bytes": 95958,
       "href": "/busiorbit-api/pack/xbytechat-api-crm.json"
     },
     {
@@ -142,7 +118,7 @@
       "slug": "xbytechat-api-data",
       "mode": "single",
       "fileCount": 1,
-      "bytes": 18815,
+      "bytes": 62524,
       "href": "/busiorbit-api/pack/xbytechat-api-data.json"
     },
     {
@@ -157,20 +133,32 @@
       "name": "xbytechat-api/Features",
       "slug": "xbytechat-api-features",
       "mode": "parts",
-      "totalBytes": 924827,
-      "partCount": 2,
+      "totalBytes": 1790230,
+      "partCount": 4,
       "parts": [
         {
           "n": 1,
           "href": "/busiorbit-api/pack/xbytechat-api-features/parts/1.json",
-          "bytes": 552628,
-          "fileCount": 234
+          "bytes": 523257,
+          "fileCount": 195
         },
         {
           "n": 2,
           "href": "/busiorbit-api/pack/xbytechat-api-features/parts/2.json",
-          "bytes": 372199,
-          "fileCount": 135
+          "bytes": 476478,
+          "fileCount": 89
+        },
+        {
+          "n": 3,
+          "href": "/busiorbit-api/pack/xbytechat-api-features/parts/3.json",
+          "bytes": 557352,
+          "fileCount": 143
+        },
+        {
+          "n": 4,
+          "href": "/busiorbit-api/pack/xbytechat-api-features/parts/4.json",
+          "bytes": 233143,
+          "fileCount": 54
         }
       ]
     },
@@ -187,75 +175,39 @@
       "slug": "xbytechat-api-middlewares",
       "mode": "single",
       "fileCount": 5,
-      "bytes": 8392,
+      "bytes": 8394,
       "href": "/busiorbit-api/pack/xbytechat-api-middlewares.json"
     },
     {
       "name": "xbytechat-api/Migrations",
       "slug": "xbytechat-api-migrations",
       "mode": "parts",
-      "totalBytes": 5052538,
-      "partCount": 10,
+      "totalBytes": 1828483,
+      "partCount": 4,
       "parts": [
         {
           "n": 1,
           "href": "/busiorbit-api/pack/xbytechat-api-migrations/parts/1.json",
-          "bytes": 476059,
-          "fileCount": 7
+          "bytes": 436036,
+          "fileCount": 5
         },
         {
           "n": 2,
           "href": "/busiorbit-api/pack/xbytechat-api-migrations/parts/2.json",
-          "bytes": 539712,
-          "fileCount": 8
+          "bytes": 457299,
+          "fileCount": 6
         },
         {
           "n": 3,
           "href": "/busiorbit-api/pack/xbytechat-api-migrations/parts/3.json",
-          "bytes": 550096,
-          "fileCount": 8
+          "bytes": 467297,
+          "fileCount": 6
         },
         {
           "n": 4,
           "href": "/busiorbit-api/pack/xbytechat-api-migrations/parts/4.json",
-          "bytes": 557530,
-          "fileCount": 8
-        },
-        {
-          "n": 5,
-          "href": "/busiorbit-api/pack/xbytechat-api-migrations/parts/5.json",
-          "bytes": 550737,
-          "fileCount": 7
-        },
-        {
-          "n": 6,
-          "href": "/busiorbit-api/pack/xbytechat-api-migrations/parts/6.json",
-          "bytes": 470204,
-          "fileCount": 7
-        },
-        {
-          "n": 7,
-          "href": "/busiorbit-api/pack/xbytechat-api-migrations/parts/7.json",
-          "bytes": 445622,
-          "fileCount": 6
-        },
-        {
-          "n": 8,
-          "href": "/busiorbit-api/pack/xbytechat-api-migrations/parts/8.json",
-          "bytes": 450654,
-          "fileCount": 6
-        },
-        {
-          "n": 9,
-          "href": "/busiorbit-api/pack/xbytechat-api-migrations/parts/9.json",
-          "bytes": 452996,
-          "fileCount": 6
-        },
-        {
-          "n": 10,
-          "href": "/busiorbit-api/pack/xbytechat-api-migrations/parts/10.json",
-          "bytes": 558928,
-          "fileCount": 6
+          "bytes": 467851,
+          "fileCount": 4
         }
       ]
     },
@@ -263,8 +215,8 @@
       "name": "xbytechat-api/Models",
       "slug": "xbytechat-api-models",
       "mode": "single",
-      "fileCount": 2,
-      "bytes": 2299,
+      "fileCount": 3,
+      "bytes": 3873,
       "href": "/busiorbit-api/pack/xbytechat-api-models.json"
     },
     {
@@ -319,16 +271,16 @@
       "name": "xbytechat-api/WhatsAppSettings",
       "slug": "xbytechat-api-whatsappsettings",
       "mode": "single",
-      "fileCount": 18,
-      "bytes": 100182,
+      "fileCount": 33,
+      "bytes": 180815,
       "href": "/busiorbit-api/pack/xbytechat-api-whatsappsettings.json"
     },
     {
       "name": "xbytechat-api/xbytechat-api",
       "slug": "xbytechat-api-xbytechat-api",
       "mode": "single",
-      "fileCount": 5,
-      "bytes": 8396,
+      "fileCount": 7,
+      "bytes": 14679,
       "href": "/busiorbit-api/pack/xbytechat-api-xbytechat-api.json"
     },
     {
@@ -336,8 +288,16 @@
       "slug": "xbytechat-api-features-accesscontrol",
       "mode": "single",
       "fileCount": 24,
-      "bytes": 41865,
+      "bytes": 40885,
       "href": "/busiorbit-api/pack/xbytechat-api-features-accesscontrol.json"
+    },
+    {
+      "name": "xbytechat-api/Features/Audiences",
+      "slug": "xbytechat-api-features-audiences",
+      "mode": "single",
+      "fileCount": 9,
+      "bytes": 25416,
+      "href": "/busiorbit-api/pack/xbytechat-api-features-audiences.json"
     },
     {
       "name": "xbytechat-api/Features/AuditTrail",
@@ -372,19 +332,27 @@
       "href": "/busiorbit-api/pack/xbytechat-api-features-autoreplytemplates.json"
     },
     {
+      "name": "xbytechat-api/Features/Billing",
+      "slug": "xbytechat-api-features-billing",
+      "mode": "single",
+      "fileCount": 9,
+      "bytes": 55594,
+      "href": "/busiorbit-api/pack/xbytechat-api-features-billing.json"
+    },
+    {
       "name": "xbytechat-api/Features/BusinessModule",
       "slug": "xbytechat-api-features-businessmodule",
       "mode": "single",
       "fileCount": 7,
-      "bytes": 26686,
+      "bytes": 30099,
       "href": "/busiorbit-api/pack/xbytechat-api-features-businessmodule.json"
     },
     {
       "name": "xbytechat-api/Features/CampaignModule",
       "slug": "xbytechat-api-features-campaignmodule",
       "mode": "single",
-      "fileCount": 19,
-      "bytes": 115911,
+      "fileCount": 85,
+      "bytes": 537984,
       "href": "/busiorbit-api/pack/xbytechat-api-features-campaignmodule.json"
     },
     {
@@ -392,7 +360,7 @@
       "slug": "xbytechat-api-features-campaigntracking",
       "mode": "single",
       "fileCount": 25,
-      "bytes": 67612,
+      "bytes": 80032,
       "href": "/busiorbit-api/pack/xbytechat-api-features-campaigntracking.json"
     },
     {
@@ -412,11 +380,19 @@
       "href": "/busiorbit-api/pack/xbytechat-api-features-crmanalytics.json"
     },
     {
+      "name": "xbytechat-api/Features/CsvModule",
+      "slug": "xbytechat-api-features-csvmodule",
+      "mode": "single",
+      "fileCount": 1,
+      "bytes": 7225,
+      "href": "/busiorbit-api/pack/xbytechat-api-features-csvmodule.json"
+    },
+    {
       "name": "xbytechat-api/Features/CTAFlowBuilder",
       "slug": "xbytechat-api-features-ctaflowbuilder",
       "mode": "single",
-      "fileCount": 21,
-      "bytes": 70401,
+      "fileCount": 25,
+      "bytes": 188981,
       "href": "/busiorbit-api/pack/xbytechat-api-features-ctaflowbuilder.json"
     },
     {
@@ -426,6 +402,14 @@
       "fileCount": 5,
       "bytes": 9590,
       "href": "/busiorbit-api/pack/xbytechat-api-features-ctamanagement.json"
+    },
+    {
+      "name": "xbytechat-api/Features/CustomeApi",
+      "slug": "xbytechat-api-features-customeapi",
+      "mode": "single",
+      "fileCount": 14,
+      "bytes": 54145,
+      "href": "/busiorbit-api/pack/xbytechat-api-features-customeapi.json"
     },
     {
       "name": "xbytechat-api/Features/FeatureAccessModule",
@@ -447,8 +431,8 @@
       "name": "xbytechat-api/Features/Inbox",
       "slug": "xbytechat-api-features-inbox",
       "mode": "single",
-      "fileCount": 24,
-      "bytes": 58985,
+      "fileCount": 25,
+      "bytes": 59907,
       "href": "/busiorbit-api/pack/xbytechat-api-features-inbox.json"
     },
     {
@@ -463,16 +447,16 @@
       "name": "xbytechat-api/Features/MessagesEngine",
       "slug": "xbytechat-api-features-messagesengine",
       "mode": "single",
-      "fileCount": 33,
-      "bytes": 107320,
+      "fileCount": 36,
+      "bytes": 166067,
       "href": "/busiorbit-api/pack/xbytechat-api-features-messagesengine.json"
     },
     {
       "name": "xbytechat-api/Features/PlanManagement",
       "slug": "xbytechat-api-features-planmanagement",
       "mode": "single",
-      "fileCount": 6,
-      "bytes": 5255,
+      "fileCount": 5,
+      "bytes": 4524,
       "href": "/busiorbit-api/pack/xbytechat-api-features-planmanagement.json"
     },
     {
@@ -495,8 +479,8 @@
       "name": "xbytechat-api/Features/Tracking",
       "slug": "xbytechat-api-features-tracking",
       "mode": "single",
-      "fileCount": 14,
-      "bytes": 43586,
+      "fileCount": 20,
+      "bytes": 87660,
       "href": "/busiorbit-api/pack/xbytechat-api-features-tracking.json"
     },
     {
@@ -504,7 +488,7 @@
       "slug": "xbytechat-api-features-webhooks",
       "mode": "single",
       "fileCount": 39,
-      "bytes": 131832,
+      "bytes": 196337,
       "href": "/busiorbit-api/pack/xbytechat-api-features-webhooks.json"
     },
     {
