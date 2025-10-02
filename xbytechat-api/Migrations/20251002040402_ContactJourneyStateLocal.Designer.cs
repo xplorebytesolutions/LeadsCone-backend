@@ -12,8 +12,8 @@ using xbytechat.api;
 namespace xbytechat.api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251001122934_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20251002040402_ContactJourneyStateLocal")]
+    partial class ContactJourneyStateLocal
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -2716,6 +2716,48 @@ namespace xbytechat.api.Migrations
                         .IsUnique();
 
                     b.ToTable("ApiKeys");
+                });
+
+            modelBuilder.Entity("xbytechat.api.Features.CustomeApi.Models.ContactJourneyState", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("BusinessId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("ClickCount")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ContactPhone")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("FlowId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("JourneyText")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("LastButtonText")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BusinessId", "FlowId", "ContactPhone")
+                        .IsUnique();
+
+                    b.ToTable("ContactJourneyStates");
                 });
 
             modelBuilder.Entity("xbytechat.api.Features.CustomeApi.Models.CustomerWebhookConfig", b =>

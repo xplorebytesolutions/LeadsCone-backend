@@ -110,7 +110,7 @@ namespace xbytechat.api
     //    public DbSet<CustomerWebhookConfig> CustomerWebhookConfigs
     //=> Set<CustomerWebhookConfig>();
         public DbSet<xbytechat.api.Features.CustomeApi.Models.CustomerWebhookConfig> CustomerWebhookConfigs { get; set; }
-
+        public DbSet<ContactJourneyState> ContactJourneyStates { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -561,7 +561,7 @@ namespace xbytechat.api
                 e.Property(x => x.Scopes).HasMaxLength(512);
             });
             // NOTE: removed duplicate mapping of CampaignRecipient.AudienceMember at the bottom.
-           
+
 
             //modelBuilder.Entity<CustomerWebhookConfig>()
             //    .HasIndex(x => new { x.BusinessId, x.IsActive });
