@@ -214,10 +214,10 @@ namespace xbytechat.api.Features.Tracking.Services
                 .ToArrayAsync(ct);
 
             // WABA Ids = WhatsAppBusinessNumber for this business
-            var wabaIds = await _db.WhatsAppPhoneNumbers
+            var wabaIds = await _db.WhatsAppSettings
                 .AsNoTracking()
-                .Where(w => w.BusinessId == businessId && w.WhatsAppBusinessNumber != null)
-                .Select(w => w.WhatsAppBusinessNumber!)
+                .Where(w => w.BusinessId == businessId && w.WabaId != null)
+                .Select(w => w.WabaId!)
                 .Distinct()
                 .OrderBy(x => x)
                 .ToArrayAsync(ct);

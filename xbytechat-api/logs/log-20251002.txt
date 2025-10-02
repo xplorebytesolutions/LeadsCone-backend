@@ -14502,3 +14502,945 @@ FROM "OutboundCampaignJobs" AS o
 WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
 ORDER BY o."NextAttemptAt", o."CreatedAt"
 LIMIT @__p_1
+2025-10-02 15:34:35.492 +05:30 [INF] User profile is available. Using 'C:\Users\sunde\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-10-02 15:34:35.533 +05:30 [INF] 🚀 Webhook Queue Worker started.
+2025-10-02 15:34:35.547 +05:30 [INF] 🧹 FailedWebhookLogCleanupService started.
+2025-10-02 15:34:36.296 +05:30 [WRN] Sensitive data logging is enabled. Log entries and exception messages may include sensitive application data; this mode should only be enabled during development.
+2025-10-02 15:34:36.857 +05:30 [WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+2025-10-02 15:34:36.877 +05:30 [INF] ClickLogWorker started
+2025-10-02 15:34:37.030 +05:30 [INF] Now listening on: http://localhost:7113
+2025-10-02 15:34:37.031 +05:30 [INF] Now listening on: http://localhost:5295
+2025-10-02 15:34:37.032 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-02 15:34:37.033 +05:30 [INF] Hosting environment: Development
+2025-10-02 15:34:37.033 +05:30 [INF] Content root path: D:\xbytechat\xbytechat-api\xbytechat-api
+2025-10-02 15:34:37.928 +05:30 [INF] ClickLogWorker stopped
+2025-10-02 15:34:43.030 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:7113/swagger/index.html - null null
+2025-10-02 15:34:43.198 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:7113/swagger/index.html - 200 null text/html;charset=utf-8 176.9683ms
+2025-10-02 15:34:43.310 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:7113/_vs/browserLink - null null
+2025-10-02 15:34:43.310 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:7113/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-02 15:34:43.320 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:7113/_framework/aspnetcore-browser-refresh.js - 200 13762 application/javascript; charset=utf-8 9.2125ms
+2025-10-02 15:34:43.353 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:7113/_vs/browserLink - 200 null text/javascript; charset=UTF-8 43.2737ms
+2025-10-02 15:34:43.447 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:7113/swagger/v1/swagger.json - null null
+2025-10-02 15:34:43.664 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:7113/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 218.0456ms
+2025-10-02 15:34:45.079 +05:30 [INF] Executed DbCommand (78ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT w."Id", w."AutoCleanupEnabled", w."LastCleanupAt"
+FROM "WebhookSettings" AS w
+LIMIT 1
+2025-10-02 15:34:45.119 +05:30 [INF] Executed DbCommand (117ms) [Parameters=[@__cutoff_0='2025-09-25T10:04:35.6351326Z' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+SELECT f."Id", f."CreatedAt", f."ErrorMessage", f."FailureType", f."RawJson", f."SourceModule"
+FROM "FailedWebhookLogs" AS f
+WHERE f."CreatedAt" < @__cutoff_0
+2025-10-02 15:34:47.049 +05:30 [INF] Executed DbCommand (125ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT DISTINCT w."BusinessId"
+FROM "WhatsAppSettings" AS w
+WHERE w."IsActive"
+2025-10-02 15:34:47.146 +05:30 [INF] Executed DbCommand (61ms) [Parameters=[@__businessId_0='16d308c9-adcc-4ea9-8e9a-0724d11b5d7b'], CommandType='"Text"', CommandTimeout='30']
+SELECT w."Id", w."ApiKey", w."ApiUrl", w."BusinessId", w."CreatedAt", w."IsActive", w."PhoneNumberId", w."Provider", w."SenderDisplayName", w."UpdatedAt", w."WabaId", w."WebhookCallbackUrl", w."WebhookSecret", w."WebhookVerifyToken", w."WhatsAppBusinessNumber"
+FROM "WhatsAppSettings" AS w
+WHERE w."BusinessId" = @__businessId_0 AND w."IsActive"
+LIMIT 1
+2025-10-02 15:34:47.225 +05:30 [INF] Executed DbCommand (62ms) [Parameters=[@__businessId_0='16d308c9-adcc-4ea9-8e9a-0724d11b5d7b'], CommandType='"Text"', CommandTimeout='30']
+SELECT w."LastSyncedAt"
+FROM "WhatsAppTemplates" AS w
+WHERE w."BusinessId" = @__businessId_0
+ORDER BY w."LastSyncedAt" DESC
+LIMIT 1
+2025-10-02 15:34:47.229 +05:30 [INF] ⏭️ Skipping sync for "16d308c9-adcc-4ea9-8e9a-0724d11b5d7b"; TTL not expired.
+2025-10-02 15:34:47.231 +05:30 [INF] TemplateSyncWorker: biz="16d308c9-adcc-4ea9-8e9a-0724d11b5d7b" added=0 updated=0 skipped=0 syncedAt="2025-10-02T07:28:30.7163840Z"
+2025-10-02 15:34:47.320 +05:30 [INF] Executed DbCommand (82ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4'], CommandType='"Text"', CommandTimeout='30']
+SELECT w."Id", w."ApiKey", w."ApiUrl", w."BusinessId", w."CreatedAt", w."IsActive", w."PhoneNumberId", w."Provider", w."SenderDisplayName", w."UpdatedAt", w."WabaId", w."WebhookCallbackUrl", w."WebhookSecret", w."WebhookVerifyToken", w."WhatsAppBusinessNumber"
+FROM "WhatsAppSettings" AS w
+WHERE w."BusinessId" = @__businessId_0 AND w."IsActive"
+LIMIT 1
+2025-10-02 15:34:47.391 +05:30 [INF] Executed DbCommand (68ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4'], CommandType='"Text"', CommandTimeout='30']
+SELECT w."LastSyncedAt"
+FROM "WhatsAppTemplates" AS w
+WHERE w."BusinessId" = @__businessId_0
+ORDER BY w."LastSyncedAt" DESC
+LIMIT 1
+2025-10-02 15:34:47.393 +05:30 [INF] ⏭️ Skipping sync for "11f41b5f-f92c-4b6e-855b-62036779dee4"; TTL not expired.
+2025-10-02 15:34:47.394 +05:30 [INF] TemplateSyncWorker: biz="11f41b5f-f92c-4b6e-855b-62036779dee4" added=0 updated=0 skipped=0 syncedAt="2025-10-02T06:47:39.2167560Z"
+2025-10-02 15:34:47.395 +05:30 [INF] TemplateSyncWorker: sweep finished in 509 ms; processed=2; next run ~"2025-10-02T16:04:46.8859027Z"
+2025-10-02 15:34:50.040 +05:30 [INF] Executed DbCommand (81ms) [Parameters=[@__now_0='2025-10-02T10:04:41.8908964+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-02 15:34:54.160 +05:30 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:7113/api/auth/login - null null
+2025-10-02 15:34:54.166 +05:30 [WRN] Failed to determine the https port for redirect.
+2025-10-02 15:34:54.201 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:34:54.203 +05:30 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:7113/api/auth/login - 204 null null 43.2329ms
+2025-10-02 15:34:54.207 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:7113/api/auth/login - application/json 48
+2025-10-02 15:34:54.215 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:34:54.334 +05:30 [INF] Executing endpoint 'xbytechat.api.AuthModule.Controllers.AuthController.Login (xbytechat.api)'
+2025-10-02 15:34:54.346 +05:30 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Login(xbytechat.api.AuthModule.DTOs.UserLoginDto) on controller xbytechat.api.AuthModule.Controllers.AuthController (xbytechat.api).
+2025-10-02 15:34:54.368 +05:30 [INF] 🔑 Login attempt for email: test@gmail.com
+2025-10-02 15:34:54.517 +05:30 [INF] Executed DbCommand (99ms) [Parameters=[@__dto_Email_0='test@gmail.com', @__hashedPassword_1='JAvlGPq9JyTdtvBO6x2llnRI1+gxwIyPqCKAn3THIKk='], CommandType='"Text"', CommandTimeout='30']
+SELECT u."Id", u."BusinessId", u."CreatedAt", u."DeletedAt", u."Email", u."IsDeleted", u."Name", u."PasswordHash", u."RefreshToken", u."RefreshTokenExpiry", u."RoleId", u."Status", r."Id", r."CreatedAt", r."Description", r."IsActive", r."IsSystemDefined", r."Name"
+FROM "Users" AS u
+LEFT JOIN "Roles" AS r ON u."RoleId" = r."Id"
+WHERE u."Email" = @__dto_Email_0 AND u."PasswordHash" = @__hashedPassword_1 AND NOT (u."IsDeleted")
+LIMIT 1
+2025-10-02 15:34:54.699 +05:30 [INF] Executed DbCommand (103ms) [Parameters=[@__user_BusinessId_Value_0='11f41b5f-f92c-4b6e-855b-62036779dee4'], CommandType='"Text"', CommandTimeout='30']
+SELECT b."Id", b."Address", b."ApprovedAt", b."ApprovedBy", b."BusinessEmail", b."BusinessName", b."CompanyName", b."CompanyPhone", b."CreatedAt", b."CreatedBy", b."CreatedByPartnerId", b."DeletedAt", b."DeletedBy", b."Industry", b."IsApproved", b."IsDeleted", b."LastLoginAt", b."LogoUrl", b."Notes", b."Phone", b."PlanId", b."RepresentativeName", b."Source", b."Status", b."Tags", b."Website", p."Id", p."Code", p."CreatedAt", p."Description", p."IsActive", p."Name"
+FROM "Businesses" AS b
+LEFT JOIN "Plans" AS p ON b."PlanId" = p."Id"
+WHERE b."Id" = @__user_BusinessId_Value_0
+LIMIT 1
+2025-10-02 15:34:54.890 +05:30 [INF] Executed DbCommand (83ms) [Parameters=[@__userId_0='a5678bcc-20f4-44f0-be61-f42a264b937c'], CommandType='"Text"', CommandTimeout='30']
+SELECT DISTINCT t0."Code", t0."Group"
+FROM "Users" AS u
+INNER JOIN "Businesses" AS b ON u."BusinessId" = b."Id"
+INNER JOIN (
+    SELECT p."PermissionId", p."PlanId"
+    FROM "PlanPermissions" AS p
+    WHERE p."IsActive"
+) AS t ON b."PlanId" = t."PlanId"
+INNER JOIN (
+    SELECT p0."Id", p0."Code", p0."Group"
+    FROM "Permissions" AS p0
+    WHERE p0."IsActive"
+) AS t0 ON t."PermissionId" = t0."Id"
+WHERE u."Id" = @__userId_0 AND EXISTS (
+    SELECT 1
+    FROM "RolePermissions" AS r
+    WHERE r."IsActive" AND NOT (r."IsRevoked") AND r."RoleId" = u."RoleId" AND r."PermissionId" = t0."Id")
+2025-10-02 15:34:54.900 +05:30 [INF] ✅ Token generated for: test@gmail.com
+2025-10-02 15:34:54.910 +05:30 [INF] 🔎 JWT includes plan_id: 5f9f5de1-a0b2-48ba-b03d-77b27345613f
+2025-10-02 15:34:54.911 +05:30 [INF] ✅ Login successful for test@gmail.com, Role: business, PlanId: "5f9f5de1-a0b2-48ba-b03d-77b27345613f"
+2025-10-02 15:34:54.918 +05:30 [INF] Executing OkObjectResult, writing value of type '<>f__AnonymousType1`1[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-02 15:34:54.925 +05:30 [INF] Executed action xbytechat.api.AuthModule.Controllers.AuthController.Login (xbytechat.api) in 574.8856ms
+2025-10-02 15:34:54.926 +05:30 [INF] Executed endpoint 'xbytechat.api.AuthModule.Controllers.AuthController.Login (xbytechat.api)'
+2025-10-02 15:34:54.931 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:7113/api/auth/login - 200 null application/json; charset=utf-8 724.0205ms
+2025-10-02 15:34:54.934 +05:30 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:7113/api/plan/me/permissions - null null
+2025-10-02 15:34:54.937 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:34:54.938 +05:30 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:7113/api/plan/me/permissions - 204 null null 4.3262ms
+2025-10-02 15:34:54.941 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:7113/api/plan/me/permissions - null null
+2025-10-02 15:34:54.945 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:34:54.951 +05:30 [INF] Executing endpoint 'xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api)'
+2025-10-02 15:34:54.955 +05:30 [INF] Route matched with {action = "GetMyPlanPermissions", controller = "Plan"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetMyPlanPermissions(System.Threading.CancellationToken) on controller xbytechat.api.Features.AccessControl.Controllers.PlanController (xbytechat.api).
+2025-10-02 15:34:55.040 +05:30 [INF] Executed DbCommand (72ms) [Parameters=[@__planId_0='5f9f5de1-a0b2-48ba-b03d-77b27345613f'], CommandType='"Text"', CommandTimeout='30']
+SELECT p0."Id", p0."Code", p0."CreatedAt", p0."Description", p0."Group", p0."IsActive", p0."Name"
+FROM "PlanPermissions" AS p
+INNER JOIN "Permissions" AS p0 ON p."PermissionId" = p0."Id"
+WHERE p."PlanId" = @__planId_0 AND p."IsActive"
+2025-10-02 15:34:55.124 +05:30 [INF] Executed DbCommand (60ms) [Parameters=[@__planId_0='5f9f5de1-a0b2-48ba-b03d-77b27345613f'], CommandType='"Text"', CommandTimeout='30']
+SELECT p."Id", p."Code", p."Name", p."Description", p."IsActive"
+FROM "Plans" AS p
+WHERE p."Id" = @__planId_0
+LIMIT 1
+2025-10-02 15:34:55.128 +05:30 [INF] Executing OkObjectResult, writing value of type '<>f__AnonymousType58`3[[System.Guid, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[xbytechat.api.Features.AccessControl.DTOs.PlanDto, xbytechat.api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[System.Collections.Generic.List`1[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-02 15:34:55.138 +05:30 [INF] Executed action xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api) in 180.8661ms
+2025-10-02 15:34:55.139 +05:30 [INF] Executed endpoint 'xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api)'
+2025-10-02 15:34:55.141 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:7113/api/plan/me/permissions - 200 null application/json; charset=utf-8 199.5432ms
+2025-10-02 15:34:55.156 +05:30 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:7113/api/plan/me/permissions - null null
+2025-10-02 15:34:55.159 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:34:55.160 +05:30 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:7113/api/plan/me/permissions - 204 null null 3.852ms
+2025-10-02 15:34:55.171 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:7113/api/plan/me/permissions - null null
+2025-10-02 15:34:55.174 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:34:55.180 +05:30 [INF] Executing endpoint 'xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api)'
+2025-10-02 15:34:55.181 +05:30 [INF] Route matched with {action = "GetMyPlanPermissions", controller = "Plan"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetMyPlanPermissions(System.Threading.CancellationToken) on controller xbytechat.api.Features.AccessControl.Controllers.PlanController (xbytechat.api).
+2025-10-02 15:34:55.289 +05:30 [INF] Executed DbCommand (103ms) [Parameters=[@__planId_0='5f9f5de1-a0b2-48ba-b03d-77b27345613f'], CommandType='"Text"', CommandTimeout='30']
+SELECT p."Id", p."Code", p."Name", p."Description", p."IsActive"
+FROM "Plans" AS p
+WHERE p."Id" = @__planId_0
+LIMIT 1
+2025-10-02 15:34:55.291 +05:30 [INF] Executing OkObjectResult, writing value of type '<>f__AnonymousType58`3[[System.Guid, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[xbytechat.api.Features.AccessControl.DTOs.PlanDto, xbytechat.api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[System.Collections.Generic.List`1[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-02 15:34:55.293 +05:30 [INF] Executed action xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api) in 109.4428ms
+2025-10-02 15:34:55.294 +05:30 [INF] Executed endpoint 'xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api)'
+2025-10-02 15:34:55.295 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:7113/api/plan/me/permissions - 200 null application/json; charset=utf-8 124.1022ms
+2025-10-02 15:34:55.356 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:7113/api/plan/me/permissions - null null
+2025-10-02 15:34:55.359 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:34:55.361 +05:30 [INF] Executing endpoint 'xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api)'
+2025-10-02 15:34:55.362 +05:30 [INF] Route matched with {action = "GetMyPlanPermissions", controller = "Plan"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetMyPlanPermissions(System.Threading.CancellationToken) on controller xbytechat.api.Features.AccessControl.Controllers.PlanController (xbytechat.api).
+2025-10-02 15:34:55.449 +05:30 [INF] Executed DbCommand (82ms) [Parameters=[@__planId_0='5f9f5de1-a0b2-48ba-b03d-77b27345613f'], CommandType='"Text"', CommandTimeout='30']
+SELECT p."Id", p."Code", p."Name", p."Description", p."IsActive"
+FROM "Plans" AS p
+WHERE p."Id" = @__planId_0
+LIMIT 1
+2025-10-02 15:34:55.452 +05:30 [INF] Executing OkObjectResult, writing value of type '<>f__AnonymousType58`3[[System.Guid, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[xbytechat.api.Features.AccessControl.DTOs.PlanDto, xbytechat.api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[System.Collections.Generic.List`1[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-02 15:34:55.453 +05:30 [INF] Executed action xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api) in 88.4924ms
+2025-10-02 15:34:55.455 +05:30 [INF] Executed endpoint 'xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api)'
+2025-10-02 15:34:55.456 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:7113/api/plan/me/permissions - 200 null application/json; charset=utf-8 100.22ms
+2025-10-02 15:35:00.139 +05:30 [INF] Executed DbCommand (94ms) [Parameters=[@__now_0='2025-10-02T10:05:00.0434596+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-02 15:35:00.788 +05:30 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:7113/api/report/message-logs/facets - null null
+2025-10-02 15:35:00.793 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:35:00.795 +05:30 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:7113/api/report/message-logs/facets - 204 null null 6.5041ms
+2025-10-02 15:35:00.800 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:7113/api/report/message-logs/facets - null null
+2025-10-02 15:35:00.804 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:35:00.807 +05:30 [INF] Executing endpoint 'xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController.Facets (xbytechat.api)'
+2025-10-02 15:35:00.812 +05:30 [INF] Route matched with {action = "Facets", controller = "MessageLogsReport"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Facets(Int32, System.Threading.CancellationToken) on controller xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController (xbytechat.api).
+2025-10-02 15:35:00.920 +05:30 [INF] Executed DbCommand (78ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4', @__from_1='2025-07-04T10:05:00.8170953Z' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+SELECT t."PhoneNumberId"
+FROM (
+    SELECT DISTINCT c."PhoneNumberId"
+    FROM "MessageLogs" AS m
+    LEFT JOIN "Campaigns" AS c ON m."CampaignId" = c."Id"
+    WHERE m."BusinessId" = @__businessId_0 AND COALESCE(m."SentAt", m."CreatedAt") >= @__from_1 AND c."Id" IS NOT NULL AND c."PhoneNumberId" IS NOT NULL
+) AS t
+ORDER BY t."PhoneNumberId"
+2025-10-02 15:35:01.025 +05:30 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:7113/api/report/message-logs/search - null null
+2025-10-02 15:35:01.027 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:35:01.028 +05:30 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:7113/api/report/message-logs/search - 204 null null 3.315ms
+2025-10-02 15:35:01.031 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:7113/api/report/message-logs/search - application/json 131
+2025-10-02 15:35:01.033 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:35:01.033 +05:30 [INF] Executed DbCommand (80ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4', @__from_1='2025-07-04T10:05:00.8170953Z' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+SELECT t.c
+FROM (
+    SELECT DISTINCT CASE
+        WHEN c."Id" IS NOT NULL AND c."Provider" IS NOT NULL THEN c."Provider"
+        ELSE m."Provider"
+    END AS c
+    FROM "MessageLogs" AS m
+    LEFT JOIN "Campaigns" AS c ON m."CampaignId" = c."Id"
+    WHERE m."BusinessId" = @__businessId_0 AND COALESCE(m."SentAt", m."CreatedAt") >= @__from_1 AND CASE
+        WHEN c."Id" IS NOT NULL AND c."Provider" IS NOT NULL THEN c."Provider"
+        ELSE m."Provider"
+    END IS NOT NULL
+) AS t
+ORDER BY t.c
+2025-10-02 15:35:01.034 +05:30 [INF] Executing endpoint 'xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController.Search (xbytechat.api)'
+2025-10-02 15:35:01.041 +05:30 [INF] Route matched with {action = "Search", controller = "MessageLogsReport"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Search(xbytechat.api.Features.Tracking.DTOs.MessageLogReportQueryDto, System.Threading.CancellationToken) on controller xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController (xbytechat.api).
+2025-10-02 15:35:01.145 +05:30 [INF] Executed DbCommand (106ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4', @__from_1='2025-07-04T10:05:00.8170953Z' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+SELECT t."Status"
+FROM (
+    SELECT DISTINCT m."Status"
+    FROM "MessageLogs" AS m
+    WHERE m."BusinessId" = @__businessId_0 AND COALESCE(m."SentAt", m."CreatedAt") >= @__from_1
+) AS t
+ORDER BY t."Status"
+2025-10-02 15:35:01.145 +05:30 [INF] Executed DbCommand (73ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4', @__q_FromUtc_Value_1='2025-09-25T18:30:00.0000000Z' (DbType = DateTime), @__q_ToUtc_Value_2='2025-10-02T10:05:00.7600000Z' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+SELECT count(*)::int
+FROM "MessageLogs" AS m
+LEFT JOIN "Campaigns" AS c ON m."CampaignId" = c."Id"
+WHERE m."BusinessId" = @__businessId_0 AND COALESCE(m."SentAt", m."CreatedAt") >= @__q_FromUtc_Value_1 AND COALESCE(m."SentAt", m."CreatedAt") <= @__q_ToUtc_Value_2
+2025-10-02 15:35:01.235 +05:30 [INF] Executed DbCommand (85ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4'], CommandType='"Text"', CommandTimeout='30']
+SELECT t."WhatsAppBusinessNumber"
+FROM (
+    SELECT DISTINCT w."WhatsAppBusinessNumber"
+    FROM "WhatsAppPhoneNumbers" AS w
+    WHERE w."BusinessId" = @__businessId_0
+) AS t
+ORDER BY t."WhatsAppBusinessNumber"
+2025-10-02 15:35:01.239 +05:30 [INF] Executing OkObjectResult, writing value of type 'xbytechat.api.Features.Tracking.DTOs.MessageLogFacetsDto'.
+2025-10-02 15:35:01.243 +05:30 [INF] Executed action xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController.Facets (xbytechat.api) in 428.9095ms
+2025-10-02 15:35:01.245 +05:30 [INF] Executed endpoint 'xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController.Facets (xbytechat.api)'
+2025-10-02 15:35:01.246 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:7113/api/report/message-logs/facets - 200 null application/json; charset=utf-8 446.1368ms
+2025-10-02 15:35:01.249 +05:30 [INF] Executed DbCommand (92ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4', @__q_FromUtc_Value_1='2025-09-25T18:30:00.0000000Z' (DbType = DateTime), @__q_ToUtc_Value_2='2025-10-02T10:05:00.7600000Z' (DbType = DateTime), @__p_4='25', @__p_3='0'], CommandType='"Text"', CommandTimeout='30']
+SELECT m."Id", m."BusinessId", m."CampaignId", c."Name" AS "CampaignName", m."RecipientNumber", c."PhoneNumberId" AS "SenderId", CASE
+    WHEN c."Id" IS NOT NULL AND c."Provider" IS NOT NULL THEN c."Provider"
+    ELSE m."Provider"
+END AS "SourceChannel", m."Status", NULL AS "MessageType", m."MessageContent", COALESCE(m."ProviderMessageId", m."MessageId") AS "ProviderMessageId", m."ErrorMessage", m."CreatedAt", m."SentAt", NULL AS "DeliveredAt"
+FROM "MessageLogs" AS m
+LEFT JOIN "Campaigns" AS c ON m."CampaignId" = c."Id"
+WHERE m."BusinessId" = @__businessId_0 AND COALESCE(m."SentAt", m."CreatedAt") >= @__q_FromUtc_Value_1 AND COALESCE(m."SentAt", m."CreatedAt") <= @__q_ToUtc_Value_2
+ORDER BY COALESCE(m."SentAt", m."CreatedAt") DESC
+LIMIT @__p_4 OFFSET @__p_3
+2025-10-02 15:35:01.256 +05:30 [INF] Executing OkObjectResult, writing value of type 'xbytechat.api.Shared.PaginatedResponse`1[[xbytechat.api.Features.Tracking.DTOs.MessageLogListItemDto, xbytechat.api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-10-02 15:35:01.269 +05:30 [INF] Executed action xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController.Search (xbytechat.api) in 226.6604ms
+2025-10-02 15:35:01.270 +05:30 [INF] Executed endpoint 'xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController.Search (xbytechat.api)'
+2025-10-02 15:35:01.272 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:7113/api/report/message-logs/search - 200 null application/json; charset=utf-8 241.0428ms
+2025-10-02 15:35:10.241 +05:30 [INF] Executed DbCommand (92ms) [Parameters=[@__now_0='2025-10-02T10:05:10.1480412+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-02 15:35:20.345 +05:30 [INF] Executed DbCommand (86ms) [Parameters=[@__now_0='2025-10-02T10:05:20.2583450+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-02 15:35:27.671 +05:30 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:7113/api/plan/me/permissions - null null
+2025-10-02 15:35:27.674 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:35:27.675 +05:30 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:7113/api/plan/me/permissions - 204 null null 3.6549ms
+2025-10-02 15:35:27.678 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:7113/api/plan/me/permissions - null null
+2025-10-02 15:35:27.680 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:35:27.682 +05:30 [INF] Executing endpoint 'xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api)'
+2025-10-02 15:35:27.682 +05:30 [INF] Route matched with {action = "GetMyPlanPermissions", controller = "Plan"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetMyPlanPermissions(System.Threading.CancellationToken) on controller xbytechat.api.Features.AccessControl.Controllers.PlanController (xbytechat.api).
+2025-10-02 15:35:27.756 +05:30 [INF] Executed DbCommand (71ms) [Parameters=[@__planId_0='5f9f5de1-a0b2-48ba-b03d-77b27345613f'], CommandType='"Text"', CommandTimeout='30']
+SELECT p."Id", p."Code", p."Name", p."Description", p."IsActive"
+FROM "Plans" AS p
+WHERE p."Id" = @__planId_0
+LIMIT 1
+2025-10-02 15:35:27.759 +05:30 [INF] Executing OkObjectResult, writing value of type '<>f__AnonymousType58`3[[System.Guid, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[xbytechat.api.Features.AccessControl.DTOs.PlanDto, xbytechat.api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[System.Collections.Generic.List`1[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-02 15:35:27.761 +05:30 [INF] Executed action xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api) in 77.2997ms
+2025-10-02 15:35:27.763 +05:30 [INF] Executed endpoint 'xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api)'
+2025-10-02 15:35:27.765 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:7113/api/plan/me/permissions - 200 null application/json; charset=utf-8 86.4645ms
+2025-10-02 15:35:27.777 +05:30 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:7113/api/plan/me/permissions - null null
+2025-10-02 15:35:27.782 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:35:27.783 +05:30 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:7113/api/plan/me/permissions - 204 null null 5.7821ms
+2025-10-02 15:35:27.787 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:7113/api/plan/me/permissions - null null
+2025-10-02 15:35:27.790 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:35:27.791 +05:30 [INF] Executing endpoint 'xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api)'
+2025-10-02 15:35:27.793 +05:30 [INF] Route matched with {action = "GetMyPlanPermissions", controller = "Plan"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetMyPlanPermissions(System.Threading.CancellationToken) on controller xbytechat.api.Features.AccessControl.Controllers.PlanController (xbytechat.api).
+2025-10-02 15:35:27.876 +05:30 [INF] Executed DbCommand (79ms) [Parameters=[@__planId_0='5f9f5de1-a0b2-48ba-b03d-77b27345613f'], CommandType='"Text"', CommandTimeout='30']
+SELECT p."Id", p."Code", p."Name", p."Description", p."IsActive"
+FROM "Plans" AS p
+WHERE p."Id" = @__planId_0
+LIMIT 1
+2025-10-02 15:35:27.878 +05:30 [INF] Executing OkObjectResult, writing value of type '<>f__AnonymousType58`3[[System.Guid, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[xbytechat.api.Features.AccessControl.DTOs.PlanDto, xbytechat.api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[System.Collections.Generic.List`1[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-02 15:35:27.880 +05:30 [INF] Executed action xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api) in 84.463ms
+2025-10-02 15:35:27.881 +05:30 [INF] Executed endpoint 'xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api)'
+2025-10-02 15:35:27.882 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:7113/api/plan/me/permissions - 200 null application/json; charset=utf-8 95.7328ms
+2025-10-02 15:35:27.909 +05:30 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:7113/api/report/message-logs/facets - null null
+2025-10-02 15:35:27.909 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:7113/api/plan/me/permissions - null null
+2025-10-02 15:35:27.912 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:35:27.914 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:35:27.915 +05:30 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:7113/api/report/message-logs/facets - 204 null null 5.5302ms
+2025-10-02 15:35:27.916 +05:30 [INF] Executing endpoint 'xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api)'
+2025-10-02 15:35:27.927 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:7113/api/report/message-logs/facets - null null
+2025-10-02 15:35:27.928 +05:30 [INF] Route matched with {action = "GetMyPlanPermissions", controller = "Plan"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetMyPlanPermissions(System.Threading.CancellationToken) on controller xbytechat.api.Features.AccessControl.Controllers.PlanController (xbytechat.api).
+2025-10-02 15:35:27.930 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:35:27.933 +05:30 [INF] Executing endpoint 'xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController.Facets (xbytechat.api)'
+2025-10-02 15:35:27.936 +05:30 [INF] Route matched with {action = "Facets", controller = "MessageLogsReport"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Facets(Int32, System.Threading.CancellationToken) on controller xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController (xbytechat.api).
+2025-10-02 15:35:28.014 +05:30 [INF] Executed DbCommand (81ms) [Parameters=[@__planId_0='5f9f5de1-a0b2-48ba-b03d-77b27345613f'], CommandType='"Text"', CommandTimeout='30']
+SELECT p."Id", p."Code", p."Name", p."Description", p."IsActive"
+FROM "Plans" AS p
+WHERE p."Id" = @__planId_0
+LIMIT 1
+2025-10-02 15:35:28.017 +05:30 [INF] Executing OkObjectResult, writing value of type '<>f__AnonymousType58`3[[System.Guid, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[xbytechat.api.Features.AccessControl.DTOs.PlanDto, xbytechat.api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[System.Collections.Generic.List`1[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-02 15:35:28.018 +05:30 [INF] Executed action xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api) in 86.5377ms
+2025-10-02 15:35:28.020 +05:30 [INF] Executed endpoint 'xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api)'
+2025-10-02 15:35:28.020 +05:30 [INF] Executed DbCommand (78ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4', @__from_1='2025-07-04T10:05:27.9412071Z' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+SELECT t."PhoneNumberId"
+FROM (
+    SELECT DISTINCT c."PhoneNumberId"
+    FROM "MessageLogs" AS m
+    LEFT JOIN "Campaigns" AS c ON m."CampaignId" = c."Id"
+    WHERE m."BusinessId" = @__businessId_0 AND COALESCE(m."SentAt", m."CreatedAt") >= @__from_1 AND c."Id" IS NOT NULL AND c."PhoneNumberId" IS NOT NULL
+) AS t
+ORDER BY t."PhoneNumberId"
+2025-10-02 15:35:28.021 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:7113/api/plan/me/permissions - 200 null application/json; charset=utf-8 111.6716ms
+2025-10-02 15:35:28.084 +05:30 [INF] Executed DbCommand (60ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4', @__from_1='2025-07-04T10:05:27.9412071Z' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+SELECT t.c
+FROM (
+    SELECT DISTINCT CASE
+        WHEN c."Id" IS NOT NULL AND c."Provider" IS NOT NULL THEN c."Provider"
+        ELSE m."Provider"
+    END AS c
+    FROM "MessageLogs" AS m
+    LEFT JOIN "Campaigns" AS c ON m."CampaignId" = c."Id"
+    WHERE m."BusinessId" = @__businessId_0 AND COALESCE(m."SentAt", m."CreatedAt") >= @__from_1 AND CASE
+        WHEN c."Id" IS NOT NULL AND c."Provider" IS NOT NULL THEN c."Provider"
+        ELSE m."Provider"
+    END IS NOT NULL
+) AS t
+ORDER BY t.c
+2025-10-02 15:35:28.147 +05:30 [INF] Executed DbCommand (60ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4', @__from_1='2025-07-04T10:05:27.9412071Z' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+SELECT t."Status"
+FROM (
+    SELECT DISTINCT m."Status"
+    FROM "MessageLogs" AS m
+    WHERE m."BusinessId" = @__businessId_0 AND COALESCE(m."SentAt", m."CreatedAt") >= @__from_1
+) AS t
+ORDER BY t."Status"
+2025-10-02 15:35:28.157 +05:30 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:7113/api/report/message-logs/search - null null
+2025-10-02 15:35:28.159 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:35:28.160 +05:30 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:7113/api/report/message-logs/search - 204 null null 3.23ms
+2025-10-02 15:35:28.163 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:7113/api/report/message-logs/search - application/json 131
+2025-10-02 15:35:28.165 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:35:28.167 +05:30 [INF] Executing endpoint 'xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController.Search (xbytechat.api)'
+2025-10-02 15:35:28.168 +05:30 [INF] Route matched with {action = "Search", controller = "MessageLogsReport"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Search(xbytechat.api.Features.Tracking.DTOs.MessageLogReportQueryDto, System.Threading.CancellationToken) on controller xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController (xbytechat.api).
+2025-10-02 15:35:28.216 +05:30 [INF] Executed DbCommand (67ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4'], CommandType='"Text"', CommandTimeout='30']
+SELECT t."WhatsAppBusinessNumber"
+FROM (
+    SELECT DISTINCT w."WhatsAppBusinessNumber"
+    FROM "WhatsAppPhoneNumbers" AS w
+    WHERE w."BusinessId" = @__businessId_0
+) AS t
+ORDER BY t."WhatsAppBusinessNumber"
+2025-10-02 15:35:28.219 +05:30 [INF] Executing OkObjectResult, writing value of type 'xbytechat.api.Features.Tracking.DTOs.MessageLogFacetsDto'.
+2025-10-02 15:35:28.220 +05:30 [INF] Executed action xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController.Facets (xbytechat.api) in 281.4357ms
+2025-10-02 15:35:28.222 +05:30 [INF] Executed endpoint 'xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController.Facets (xbytechat.api)'
+2025-10-02 15:35:28.223 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:7113/api/report/message-logs/facets - 200 null application/json; charset=utf-8 295.8907ms
+2025-10-02 15:35:28.254 +05:30 [INF] Executed DbCommand (83ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4', @__q_FromUtc_Value_1='2025-09-25T18:30:00.0000000Z' (DbType = DateTime), @__q_ToUtc_Value_2='2025-10-02T10:05:27.8960000Z' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+SELECT count(*)::int
+FROM "MessageLogs" AS m
+LEFT JOIN "Campaigns" AS c ON m."CampaignId" = c."Id"
+WHERE m."BusinessId" = @__businessId_0 AND COALESCE(m."SentAt", m."CreatedAt") >= @__q_FromUtc_Value_1 AND COALESCE(m."SentAt", m."CreatedAt") <= @__q_ToUtc_Value_2
+2025-10-02 15:35:28.342 +05:30 [INF] Executed DbCommand (85ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4', @__q_FromUtc_Value_1='2025-09-25T18:30:00.0000000Z' (DbType = DateTime), @__q_ToUtc_Value_2='2025-10-02T10:05:27.8960000Z' (DbType = DateTime), @__p_4='25', @__p_3='0'], CommandType='"Text"', CommandTimeout='30']
+SELECT m."Id", m."BusinessId", m."CampaignId", c."Name" AS "CampaignName", m."RecipientNumber", c."PhoneNumberId" AS "SenderId", CASE
+    WHEN c."Id" IS NOT NULL AND c."Provider" IS NOT NULL THEN c."Provider"
+    ELSE m."Provider"
+END AS "SourceChannel", m."Status", NULL AS "MessageType", m."MessageContent", COALESCE(m."ProviderMessageId", m."MessageId") AS "ProviderMessageId", m."ErrorMessage", m."CreatedAt", m."SentAt", NULL AS "DeliveredAt"
+FROM "MessageLogs" AS m
+LEFT JOIN "Campaigns" AS c ON m."CampaignId" = c."Id"
+WHERE m."BusinessId" = @__businessId_0 AND COALESCE(m."SentAt", m."CreatedAt") >= @__q_FromUtc_Value_1 AND COALESCE(m."SentAt", m."CreatedAt") <= @__q_ToUtc_Value_2
+ORDER BY COALESCE(m."SentAt", m."CreatedAt") DESC
+LIMIT @__p_4 OFFSET @__p_3
+2025-10-02 15:35:28.344 +05:30 [INF] Executing OkObjectResult, writing value of type 'xbytechat.api.Shared.PaginatedResponse`1[[xbytechat.api.Features.Tracking.DTOs.MessageLogListItemDto, xbytechat.api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-10-02 15:35:28.346 +05:30 [INF] Executed action xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController.Search (xbytechat.api) in 176.3113ms
+2025-10-02 15:35:28.347 +05:30 [INF] Executed endpoint 'xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController.Search (xbytechat.api)'
+2025-10-02 15:35:28.348 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:7113/api/report/message-logs/search - 200 null application/json; charset=utf-8 185.1715ms
+2025-10-02 15:35:30.426 +05:30 [INF] Executed DbCommand (74ms) [Parameters=[@__now_0='2025-10-02T10:05:30.3507877+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-02 15:35:40.500 +05:30 [INF] Executed DbCommand (60ms) [Parameters=[@__now_0='2025-10-02T10:05:40.4397423+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-02 15:38:34.704 +05:30 [INF] User profile is available. Using 'C:\Users\sunde\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2025-10-02 15:38:34.749 +05:30 [INF] 🚀 Webhook Queue Worker started.
+2025-10-02 15:38:34.764 +05:30 [INF] 🧹 FailedWebhookLogCleanupService started.
+2025-10-02 15:38:35.631 +05:30 [WRN] Sensitive data logging is enabled. Log entries and exception messages may include sensitive application data; this mode should only be enabled during development.
+2025-10-02 15:38:36.159 +05:30 [WRN] The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+2025-10-02 15:38:36.175 +05:30 [INF] ClickLogWorker started
+2025-10-02 15:38:36.315 +05:30 [INF] Now listening on: http://localhost:7113
+2025-10-02 15:38:36.316 +05:30 [INF] Now listening on: http://localhost:5295
+2025-10-02 15:38:36.317 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2025-10-02 15:38:36.318 +05:30 [INF] Hosting environment: Development
+2025-10-02 15:38:36.319 +05:30 [INF] Content root path: D:\xbytechat\xbytechat-api\xbytechat-api
+2025-10-02 15:38:37.216 +05:30 [INF] ClickLogWorker stopped
+2025-10-02 15:38:40.945 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:7113/swagger/index.html - null null
+2025-10-02 15:38:41.087 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:7113/swagger/index.html - 200 null text/html;charset=utf-8 150.0833ms
+2025-10-02 15:38:41.106 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:7113/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-02 15:38:41.119 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:7113/_framework/aspnetcore-browser-refresh.js - 200 13762 application/javascript; charset=utf-8 13.5266ms
+2025-10-02 15:38:41.156 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:7113/_vs/browserLink - null null
+2025-10-02 15:38:41.194 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:7113/_vs/browserLink - 200 null text/javascript; charset=UTF-8 37.8992ms
+2025-10-02 15:38:41.340 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:7113/swagger/v1/swagger.json - null null
+2025-10-02 15:38:41.553 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:7113/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 213.3431ms
+2025-10-02 15:38:44.784 +05:30 [INF] Executed DbCommand (116ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT w."Id", w."AutoCleanupEnabled", w."LastCleanupAt"
+FROM "WebhookSettings" AS w
+LIMIT 1
+2025-10-02 15:38:44.792 +05:30 [INF] Executed DbCommand (125ms) [Parameters=[@__cutoff_0='2025-09-25T10:08:34.9381482Z' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+SELECT f."Id", f."CreatedAt", f."ErrorMessage", f."FailureType", f."RawJson", f."SourceModule"
+FROM "FailedWebhookLogs" AS f
+WHERE f."CreatedAt" < @__cutoff_0
+2025-10-02 15:38:46.304 +05:30 [INF] Executed DbCommand (100ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT DISTINCT w."BusinessId"
+FROM "WhatsAppSettings" AS w
+WHERE w."IsActive"
+2025-10-02 15:38:46.489 +05:30 [INF] Executed DbCommand (93ms) [Parameters=[@__businessId_0='16d308c9-adcc-4ea9-8e9a-0724d11b5d7b'], CommandType='"Text"', CommandTimeout='30']
+SELECT w."Id", w."ApiKey", w."ApiUrl", w."BusinessId", w."CreatedAt", w."IsActive", w."PhoneNumberId", w."Provider", w."SenderDisplayName", w."UpdatedAt", w."WabaId", w."WebhookCallbackUrl", w."WebhookSecret", w."WebhookVerifyToken", w."WhatsAppBusinessNumber"
+FROM "WhatsAppSettings" AS w
+WHERE w."BusinessId" = @__businessId_0 AND w."IsActive"
+LIMIT 1
+2025-10-02 15:38:46.574 +05:30 [INF] Executed DbCommand (69ms) [Parameters=[@__businessId_0='16d308c9-adcc-4ea9-8e9a-0724d11b5d7b'], CommandType='"Text"', CommandTimeout='30']
+SELECT w."LastSyncedAt"
+FROM "WhatsAppTemplates" AS w
+WHERE w."BusinessId" = @__businessId_0
+ORDER BY w."LastSyncedAt" DESC
+LIMIT 1
+2025-10-02 15:38:46.579 +05:30 [INF] ⏭️ Skipping sync for "16d308c9-adcc-4ea9-8e9a-0724d11b5d7b"; TTL not expired.
+2025-10-02 15:38:46.581 +05:30 [INF] TemplateSyncWorker: biz="16d308c9-adcc-4ea9-8e9a-0724d11b5d7b" added=0 updated=0 skipped=0 syncedAt="2025-10-02T07:28:30.7163840Z"
+2025-10-02 15:38:46.674 +05:30 [INF] Executed DbCommand (87ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4'], CommandType='"Text"', CommandTimeout='30']
+SELECT w."Id", w."ApiKey", w."ApiUrl", w."BusinessId", w."CreatedAt", w."IsActive", w."PhoneNumberId", w."Provider", w."SenderDisplayName", w."UpdatedAt", w."WabaId", w."WebhookCallbackUrl", w."WebhookSecret", w."WebhookVerifyToken", w."WhatsAppBusinessNumber"
+FROM "WhatsAppSettings" AS w
+WHERE w."BusinessId" = @__businessId_0 AND w."IsActive"
+LIMIT 1
+2025-10-02 15:38:46.750 +05:30 [INF] Executed DbCommand (74ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4'], CommandType='"Text"', CommandTimeout='30']
+SELECT w."LastSyncedAt"
+FROM "WhatsAppTemplates" AS w
+WHERE w."BusinessId" = @__businessId_0
+ORDER BY w."LastSyncedAt" DESC
+LIMIT 1
+2025-10-02 15:38:46.753 +05:30 [INF] ⏭️ Skipping sync for "11f41b5f-f92c-4b6e-855b-62036779dee4"; TTL not expired.
+2025-10-02 15:38:46.753 +05:30 [INF] TemplateSyncWorker: biz="11f41b5f-f92c-4b6e-855b-62036779dee4" added=0 updated=0 skipped=0 syncedAt="2025-10-02T06:47:39.2167560Z"
+2025-10-02 15:38:46.755 +05:30 [INF] TemplateSyncWorker: sweep finished in 567 ms; processed=2; next run ~"2025-10-02T16:08:46.1881196Z"
+2025-10-02 15:38:49.391 +05:30 [INF] Executed DbCommand (90ms) [Parameters=[@__now_0='2025-10-02T10:08:41.1859156+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-02 15:38:59.493 +05:30 [INF] Executed DbCommand (90ms) [Parameters=[@__now_0='2025-10-02T10:08:59.4017661+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-02 15:39:06.602 +05:30 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:7113/api/plan/me/permissions - null null
+2025-10-02 15:39:06.606 +05:30 [WRN] Failed to determine the https port for redirect.
+2025-10-02 15:39:06.653 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:39:06.657 +05:30 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:7113/api/plan/me/permissions - 204 null null 54.8767ms
+2025-10-02 15:39:06.666 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:7113/api/plan/me/permissions - null null
+2025-10-02 15:39:06.677 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:39:06.928 +05:30 [INF] Executing endpoint 'xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api)'
+2025-10-02 15:39:06.940 +05:30 [INF] Route matched with {action = "GetMyPlanPermissions", controller = "Plan"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetMyPlanPermissions(System.Threading.CancellationToken) on controller xbytechat.api.Features.AccessControl.Controllers.PlanController (xbytechat.api).
+2025-10-02 15:39:07.090 +05:30 [INF] Executed DbCommand (105ms) [Parameters=[@__planId_0='5f9f5de1-a0b2-48ba-b03d-77b27345613f'], CommandType='"Text"', CommandTimeout='30']
+SELECT p0."Id", p0."Code", p0."CreatedAt", p0."Description", p0."Group", p0."IsActive", p0."Name"
+FROM "PlanPermissions" AS p
+INNER JOIN "Permissions" AS p0 ON p."PermissionId" = p0."Id"
+WHERE p."PlanId" = @__planId_0 AND p."IsActive"
+2025-10-02 15:39:07.238 +05:30 [INF] Executed DbCommand (105ms) [Parameters=[@__planId_0='5f9f5de1-a0b2-48ba-b03d-77b27345613f'], CommandType='"Text"', CommandTimeout='30']
+SELECT p."Id", p."Code", p."Name", p."Description", p."IsActive"
+FROM "Plans" AS p
+WHERE p."Id" = @__planId_0
+LIMIT 1
+2025-10-02 15:39:07.249 +05:30 [INF] Executing OkObjectResult, writing value of type '<>f__AnonymousType58`3[[System.Guid, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[xbytechat.api.Features.AccessControl.DTOs.PlanDto, xbytechat.api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[System.Collections.Generic.List`1[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-02 15:39:07.269 +05:30 [INF] Executed action xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api) in 324.6297ms
+2025-10-02 15:39:07.271 +05:30 [INF] Executed endpoint 'xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api)'
+2025-10-02 15:39:07.275 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:7113/api/plan/me/permissions - 200 null application/json; charset=utf-8 609.0088ms
+2025-10-02 15:39:07.278 +05:30 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:7113/api/plan/me/permissions - null null
+2025-10-02 15:39:07.281 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:39:07.282 +05:30 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:7113/api/plan/me/permissions - 204 null null 3.8214ms
+2025-10-02 15:39:07.285 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:7113/api/plan/me/permissions - null null
+2025-10-02 15:39:07.287 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:39:07.290 +05:30 [INF] Executing endpoint 'xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api)'
+2025-10-02 15:39:07.291 +05:30 [INF] Route matched with {action = "GetMyPlanPermissions", controller = "Plan"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetMyPlanPermissions(System.Threading.CancellationToken) on controller xbytechat.api.Features.AccessControl.Controllers.PlanController (xbytechat.api).
+2025-10-02 15:39:07.364 +05:30 [INF] Executed DbCommand (67ms) [Parameters=[@__planId_0='5f9f5de1-a0b2-48ba-b03d-77b27345613f'], CommandType='"Text"', CommandTimeout='30']
+SELECT p."Id", p."Code", p."Name", p."Description", p."IsActive"
+FROM "Plans" AS p
+WHERE p."Id" = @__planId_0
+LIMIT 1
+2025-10-02 15:39:07.367 +05:30 [INF] Executing OkObjectResult, writing value of type '<>f__AnonymousType58`3[[System.Guid, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[xbytechat.api.Features.AccessControl.DTOs.PlanDto, xbytechat.api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[System.Collections.Generic.List`1[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-02 15:39:07.368 +05:30 [INF] Executed action xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api) in 75.0938ms
+2025-10-02 15:39:07.369 +05:30 [INF] Executed endpoint 'xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api)'
+2025-10-02 15:39:07.370 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:7113/api/plan/me/permissions - 200 null application/json; charset=utf-8 85.5048ms
+2025-10-02 15:39:07.395 +05:30 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:7113/api/report/message-logs/facets - null null
+2025-10-02 15:39:07.396 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:7113/api/plan/me/permissions - null null
+2025-10-02 15:39:07.399 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:39:07.402 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:39:07.403 +05:30 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:7113/api/report/message-logs/facets - 204 null null 7.9942ms
+2025-10-02 15:39:07.408 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:7113/api/report/message-logs/facets - null null
+2025-10-02 15:39:07.408 +05:30 [INF] Executing endpoint 'xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api)'
+2025-10-02 15:39:07.413 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:39:07.413 +05:30 [INF] Route matched with {action = "GetMyPlanPermissions", controller = "Plan"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetMyPlanPermissions(System.Threading.CancellationToken) on controller xbytechat.api.Features.AccessControl.Controllers.PlanController (xbytechat.api).
+2025-10-02 15:39:07.415 +05:30 [INF] Executing endpoint 'xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController.Facets (xbytechat.api)'
+2025-10-02 15:39:07.427 +05:30 [INF] Route matched with {action = "Facets", controller = "MessageLogsReport"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Facets(Int32, System.Threading.CancellationToken) on controller xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController (xbytechat.api).
+2025-10-02 15:39:07.495 +05:30 [INF] Executed DbCommand (76ms) [Parameters=[@__planId_0='5f9f5de1-a0b2-48ba-b03d-77b27345613f'], CommandType='"Text"', CommandTimeout='30']
+SELECT p."Id", p."Code", p."Name", p."Description", p."IsActive"
+FROM "Plans" AS p
+WHERE p."Id" = @__planId_0
+LIMIT 1
+2025-10-02 15:39:07.498 +05:30 [INF] Executing OkObjectResult, writing value of type '<>f__AnonymousType58`3[[System.Guid, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[xbytechat.api.Features.AccessControl.DTOs.PlanDto, xbytechat.api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[System.Collections.Generic.List`1[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-02 15:39:07.500 +05:30 [INF] Executed action xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api) in 83.5009ms
+2025-10-02 15:39:07.501 +05:30 [INF] Executed endpoint 'xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api)'
+2025-10-02 15:39:07.502 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:7113/api/plan/me/permissions - 200 null application/json; charset=utf-8 105.6538ms
+2025-10-02 15:39:07.583 +05:30 [INF] Executed DbCommand (113ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4', @__from_1='2025-07-04T10:09:07.4338676Z' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+SELECT t."PhoneNumberId"
+FROM (
+    SELECT DISTINCT c."PhoneNumberId"
+    FROM "MessageLogs" AS m
+    LEFT JOIN "Campaigns" AS c ON m."CampaignId" = c."Id"
+    WHERE m."BusinessId" = @__businessId_0 AND COALESCE(m."SentAt", m."CreatedAt") >= @__from_1 AND c."Id" IS NOT NULL AND c."PhoneNumberId" IS NOT NULL
+) AS t
+ORDER BY t."PhoneNumberId"
+2025-10-02 15:39:07.644 +05:30 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:7113/api/report/message-logs/search - null null
+2025-10-02 15:39:07.647 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:39:07.648 +05:30 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:7113/api/report/message-logs/search - 204 null null 3.5462ms
+2025-10-02 15:39:07.651 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:7113/api/report/message-logs/search - application/json 131
+2025-10-02 15:39:07.653 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:39:07.654 +05:30 [INF] Executing endpoint 'xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController.Search (xbytechat.api)'
+2025-10-02 15:39:07.657 +05:30 [INF] Route matched with {action = "Search", controller = "MessageLogsReport"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Search(xbytechat.api.Features.Tracking.DTOs.MessageLogReportQueryDto, System.Threading.CancellationToken) on controller xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController (xbytechat.api).
+2025-10-02 15:39:07.701 +05:30 [INF] Executed DbCommand (106ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4', @__from_1='2025-07-04T10:09:07.4338676Z' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+SELECT t.c
+FROM (
+    SELECT DISTINCT CASE
+        WHEN c."Id" IS NOT NULL AND c."Provider" IS NOT NULL THEN c."Provider"
+        ELSE m."Provider"
+    END AS c
+    FROM "MessageLogs" AS m
+    LEFT JOIN "Campaigns" AS c ON m."CampaignId" = c."Id"
+    WHERE m."BusinessId" = @__businessId_0 AND COALESCE(m."SentAt", m."CreatedAt") >= @__from_1 AND CASE
+        WHEN c."Id" IS NOT NULL AND c."Provider" IS NOT NULL THEN c."Provider"
+        ELSE m."Provider"
+    END IS NOT NULL
+) AS t
+ORDER BY t.c
+2025-10-02 15:39:07.794 +05:30 [INF] Executed DbCommand (88ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4', @__q_FromUtc_Value_1='2025-09-25T18:30:00.0000000Z' (DbType = DateTime), @__q_ToUtc_Value_2='2025-10-02T10:09:07.3800000Z' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+SELECT count(*)::int
+FROM "MessageLogs" AS m
+LEFT JOIN "Campaigns" AS c ON m."CampaignId" = c."Id"
+WHERE m."BusinessId" = @__businessId_0 AND COALESCE(m."SentAt", m."CreatedAt") >= @__q_FromUtc_Value_1 AND COALESCE(m."SentAt", m."CreatedAt") <= @__q_ToUtc_Value_2
+2025-10-02 15:39:07.808 +05:30 [INF] Executed DbCommand (101ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4', @__from_1='2025-07-04T10:09:07.4338676Z' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+SELECT t."Status"
+FROM (
+    SELECT DISTINCT m."Status"
+    FROM "MessageLogs" AS m
+    WHERE m."BusinessId" = @__businessId_0 AND COALESCE(m."SentAt", m."CreatedAt") >= @__from_1
+) AS t
+ORDER BY t."Status"
+2025-10-02 15:39:07.914 +05:30 [INF] Executed DbCommand (109ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4', @__q_FromUtc_Value_1='2025-09-25T18:30:00.0000000Z' (DbType = DateTime), @__q_ToUtc_Value_2='2025-10-02T10:09:07.3800000Z' (DbType = DateTime), @__p_4='25', @__p_3='0'], CommandType='"Text"', CommandTimeout='30']
+SELECT m."Id", m."BusinessId", m."CampaignId", c."Name" AS "CampaignName", m."RecipientNumber", c."PhoneNumberId" AS "SenderId", CASE
+    WHEN c."Id" IS NOT NULL AND c."Provider" IS NOT NULL THEN c."Provider"
+    ELSE m."Provider"
+END AS "SourceChannel", m."Status", NULL AS "MessageType", m."MessageContent", COALESCE(m."ProviderMessageId", m."MessageId") AS "ProviderMessageId", m."ErrorMessage", m."CreatedAt", m."SentAt", NULL AS "DeliveredAt"
+FROM "MessageLogs" AS m
+LEFT JOIN "Campaigns" AS c ON m."CampaignId" = c."Id"
+WHERE m."BusinessId" = @__businessId_0 AND COALESCE(m."SentAt", m."CreatedAt") >= @__q_FromUtc_Value_1 AND COALESCE(m."SentAt", m."CreatedAt") <= @__q_ToUtc_Value_2
+ORDER BY COALESCE(m."SentAt", m."CreatedAt") DESC
+LIMIT @__p_4 OFFSET @__p_3
+2025-10-02 15:39:07.919 +05:30 [INF] Executing OkObjectResult, writing value of type 'xbytechat.api.Shared.PaginatedResponse`1[[xbytechat.api.Features.Tracking.DTOs.MessageLogListItemDto, xbytechat.api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-10-02 15:39:07.928 +05:30 [INF] Executed action xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController.Search (xbytechat.api) in 270.0691ms
+2025-10-02 15:39:07.930 +05:30 [INF] Executed endpoint 'xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController.Search (xbytechat.api)'
+2025-10-02 15:39:07.931 +05:30 [INF] Executed DbCommand (119ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4'], CommandType='"Text"', CommandTimeout='30']
+SELECT t."WhatsAppBusinessNumber"
+FROM (
+    SELECT DISTINCT w."WhatsAppBusinessNumber"
+    FROM "WhatsAppSettings" AS w
+    WHERE w."BusinessId" = @__businessId_0 AND w."WabaId" IS NOT NULL
+) AS t
+ORDER BY t."WhatsAppBusinessNumber"
+2025-10-02 15:39:07.932 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:7113/api/report/message-logs/search - 200 null application/json; charset=utf-8 280.6844ms
+2025-10-02 15:39:07.935 +05:30 [INF] Executing OkObjectResult, writing value of type 'xbytechat.api.Features.Tracking.DTOs.MessageLogFacetsDto'.
+2025-10-02 15:39:07.938 +05:30 [INF] Executed action xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController.Facets (xbytechat.api) in 508.2952ms
+2025-10-02 15:39:07.939 +05:30 [INF] Executed endpoint 'xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController.Facets (xbytechat.api)'
+2025-10-02 15:39:07.940 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:7113/api/report/message-logs/facets - 200 null application/json; charset=utf-8 532.457ms
+2025-10-02 15:39:09.593 +05:30 [INF] Executed DbCommand (89ms) [Parameters=[@__now_0='2025-10-02T10:09:09.5038371+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-02 15:39:11.374 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:7113/api/plan/me/permissions - null null
+2025-10-02 15:39:11.377 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:39:11.378 +05:30 [INF] Executing endpoint 'xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api)'
+2025-10-02 15:39:11.379 +05:30 [INF] Route matched with {action = "GetMyPlanPermissions", controller = "Plan"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetMyPlanPermissions(System.Threading.CancellationToken) on controller xbytechat.api.Features.AccessControl.Controllers.PlanController (xbytechat.api).
+2025-10-02 15:39:11.460 +05:30 [INF] Executed DbCommand (78ms) [Parameters=[@__planId_0='5f9f5de1-a0b2-48ba-b03d-77b27345613f'], CommandType='"Text"', CommandTimeout='30']
+SELECT p."Id", p."Code", p."Name", p."Description", p."IsActive"
+FROM "Plans" AS p
+WHERE p."Id" = @__planId_0
+LIMIT 1
+2025-10-02 15:39:11.462 +05:30 [INF] Executing OkObjectResult, writing value of type '<>f__AnonymousType58`3[[System.Guid, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[xbytechat.api.Features.AccessControl.DTOs.PlanDto, xbytechat.api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[System.Collections.Generic.List`1[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-02 15:39:11.463 +05:30 [INF] Executed action xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api) in 82.9758ms
+2025-10-02 15:39:11.464 +05:30 [INF] Executed endpoint 'xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api)'
+2025-10-02 15:39:11.465 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:7113/api/plan/me/permissions - 200 null application/json; charset=utf-8 91.0107ms
+2025-10-02 15:39:11.469 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:7113/api/plan/me/permissions - null null
+2025-10-02 15:39:11.471 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:39:11.472 +05:30 [INF] Executing endpoint 'xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api)'
+2025-10-02 15:39:11.473 +05:30 [INF] Route matched with {action = "GetMyPlanPermissions", controller = "Plan"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetMyPlanPermissions(System.Threading.CancellationToken) on controller xbytechat.api.Features.AccessControl.Controllers.PlanController (xbytechat.api).
+2025-10-02 15:39:11.566 +05:30 [INF] Executed DbCommand (90ms) [Parameters=[@__planId_0='5f9f5de1-a0b2-48ba-b03d-77b27345613f'], CommandType='"Text"', CommandTimeout='30']
+SELECT p."Id", p."Code", p."Name", p."Description", p."IsActive"
+FROM "Plans" AS p
+WHERE p."Id" = @__planId_0
+LIMIT 1
+2025-10-02 15:39:11.569 +05:30 [INF] Executing OkObjectResult, writing value of type '<>f__AnonymousType58`3[[System.Guid, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[xbytechat.api.Features.AccessControl.DTOs.PlanDto, xbytechat.api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[System.Collections.Generic.List`1[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-02 15:39:11.570 +05:30 [INF] Executed action xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api) in 95.9379ms
+2025-10-02 15:39:11.572 +05:30 [INF] Executed endpoint 'xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api)'
+2025-10-02 15:39:11.573 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:7113/api/plan/me/permissions - 200 null application/json; charset=utf-8 103.8071ms
+2025-10-02 15:39:11.593 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:7113/api/plan/me/permissions - null null
+2025-10-02 15:39:11.594 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:7113/api/report/message-logs/facets - null null
+2025-10-02 15:39:11.596 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:39:11.598 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:39:11.599 +05:30 [INF] Executing endpoint 'xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api)'
+2025-10-02 15:39:11.599 +05:30 [INF] Executing endpoint 'xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController.Facets (xbytechat.api)'
+2025-10-02 15:39:11.600 +05:30 [INF] Route matched with {action = "GetMyPlanPermissions", controller = "Plan"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetMyPlanPermissions(System.Threading.CancellationToken) on controller xbytechat.api.Features.AccessControl.Controllers.PlanController (xbytechat.api).
+2025-10-02 15:39:11.601 +05:30 [INF] Route matched with {action = "Facets", controller = "MessageLogsReport"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Facets(Int32, System.Threading.CancellationToken) on controller xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController (xbytechat.api).
+2025-10-02 15:39:11.685 +05:30 [INF] Executed DbCommand (81ms) [Parameters=[@__planId_0='5f9f5de1-a0b2-48ba-b03d-77b27345613f'], CommandType='"Text"', CommandTimeout='30']
+SELECT p."Id", p."Code", p."Name", p."Description", p."IsActive"
+FROM "Plans" AS p
+WHERE p."Id" = @__planId_0
+LIMIT 1
+2025-10-02 15:39:11.687 +05:30 [INF] Executing OkObjectResult, writing value of type '<>f__AnonymousType58`3[[System.Guid, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[xbytechat.api.Features.AccessControl.DTOs.PlanDto, xbytechat.api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[System.Collections.Generic.List`1[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-02 15:39:11.689 +05:30 [INF] Executed action xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api) in 86.6907ms
+2025-10-02 15:39:11.690 +05:30 [INF] Executed endpoint 'xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api)'
+2025-10-02 15:39:11.691 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:7113/api/plan/me/permissions - 200 null application/json; charset=utf-8 98.0052ms
+2025-10-02 15:39:11.708 +05:30 [INF] Executed DbCommand (100ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4', @__from_1='2025-07-04T10:09:11.6072538Z' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+SELECT t."PhoneNumberId"
+FROM (
+    SELECT DISTINCT c."PhoneNumberId"
+    FROM "MessageLogs" AS m
+    LEFT JOIN "Campaigns" AS c ON m."CampaignId" = c."Id"
+    WHERE m."BusinessId" = @__businessId_0 AND COALESCE(m."SentAt", m."CreatedAt") >= @__from_1 AND c."Id" IS NOT NULL AND c."PhoneNumberId" IS NOT NULL
+) AS t
+ORDER BY t."PhoneNumberId"
+2025-10-02 15:39:11.788 +05:30 [INF] Executed DbCommand (77ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4', @__from_1='2025-07-04T10:09:11.6072538Z' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+SELECT t.c
+FROM (
+    SELECT DISTINCT CASE
+        WHEN c."Id" IS NOT NULL AND c."Provider" IS NOT NULL THEN c."Provider"
+        ELSE m."Provider"
+    END AS c
+    FROM "MessageLogs" AS m
+    LEFT JOIN "Campaigns" AS c ON m."CampaignId" = c."Id"
+    WHERE m."BusinessId" = @__businessId_0 AND COALESCE(m."SentAt", m."CreatedAt") >= @__from_1 AND CASE
+        WHEN c."Id" IS NOT NULL AND c."Provider" IS NOT NULL THEN c."Provider"
+        ELSE m."Provider"
+    END IS NOT NULL
+) AS t
+ORDER BY t.c
+2025-10-02 15:39:11.854 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:7113/api/report/message-logs/search - application/json 131
+2025-10-02 15:39:11.857 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:39:11.858 +05:30 [INF] Executing endpoint 'xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController.Search (xbytechat.api)'
+2025-10-02 15:39:11.859 +05:30 [INF] Route matched with {action = "Search", controller = "MessageLogsReport"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Search(xbytechat.api.Features.Tracking.DTOs.MessageLogReportQueryDto, System.Threading.CancellationToken) on controller xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController (xbytechat.api).
+2025-10-02 15:39:11.866 +05:30 [INF] Executed DbCommand (75ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4', @__from_1='2025-07-04T10:09:11.6072538Z' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+SELECT t."Status"
+FROM (
+    SELECT DISTINCT m."Status"
+    FROM "MessageLogs" AS m
+    WHERE m."BusinessId" = @__businessId_0 AND COALESCE(m."SentAt", m."CreatedAt") >= @__from_1
+) AS t
+ORDER BY t."Status"
+2025-10-02 15:39:11.957 +05:30 [INF] Executed DbCommand (94ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4', @__q_FromUtc_Value_1='2025-09-25T18:30:00.0000000Z' (DbType = DateTime), @__q_ToUtc_Value_2='2025-10-02T10:09:11.5820000Z' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+SELECT count(*)::int
+FROM "MessageLogs" AS m
+LEFT JOIN "Campaigns" AS c ON m."CampaignId" = c."Id"
+WHERE m."BusinessId" = @__businessId_0 AND COALESCE(m."SentAt", m."CreatedAt") >= @__q_FromUtc_Value_1 AND COALESCE(m."SentAt", m."CreatedAt") <= @__q_ToUtc_Value_2
+2025-10-02 15:39:11.964 +05:30 [INF] Executed DbCommand (95ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4'], CommandType='"Text"', CommandTimeout='30']
+SELECT t."WhatsAppBusinessNumber"
+FROM (
+    SELECT DISTINCT w."WhatsAppBusinessNumber"
+    FROM "WhatsAppSettings" AS w
+    WHERE w."BusinessId" = @__businessId_0 AND w."WabaId" IS NOT NULL
+) AS t
+ORDER BY t."WhatsAppBusinessNumber"
+2025-10-02 15:39:11.966 +05:30 [INF] Executing OkObjectResult, writing value of type 'xbytechat.api.Features.Tracking.DTOs.MessageLogFacetsDto'.
+2025-10-02 15:39:11.967 +05:30 [INF] Executed action xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController.Facets (xbytechat.api) in 363.361ms
+2025-10-02 15:39:11.968 +05:30 [INF] Executed endpoint 'xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController.Facets (xbytechat.api)'
+2025-10-02 15:39:11.969 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:7113/api/report/message-logs/facets - 200 null application/json; charset=utf-8 374.8018ms
+2025-10-02 15:39:12.067 +05:30 [INF] Executed DbCommand (106ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4', @__q_FromUtc_Value_1='2025-09-25T18:30:00.0000000Z' (DbType = DateTime), @__q_ToUtc_Value_2='2025-10-02T10:09:11.5820000Z' (DbType = DateTime), @__p_4='25', @__p_3='0'], CommandType='"Text"', CommandTimeout='30']
+SELECT m."Id", m."BusinessId", m."CampaignId", c."Name" AS "CampaignName", m."RecipientNumber", c."PhoneNumberId" AS "SenderId", CASE
+    WHEN c."Id" IS NOT NULL AND c."Provider" IS NOT NULL THEN c."Provider"
+    ELSE m."Provider"
+END AS "SourceChannel", m."Status", NULL AS "MessageType", m."MessageContent", COALESCE(m."ProviderMessageId", m."MessageId") AS "ProviderMessageId", m."ErrorMessage", m."CreatedAt", m."SentAt", NULL AS "DeliveredAt"
+FROM "MessageLogs" AS m
+LEFT JOIN "Campaigns" AS c ON m."CampaignId" = c."Id"
+WHERE m."BusinessId" = @__businessId_0 AND COALESCE(m."SentAt", m."CreatedAt") >= @__q_FromUtc_Value_1 AND COALESCE(m."SentAt", m."CreatedAt") <= @__q_ToUtc_Value_2
+ORDER BY COALESCE(m."SentAt", m."CreatedAt") DESC
+LIMIT @__p_4 OFFSET @__p_3
+2025-10-02 15:39:12.070 +05:30 [INF] Executing OkObjectResult, writing value of type 'xbytechat.api.Shared.PaginatedResponse`1[[xbytechat.api.Features.Tracking.DTOs.MessageLogListItemDto, xbytechat.api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-10-02 15:39:12.071 +05:30 [INF] Executed action xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController.Search (xbytechat.api) in 211.0591ms
+2025-10-02 15:39:12.072 +05:30 [INF] Executed endpoint 'xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController.Search (xbytechat.api)'
+2025-10-02 15:39:12.073 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:7113/api/report/message-logs/search - 200 null application/json; charset=utf-8 219.2358ms
+2025-10-02 15:39:17.564 +05:30 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:7113/api/report/message-logs/facets - null null
+2025-10-02 15:39:17.567 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:39:17.568 +05:30 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:7113/api/report/message-logs/facets - 204 null null 4.1483ms
+2025-10-02 15:39:17.571 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:7113/api/report/message-logs/facets - null null
+2025-10-02 15:39:17.574 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:39:17.575 +05:30 [INF] Executing endpoint 'xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController.Facets (xbytechat.api)'
+2025-10-02 15:39:17.576 +05:30 [INF] Route matched with {action = "Facets", controller = "MessageLogsReport"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Facets(Int32, System.Threading.CancellationToken) on controller xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController (xbytechat.api).
+2025-10-02 15:39:17.670 +05:30 [INF] Executed DbCommand (91ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4', @__from_1='2025-07-04T10:09:17.5784759Z' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+SELECT t."PhoneNumberId"
+FROM (
+    SELECT DISTINCT c."PhoneNumberId"
+    FROM "MessageLogs" AS m
+    LEFT JOIN "Campaigns" AS c ON m."CampaignId" = c."Id"
+    WHERE m."BusinessId" = @__businessId_0 AND COALESCE(m."SentAt", m."CreatedAt") >= @__from_1 AND c."Id" IS NOT NULL AND c."PhoneNumberId" IS NOT NULL
+) AS t
+ORDER BY t."PhoneNumberId"
+2025-10-02 15:39:17.754 +05:30 [INF] Executed DbCommand (81ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4', @__from_1='2025-07-04T10:09:17.5784759Z' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+SELECT t.c
+FROM (
+    SELECT DISTINCT CASE
+        WHEN c."Id" IS NOT NULL AND c."Provider" IS NOT NULL THEN c."Provider"
+        ELSE m."Provider"
+    END AS c
+    FROM "MessageLogs" AS m
+    LEFT JOIN "Campaigns" AS c ON m."CampaignId" = c."Id"
+    WHERE m."BusinessId" = @__businessId_0 AND COALESCE(m."SentAt", m."CreatedAt") >= @__from_1 AND CASE
+        WHEN c."Id" IS NOT NULL AND c."Provider" IS NOT NULL THEN c."Provider"
+        ELSE m."Provider"
+    END IS NOT NULL
+) AS t
+ORDER BY t.c
+2025-10-02 15:39:17.783 +05:30 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:7113/api/report/message-logs/search - null null
+2025-10-02 15:39:17.786 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:39:17.787 +05:30 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:7113/api/report/message-logs/search - 204 null null 3.7552ms
+2025-10-02 15:39:17.790 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:7113/api/report/message-logs/search - application/json 131
+2025-10-02 15:39:17.792 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:39:17.794 +05:30 [INF] Executing endpoint 'xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController.Search (xbytechat.api)'
+2025-10-02 15:39:17.795 +05:30 [INF] Route matched with {action = "Search", controller = "MessageLogsReport"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Search(xbytechat.api.Features.Tracking.DTOs.MessageLogReportQueryDto, System.Threading.CancellationToken) on controller xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController (xbytechat.api).
+2025-10-02 15:39:17.829 +05:30 [INF] Executed DbCommand (72ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4', @__from_1='2025-07-04T10:09:17.5784759Z' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+SELECT t."Status"
+FROM (
+    SELECT DISTINCT m."Status"
+    FROM "MessageLogs" AS m
+    WHERE m."BusinessId" = @__businessId_0 AND COALESCE(m."SentAt", m."CreatedAt") >= @__from_1
+) AS t
+ORDER BY t."Status"
+2025-10-02 15:39:17.896 +05:30 [INF] Executed DbCommand (99ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4', @__q_FromUtc_Value_1='2025-09-25T18:30:00.0000000Z' (DbType = DateTime), @__q_ToUtc_Value_2='2025-10-02T10:09:17.5250000Z' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+SELECT count(*)::int
+FROM "MessageLogs" AS m
+LEFT JOIN "Campaigns" AS c ON m."CampaignId" = c."Id"
+WHERE m."BusinessId" = @__businessId_0 AND COALESCE(m."SentAt", m."CreatedAt") >= @__q_FromUtc_Value_1 AND COALESCE(m."SentAt", m."CreatedAt") <= @__q_ToUtc_Value_2
+2025-10-02 15:39:17.908 +05:30 [INF] Executed DbCommand (76ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4'], CommandType='"Text"', CommandTimeout='30']
+SELECT t."WhatsAppBusinessNumber"
+FROM (
+    SELECT DISTINCT w."WhatsAppBusinessNumber"
+    FROM "WhatsAppSettings" AS w
+    WHERE w."BusinessId" = @__businessId_0 AND w."WabaId" IS NOT NULL
+) AS t
+ORDER BY t."WhatsAppBusinessNumber"
+2025-10-02 15:39:17.911 +05:30 [INF] Executing OkObjectResult, writing value of type 'xbytechat.api.Features.Tracking.DTOs.MessageLogFacetsDto'.
+2025-10-02 15:39:17.912 +05:30 [INF] Executed action xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController.Facets (xbytechat.api) in 334.3635ms
+2025-10-02 15:39:17.913 +05:30 [INF] Executed endpoint 'xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController.Facets (xbytechat.api)'
+2025-10-02 15:39:17.914 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:7113/api/report/message-logs/facets - 200 null application/json; charset=utf-8 343.341ms
+2025-10-02 15:39:18.007 +05:30 [INF] Executed DbCommand (108ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4', @__q_FromUtc_Value_1='2025-09-25T18:30:00.0000000Z' (DbType = DateTime), @__q_ToUtc_Value_2='2025-10-02T10:09:17.5250000Z' (DbType = DateTime), @__p_4='25', @__p_3='0'], CommandType='"Text"', CommandTimeout='30']
+SELECT m."Id", m."BusinessId", m."CampaignId", c."Name" AS "CampaignName", m."RecipientNumber", c."PhoneNumberId" AS "SenderId", CASE
+    WHEN c."Id" IS NOT NULL AND c."Provider" IS NOT NULL THEN c."Provider"
+    ELSE m."Provider"
+END AS "SourceChannel", m."Status", NULL AS "MessageType", m."MessageContent", COALESCE(m."ProviderMessageId", m."MessageId") AS "ProviderMessageId", m."ErrorMessage", m."CreatedAt", m."SentAt", NULL AS "DeliveredAt"
+FROM "MessageLogs" AS m
+LEFT JOIN "Campaigns" AS c ON m."CampaignId" = c."Id"
+WHERE m."BusinessId" = @__businessId_0 AND COALESCE(m."SentAt", m."CreatedAt") >= @__q_FromUtc_Value_1 AND COALESCE(m."SentAt", m."CreatedAt") <= @__q_ToUtc_Value_2
+ORDER BY COALESCE(m."SentAt", m."CreatedAt") DESC
+LIMIT @__p_4 OFFSET @__p_3
+2025-10-02 15:39:18.010 +05:30 [INF] Executing OkObjectResult, writing value of type 'xbytechat.api.Shared.PaginatedResponse`1[[xbytechat.api.Features.Tracking.DTOs.MessageLogListItemDto, xbytechat.api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-10-02 15:39:18.011 +05:30 [INF] Executed action xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController.Search (xbytechat.api) in 214.9417ms
+2025-10-02 15:39:18.012 +05:30 [INF] Executed endpoint 'xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController.Search (xbytechat.api)'
+2025-10-02 15:39:18.013 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:7113/api/report/message-logs/search - 200 null application/json; charset=utf-8 223.2684ms
+2025-10-02 15:39:19.710 +05:30 [INF] Executed DbCommand (110ms) [Parameters=[@__now_0='2025-10-02T10:09:19.6003319+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-02 15:39:29.805 +05:30 [INF] Executed DbCommand (90ms) [Parameters=[@__now_0='2025-10-02T10:09:29.7151823+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-02 15:39:39.911 +05:30 [INF] Executed DbCommand (99ms) [Parameters=[@__now_0='2025-10-02T10:09:39.8116401+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-02 15:39:50.016 +05:30 [INF] Executed DbCommand (88ms) [Parameters=[@__now_0='2025-10-02T10:09:49.9276808+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1
+2025-10-02 15:39:55.087 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:7113/swagger/index.html - null null
+2025-10-02 15:39:55.099 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:7113/swagger/index.html - 200 null text/html;charset=utf-8 11.8409ms
+2025-10-02 15:39:55.150 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:7113/_vs/browserLink - null null
+2025-10-02 15:39:55.151 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:7113/_framework/aspnetcore-browser-refresh.js - null null
+2025-10-02 15:39:55.159 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:7113/_framework/aspnetcore-browser-refresh.js - 200 13762 application/javascript; charset=utf-8 8.6889ms
+2025-10-02 15:39:55.166 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:7113/_vs/browserLink - 200 null text/javascript; charset=UTF-8 16.1415ms
+2025-10-02 15:39:55.308 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:7113/swagger/v1/swagger.json - null null
+2025-10-02 15:39:55.414 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:7113/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 106.5965ms
+2025-10-02 15:39:57.512 +05:30 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:7113/api/plan/me/permissions - null null
+2025-10-02 15:39:57.514 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:39:57.515 +05:30 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:7113/api/plan/me/permissions - 204 null null 3.258ms
+2025-10-02 15:39:57.518 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:7113/api/plan/me/permissions - null null
+2025-10-02 15:39:57.525 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:39:57.526 +05:30 [INF] Executing endpoint 'xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api)'
+2025-10-02 15:39:57.530 +05:30 [INF] Route matched with {action = "GetMyPlanPermissions", controller = "Plan"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetMyPlanPermissions(System.Threading.CancellationToken) on controller xbytechat.api.Features.AccessControl.Controllers.PlanController (xbytechat.api).
+2025-10-02 15:39:57.623 +05:30 [INF] Executed DbCommand (89ms) [Parameters=[@__planId_0='5f9f5de1-a0b2-48ba-b03d-77b27345613f'], CommandType='"Text"', CommandTimeout='30']
+SELECT p."Id", p."Code", p."Name", p."Description", p."IsActive"
+FROM "Plans" AS p
+WHERE p."Id" = @__planId_0
+LIMIT 1
+2025-10-02 15:39:57.625 +05:30 [INF] Executing OkObjectResult, writing value of type '<>f__AnonymousType58`3[[System.Guid, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[xbytechat.api.Features.AccessControl.DTOs.PlanDto, xbytechat.api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[System.Collections.Generic.List`1[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-02 15:39:57.627 +05:30 [INF] Executed action xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api) in 95.0226ms
+2025-10-02 15:39:57.629 +05:30 [INF] Executed endpoint 'xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api)'
+2025-10-02 15:39:57.630 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:7113/api/plan/me/permissions - 200 null application/json; charset=utf-8 111.8757ms
+2025-10-02 15:39:57.634 +05:30 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:7113/api/plan/me/permissions - null null
+2025-10-02 15:39:57.636 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:39:57.637 +05:30 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:7113/api/plan/me/permissions - 204 null null 2.8932ms
+2025-10-02 15:39:57.640 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:7113/api/plan/me/permissions - null null
+2025-10-02 15:39:57.641 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:39:57.642 +05:30 [INF] Executing endpoint 'xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api)'
+2025-10-02 15:39:57.643 +05:30 [INF] Route matched with {action = "GetMyPlanPermissions", controller = "Plan"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetMyPlanPermissions(System.Threading.CancellationToken) on controller xbytechat.api.Features.AccessControl.Controllers.PlanController (xbytechat.api).
+2025-10-02 15:39:57.721 +05:30 [INF] Executed DbCommand (77ms) [Parameters=[@__planId_0='5f9f5de1-a0b2-48ba-b03d-77b27345613f'], CommandType='"Text"', CommandTimeout='30']
+SELECT p."Id", p."Code", p."Name", p."Description", p."IsActive"
+FROM "Plans" AS p
+WHERE p."Id" = @__planId_0
+LIMIT 1
+2025-10-02 15:39:57.724 +05:30 [INF] Executing OkObjectResult, writing value of type '<>f__AnonymousType58`3[[System.Guid, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[xbytechat.api.Features.AccessControl.DTOs.PlanDto, xbytechat.api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[System.Collections.Generic.List`1[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-02 15:39:57.725 +05:30 [INF] Executed action xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api) in 80.8791ms
+2025-10-02 15:39:57.726 +05:30 [INF] Executed endpoint 'xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api)'
+2025-10-02 15:39:57.727 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:7113/api/plan/me/permissions - 200 null application/json; charset=utf-8 87.4907ms
+2025-10-02 15:39:57.752 +05:30 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:7113/api/report/message-logs/facets - null null
+2025-10-02 15:39:57.754 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:7113/api/plan/me/permissions - null null
+2025-10-02 15:39:57.760 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:39:57.762 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:39:57.762 +05:30 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:7113/api/report/message-logs/facets - 204 null null 10.9291ms
+2025-10-02 15:39:57.763 +05:30 [INF] Executing endpoint 'xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api)'
+2025-10-02 15:39:57.766 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:7113/api/report/message-logs/facets - null null
+2025-10-02 15:39:57.767 +05:30 [INF] Route matched with {action = "GetMyPlanPermissions", controller = "Plan"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetMyPlanPermissions(System.Threading.CancellationToken) on controller xbytechat.api.Features.AccessControl.Controllers.PlanController (xbytechat.api).
+2025-10-02 15:39:57.769 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:39:57.771 +05:30 [INF] Executing endpoint 'xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController.Facets (xbytechat.api)'
+2025-10-02 15:39:57.778 +05:30 [INF] Route matched with {action = "Facets", controller = "MessageLogsReport"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Facets(Int32, System.Threading.CancellationToken) on controller xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController (xbytechat.api).
+2025-10-02 15:39:57.918 +05:30 [INF] Executed DbCommand (146ms) [Parameters=[@__planId_0='5f9f5de1-a0b2-48ba-b03d-77b27345613f'], CommandType='"Text"', CommandTimeout='30']
+SELECT p."Id", p."Code", p."Name", p."Description", p."IsActive"
+FROM "Plans" AS p
+WHERE p."Id" = @__planId_0
+LIMIT 1
+2025-10-02 15:39:57.919 +05:30 [INF] Executing OkObjectResult, writing value of type '<>f__AnonymousType58`3[[System.Guid, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[xbytechat.api.Features.AccessControl.DTOs.PlanDto, xbytechat.api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null],[System.Collections.Generic.List`1[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2025-10-02 15:39:57.920 +05:30 [INF] Executed action xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api) in 150.4807ms
+2025-10-02 15:39:57.922 +05:30 [INF] Executed endpoint 'xbytechat.api.Features.AccessControl.Controllers.PlanController.GetMyPlanPermissions (xbytechat.api)'
+2025-10-02 15:39:57.922 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:7113/api/plan/me/permissions - 200 null application/json; charset=utf-8 168.6167ms
+2025-10-02 15:39:57.955 +05:30 [INF] Executed DbCommand (171ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4', @__from_1='2025-07-04T10:09:57.7800218Z' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+SELECT t."PhoneNumberId"
+FROM (
+    SELECT DISTINCT c."PhoneNumberId"
+    FROM "MessageLogs" AS m
+    LEFT JOIN "Campaigns" AS c ON m."CampaignId" = c."Id"
+    WHERE m."BusinessId" = @__businessId_0 AND COALESCE(m."SentAt", m."CreatedAt") >= @__from_1 AND c."Id" IS NOT NULL AND c."PhoneNumberId" IS NOT NULL
+) AS t
+ORDER BY t."PhoneNumberId"
+2025-10-02 15:39:58.013 +05:30 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:7113/api/report/message-logs/search - null null
+2025-10-02 15:39:58.016 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:39:58.016 +05:30 [INF] Request finished HTTP/1.1 OPTIONS http://localhost:7113/api/report/message-logs/search - 204 null null 3.1014ms
+2025-10-02 15:39:58.019 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:7113/api/report/message-logs/search - application/json 131
+2025-10-02 15:39:58.021 +05:30 [INF] CORS policy execution successful.
+2025-10-02 15:39:58.022 +05:30 [INF] Executing endpoint 'xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController.Search (xbytechat.api)'
+2025-10-02 15:39:58.025 +05:30 [INF] Route matched with {action = "Search", controller = "MessageLogsReport"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Search(xbytechat.api.Features.Tracking.DTOs.MessageLogReportQueryDto, System.Threading.CancellationToken) on controller xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController (xbytechat.api).
+2025-10-02 15:39:58.044 +05:30 [INF] Executed DbCommand (87ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4', @__from_1='2025-07-04T10:09:57.7800218Z' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+SELECT t.c
+FROM (
+    SELECT DISTINCT CASE
+        WHEN c."Id" IS NOT NULL AND c."Provider" IS NOT NULL THEN c."Provider"
+        ELSE m."Provider"
+    END AS c
+    FROM "MessageLogs" AS m
+    LEFT JOIN "Campaigns" AS c ON m."CampaignId" = c."Id"
+    WHERE m."BusinessId" = @__businessId_0 AND COALESCE(m."SentAt", m."CreatedAt") >= @__from_1 AND CASE
+        WHEN c."Id" IS NOT NULL AND c."Provider" IS NOT NULL THEN c."Provider"
+        ELSE m."Provider"
+    END IS NOT NULL
+) AS t
+ORDER BY t.c
+2025-10-02 15:39:58.091 +05:30 [INF] Executed DbCommand (60ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4', @__q_FromUtc_Value_1='2025-09-25T18:30:00.0000000Z' (DbType = DateTime), @__q_ToUtc_Value_2='2025-10-02T10:09:57.7390000Z' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+SELECT count(*)::int
+FROM "MessageLogs" AS m
+LEFT JOIN "Campaigns" AS c ON m."CampaignId" = c."Id"
+WHERE m."BusinessId" = @__businessId_0 AND COALESCE(m."SentAt", m."CreatedAt") >= @__q_FromUtc_Value_1 AND COALESCE(m."SentAt", m."CreatedAt") <= @__q_ToUtc_Value_2
+2025-10-02 15:39:58.118 +05:30 [INF] Executed DbCommand (71ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4', @__from_1='2025-07-04T10:09:57.7800218Z' (DbType = DateTime)], CommandType='"Text"', CommandTimeout='30']
+SELECT t."Status"
+FROM (
+    SELECT DISTINCT m."Status"
+    FROM "MessageLogs" AS m
+    WHERE m."BusinessId" = @__businessId_0 AND COALESCE(m."SentAt", m."CreatedAt") >= @__from_1
+) AS t
+ORDER BY t."Status"
+2025-10-02 15:39:58.194 +05:30 [INF] Executed DbCommand (71ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4'], CommandType='"Text"', CommandTimeout='30']
+SELECT t."WabaId"
+FROM (
+    SELECT DISTINCT w."WabaId"
+    FROM "WhatsAppSettings" AS w
+    WHERE w."BusinessId" = @__businessId_0 AND w."WabaId" IS NOT NULL
+) AS t
+ORDER BY t."WabaId"
+2025-10-02 15:39:58.194 +05:30 [INF] Executed DbCommand (101ms) [Parameters=[@__businessId_0='11f41b5f-f92c-4b6e-855b-62036779dee4', @__q_FromUtc_Value_1='2025-09-25T18:30:00.0000000Z' (DbType = DateTime), @__q_ToUtc_Value_2='2025-10-02T10:09:57.7390000Z' (DbType = DateTime), @__p_4='25', @__p_3='0'], CommandType='"Text"', CommandTimeout='30']
+SELECT m."Id", m."BusinessId", m."CampaignId", c."Name" AS "CampaignName", m."RecipientNumber", c."PhoneNumberId" AS "SenderId", CASE
+    WHEN c."Id" IS NOT NULL AND c."Provider" IS NOT NULL THEN c."Provider"
+    ELSE m."Provider"
+END AS "SourceChannel", m."Status", NULL AS "MessageType", m."MessageContent", COALESCE(m."ProviderMessageId", m."MessageId") AS "ProviderMessageId", m."ErrorMessage", m."CreatedAt", m."SentAt", NULL AS "DeliveredAt"
+FROM "MessageLogs" AS m
+LEFT JOIN "Campaigns" AS c ON m."CampaignId" = c."Id"
+WHERE m."BusinessId" = @__businessId_0 AND COALESCE(m."SentAt", m."CreatedAt") >= @__q_FromUtc_Value_1 AND COALESCE(m."SentAt", m."CreatedAt") <= @__q_ToUtc_Value_2
+ORDER BY COALESCE(m."SentAt", m."CreatedAt") DESC
+LIMIT @__p_4 OFFSET @__p_3
+2025-10-02 15:39:58.196 +05:30 [INF] Executing OkObjectResult, writing value of type 'xbytechat.api.Features.Tracking.DTOs.MessageLogFacetsDto'.
+2025-10-02 15:39:58.198 +05:30 [INF] Executing OkObjectResult, writing value of type 'xbytechat.api.Shared.PaginatedResponse`1[[xbytechat.api.Features.Tracking.DTOs.MessageLogListItemDto, xbytechat.api, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2025-10-02 15:39:58.199 +05:30 [INF] Executed action xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController.Facets (xbytechat.api) in 420.2735ms
+2025-10-02 15:39:58.201 +05:30 [INF] Executed endpoint 'xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController.Facets (xbytechat.api)'
+2025-10-02 15:39:58.202 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:7113/api/report/message-logs/facets - 200 null application/json; charset=utf-8 436.1443ms
+2025-10-02 15:39:58.202 +05:30 [INF] Executed action xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController.Search (xbytechat.api) in 175.0972ms
+2025-10-02 15:39:58.206 +05:30 [INF] Executed endpoint 'xbytechat.api.Features.Tracking.Controllers.MessageLogsReportController.Search (xbytechat.api)'
+2025-10-02 15:39:58.206 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:7113/api/report/message-logs/search - 200 null application/json; charset=utf-8 187.5586ms
+2025-10-02 15:40:00.307 +05:30 [INF] Executed DbCommand (284ms) [Parameters=[@__now_0='2025-10-02T10:10:00.0227235+00:00' (DbType = DateTime), @__p_1='3'], CommandType='"Text"', CommandTimeout='30']
+SELECT o."Id", o."Attempt", o."BusinessId", o."CampaignId", o."CreatedAt", o."LastError", o."MaxAttempts", o."NextAttemptAt", o."Status", o."UpdatedAt"
+FROM "OutboundCampaignJobs" AS o
+WHERE o."Status" = 'queued' AND o."NextAttemptAt" <= @__now_0
+ORDER BY o."NextAttemptAt", o."CreatedAt"
+LIMIT @__p_1

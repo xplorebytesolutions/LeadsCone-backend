@@ -119,17 +119,6 @@ namespace xbytechat.api.Features.Tracking.Controllers
             }
         }
 
-    
-        //[HttpPost("export/xlsx")]
-        //public IActionResult ExportXlsxStub()
-        //{
-        //    return StatusCode(StatusCodes.Status501NotImplemented, new ProblemDetails
-        //    {
-        //        Title = "XLSX export is not enabled",
-        //        Detail = "Implement in MessageLogsReportController.ExportXlsx using a spreadsheet library."
-        //    });
-        //}
-
      
         [HttpPost("export/pdf")]
         public IActionResult ExportPdfStub()
