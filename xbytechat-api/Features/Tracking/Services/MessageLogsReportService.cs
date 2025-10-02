@@ -181,6 +181,15 @@ namespace xbytechat.api.Features.Tracking.Services
                             (m.SentAt ?? m.CreatedAt) >= from);
 
             // SenderIds come from Campaign.PhoneNumberId (if available)
+
+            var wabaIds = await _db.WhatsAppPhoneNumbers
+            .AsNoTracking()
+            .Where(w => w.BusinessId == businessId && w.WhatsAppBusinessNumber != null)
+            .Select(w => w.PhoneNumberId!)
+            .Distinct()
+            .OrderBy(x => x)
+            .ToArrayAsync(ct);
+
             var senderIds = await (
                 from m in baseQ
                 join c0 in _db.Campaigns.AsNoTracking() on m.CampaignId equals c0.Id into cj
