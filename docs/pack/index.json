@@ -1,19 +1,19 @@
 {
   "version": "2.3-sliced",
-  "generatedAt": "2026-01-16 13:28:54 +00:00",
+  "generatedAt": "2026-01-16 13:30:02 +00:00",
   "modules": [
     {
       "name": "xbytechat-api",
       "slug": "xbytechat-api",
       "mode": "parts",
-      "totalBytes": 4146580,
+      "totalBytes": 4145658,
       "partCount": 9,
       "parts": [
         {
           "n": 1,
           "href": "/busiorbit-api/pack/xbytechat-api/parts/1.json",
-          "bytes": 552465,
-          "fileCount": 195
+          "bytes": 551543,
+          "fileCount": 194
         },
         {
           "n": 2,
@@ -133,14 +133,14 @@
       "name": "xbytechat-api/Features",
       "slug": "xbytechat-api-features",
       "mode": "parts",
-      "totalBytes": 1789308,
+      "totalBytes": 1788386,
       "partCount": 4,
       "parts": [
         {
           "n": 1,
           "href": "/busiorbit-api/pack/xbytechat-api-features/parts/1.json",
-          "bytes": 522335,
-          "fileCount": 194
+          "bytes": 521413,
+          "fileCount": 193
         },
         {
           "n": 2,
@@ -335,8 +335,8 @@
       "name": "xbytechat-api/Features/Billing",
       "slug": "xbytechat-api-features-billing",
       "mode": "single",
-      "fileCount": 9,
-      "bytes": 55594,
+      "fileCount": 8,
+      "bytes": 54672,
       "href": "/busiorbit-api/pack/xbytechat-api-features-billing.json"
     },
     {
