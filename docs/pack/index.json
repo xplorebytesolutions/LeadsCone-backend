@@ -1,19 +1,19 @@
 {
   "version": "2.3-sliced",
-  "generatedAt": "2025-10-02 10:25:32 +00:00",
+  "generatedAt": "2026-01-16 13:28:54 +00:00",
   "modules": [
     {
       "name": "xbytechat-api",
       "slug": "xbytechat-api",
       "mode": "parts",
-      "totalBytes": 4147502,
+      "totalBytes": 4146580,
       "partCount": 9,
       "parts": [
         {
           "n": 1,
           "href": "/busiorbit-api/pack/xbytechat-api/parts/1.json",
-          "bytes": 553387,
-          "fileCount": 196
+          "bytes": 552465,
+          "fileCount": 195
         },
         {
           "n": 2,
@@ -133,14 +133,14 @@
       "name": "xbytechat-api/Features",
       "slug": "xbytechat-api-features",
       "mode": "parts",
-      "totalBytes": 1790230,
+      "totalBytes": 1789308,
       "partCount": 4,
       "parts": [
         {
           "n": 1,
           "href": "/busiorbit-api/pack/xbytechat-api-features/parts/1.json",
-          "bytes": 523257,
-          "fileCount": 195
+          "bytes": 522335,
+          "fileCount": 194
         },
         {
           "n": 2,
@@ -295,8 +295,8 @@
       "name": "xbytechat-api/Features/Audiences",
       "slug": "xbytechat-api-features-audiences",
       "mode": "single",
-      "fileCount": 9,
-      "bytes": 25416,
+      "fileCount": 8,
+      "bytes": 24494,
       "href": "/busiorbit-api/pack/xbytechat-api-features-audiences.json"
     },
     {

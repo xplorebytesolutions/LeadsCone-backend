@@ -1,6 +1,6 @@
 {
   "name": "xbytechat-api/Features/Audiences",
-  "generatedAt": "2025-10-02 10:25:32 +00:00",
+  "generatedAt": "2026-01-16 13:28:54 +00:00",
   "files": [
     {
       "path": "xbytechat-api/Features/Audiences/Controllers/AudienceController.cs",
@@ -29,13 +29,6 @@
       "language": "csharp",
       "size": 342,
       "content": "using System;\nusing System.Collections.Generic;\n\nnamespace xbytechat.api.Features.Audiences.DTOs\n{\n    public class CsvImportResponseDto\n    {\n        public Guid BatchId { get; set; }\n        public int RowCount { get; set; }\n        public List<string> Columns { get; set; } = new();\n        public DateTime CreatedAt { get; set; }\n    }\n}\n"
-    },
-    {
-      "path": "xbytechat-api/Features/Audiences/ExtrackAllFiles.bat",
-      "sha256": "3d14ccc013b9fd82ff0759820acc71da52821878e664cb4daa9418062278e799",
-      "language": "bat",
-      "size": 922,
-      "content": "@echo off\nREM This script will find all files and output their name and content into one file.\nREM The output file will be named [FolderName]_AllFileDump.txt.\n\nREM Get the current folder's name and set it as the output file name with the custom suffix\nfor %%I in (\"%cd%\") do set \"outputFile=%%~nI_AllFileDump.txt\"\n\nREM Clear the output file to start fresh\n> \"%outputFile%\" (echo Folder and File Content Report)\necho. >> \"%outputFile%\"\n\nREM Loop through all files in the current directory and subdirectories\nfor /R . %%F in (*.*) do (\n    echo ====================================================== >> \"%outputFile%\"\n    echo FILE: %%F >> \"%outputFile%\"\n    echo ====================================================== >> \"%outputFile%\"\n    echo. >> \"%outputFile%\"\n    type \"%%F\" >> \"%outputFile%\" 2>nul\n    echo. >> \"%outputFile%\"\n    echo. >> \"%outputFile%\"\n)\n\necho Finished! All content has been extracted to %outputFile%"
     },
     {
       "path": "xbytechat-api/Features/Audiences/Services/AudienceImportService.cs",
