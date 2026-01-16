@@ -1,6 +1,6 @@
 {
   "name": "xbytechat-api/Features/Inbox",
-  "generatedAt": "2026-01-16 13:31:15 +00:00",
+  "generatedAt": "2026-01-16 13:32:21 +00:00",
   "files": [
     {
       "path": "xbytechat-api/Features/Inbox/Controllers/InboxController.cs",

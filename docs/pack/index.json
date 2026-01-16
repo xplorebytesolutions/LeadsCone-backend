@@ -1,12 +1,12 @@
 {
   "version": "2.3-sliced",
-  "generatedAt": "2026-01-16 13:31:15 +00:00",
+  "generatedAt": "2026-01-16 13:32:21 +00:00",
   "modules": [
     {
       "name": "xbytechat-api",
       "slug": "xbytechat-api",
       "mode": "parts",
-      "totalBytes": 4143814,
+      "totalBytes": 4142892,
       "partCount": 9,
       "parts": [
         {
@@ -24,8 +24,8 @@
         {
           "n": 3,
           "href": "/busiorbit-api/pack/xbytechat-api/parts/3.json",
-          "bytes": 510884,
-          "fileCount": 167
+          "bytes": 509962,
+          "fileCount": 166
         },
         {
           "n": 4,
@@ -133,7 +133,7 @@
       "name": "xbytechat-api/Features",
       "slug": "xbytechat-api-features",
       "mode": "parts",
-      "totalBytes": 1786542,
+      "totalBytes": 1785620,
       "partCount": 4,
       "parts": [
         {
@@ -151,8 +151,8 @@
         {
           "n": 3,
           "href": "/busiorbit-api/pack/xbytechat-api-features/parts/3.json",
-          "bytes": 557352,
-          "fileCount": 143
+          "bytes": 556430,
+          "fileCount": 142
         },
         {
           "n": 4,
@@ -407,8 +407,8 @@
       "name": "xbytechat-api/Features/CustomeApi",
       "slug": "xbytechat-api-features-customeapi",
       "mode": "single",
-      "fileCount": 14,
-      "bytes": 54145,
+      "fileCount": 13,
+      "bytes": 53223,
       "href": "/busiorbit-api/pack/xbytechat-api-features-customeapi.json"
     },
     {
