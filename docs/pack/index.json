@@ -1,12 +1,12 @@
 {
   "version": "2.3-sliced",
-  "generatedAt": "2026-01-16 13:32:21 +00:00",
+  "generatedAt": "2026-01-16 13:33:28 +00:00",
   "modules": [
     {
       "name": "xbytechat-api",
       "slug": "xbytechat-api",
       "mode": "parts",
-      "totalBytes": 4142892,
+      "totalBytes": 4141970,
       "partCount": 9,
       "parts": [
         {
@@ -24,8 +24,8 @@
         {
           "n": 3,
           "href": "/busiorbit-api/pack/xbytechat-api/parts/3.json",
-          "bytes": 509962,
-          "fileCount": 166
+          "bytes": 509040,
+          "fileCount": 165
         },
         {
           "n": 4,
@@ -133,7 +133,7 @@
       "name": "xbytechat-api/Features",
       "slug": "xbytechat-api-features",
       "mode": "parts",
-      "totalBytes": 1785620,
+      "totalBytes": 1784698,
       "partCount": 4,
       "parts": [
         {
@@ -151,8 +151,8 @@
         {
           "n": 3,
           "href": "/busiorbit-api/pack/xbytechat-api-features/parts/3.json",
-          "bytes": 556430,
-          "fileCount": 142
+          "bytes": 555508,
+          "fileCount": 141
         },
         {
           "n": 4,
@@ -431,8 +431,8 @@
       "name": "xbytechat-api/Features/Inbox",
       "slug": "xbytechat-api-features-inbox",
       "mode": "single",
-      "fileCount": 25,
-      "bytes": 59907,
+      "fileCount": 24,
+      "bytes": 58985,
       "href": "/busiorbit-api/pack/xbytechat-api-features-inbox.json"
     },
     {

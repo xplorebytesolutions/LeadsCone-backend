@@ -2,7 +2,7 @@
   "name": "xbytechat-api",
   "part": 5,
   "of": 9,
-  "generatedAt": "2026-01-16 13:32:21 +00:00",
+  "generatedAt": "2026-01-16 13:33:28 +00:00",
   "files": [
     {
       "path": "xbytechat-api/Migrations/20250928044553_Initial.Designer.cs",
