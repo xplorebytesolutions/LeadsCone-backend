@@ -1,12 +1,12 @@
 {
   "version": "2.3-sliced",
-  "generatedAt": "2026-01-16 13:37:07 +00:00",
+  "generatedAt": "2026-01-16 13:38:03 +00:00",
   "modules": [
     {
       "name": "xbytechat-api",
       "slug": "xbytechat-api",
       "mode": "parts",
-      "totalBytes": 4140126,
+      "totalBytes": 4139204,
       "partCount": 9,
       "parts": [
         {
@@ -24,8 +24,8 @@
         {
           "n": 3,
           "href": "/busiorbit-api/pack/xbytechat-api/parts/3.json",
-          "bytes": 509040,
-          "fileCount": 165
+          "bytes": 508118,
+          "fileCount": 164
         },
         {
           "n": 4,
@@ -133,7 +133,7 @@
       "name": "xbytechat-api/Features",
       "slug": "xbytechat-api-features",
       "mode": "parts",
-      "totalBytes": 1783776,
+      "totalBytes": 1782854,
       "partCount": 4,
       "parts": [
         {
@@ -151,14 +151,14 @@
         {
           "n": 3,
           "href": "/busiorbit-api/pack/xbytechat-api-features/parts/3.json",
-          "bytes": 554586,
+          "bytes": 562806,
           "fileCount": 140
         },
         {
           "n": 4,
           "href": "/busiorbit-api/pack/xbytechat-api-features/parts/4.json",
-          "bytes": 233143,
-          "fileCount": 54
+          "bytes": 224001,
+          "fileCount": 53
         }
       ]
     },
@@ -391,8 +391,8 @@
       "name": "xbytechat-api/Features/CTAFlowBuilder",
       "slug": "xbytechat-api-features-ctaflowbuilder",
       "mode": "single",
-      "fileCount": 24,
-      "bytes": 188059,
+      "fileCount": 23,
+      "bytes": 187137,
       "href": "/busiorbit-api/pack/xbytechat-api-features-ctaflowbuilder.json"
     },
     {
