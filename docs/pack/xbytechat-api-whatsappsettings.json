@@ -1,6 +1,6 @@
 {
   "name": "xbytechat-api/WhatsAppSettings",
-  "generatedAt": "2026-01-16 13:34:14 +00:00",
+  "generatedAt": "2026-01-16 13:34:58 +00:00",
   "files": [
     {
       "path": "xbytechat-api/WhatsAppSettings/Abstractions/ITemplateCatalogProvider.cs",

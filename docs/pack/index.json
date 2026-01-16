@@ -1,12 +1,12 @@
 {
   "version": "2.3-sliced",
-  "generatedAt": "2026-01-16 13:34:14 +00:00",
+  "generatedAt": "2026-01-16 13:34:58 +00:00",
   "modules": [
     {
       "name": "xbytechat-api",
       "slug": "xbytechat-api",
       "mode": "parts",
-      "totalBytes": 4141970,
+      "totalBytes": 4141048,
       "partCount": 9,
       "parts": [
         {
@@ -30,8 +30,8 @@
         {
           "n": 4,
           "href": "/busiorbit-api/pack/xbytechat-api/parts/4.json",
-          "bytes": 562056,
-          "fileCount": 95
+          "bytes": 561134,
+          "fileCount": 94
         },
         {
           "n": 5,
@@ -133,7 +133,7 @@
       "name": "xbytechat-api/Features",
       "slug": "xbytechat-api-features",
       "mode": "parts",
-      "totalBytes": 1784698,
+      "totalBytes": 1783776,
       "partCount": 4,
       "parts": [
         {
@@ -151,8 +151,8 @@
         {
           "n": 3,
           "href": "/busiorbit-api/pack/xbytechat-api-features/parts/3.json",
-          "bytes": 555508,
-          "fileCount": 141
+          "bytes": 554586,
+          "fileCount": 140
         },
         {
           "n": 4,
@@ -479,8 +479,8 @@
       "name": "xbytechat-api/Features/Tracking",
       "slug": "xbytechat-api-features-tracking",
       "mode": "single",
-      "fileCount": 20,
-      "bytes": 87660,
+      "fileCount": 19,
+      "bytes": 86738,
       "href": "/busiorbit-api/pack/xbytechat-api-features-tracking.json"
     },
     {

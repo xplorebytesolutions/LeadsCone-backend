@@ -2,7 +2,7 @@
   "name": "xbytechat-api/Features",
   "part": 3,
   "of": 4,
-  "generatedAt": "2026-01-16 13:34:14 +00:00",
+  "generatedAt": "2026-01-16 13:34:58 +00:00",
   "files": [
     {
       "path": "xbytechat-api/Features/CTAFlowBuilder/Services/CTAFlowService.cs",
@@ -934,13 +934,6 @@
       "language": "csharp",
       "size": 1798,
       "content": "using System;\n\nnamespace xbytechat.api.Features.Tracking.DTOs\n{\n    public class TrackingLogDto\n    {\n        // 🧩 Multi-Tenant Isolation\n        public Guid BusinessId { get; set; }\n\n        // 👤 CRM Linkage\n        public Guid? ContactId { get; set; }\n        public string? ContactPhone { get; set; }\n\n        // 🔗 Source Info\n        public string SourceType { get; set; } = string.Empty; // e.g. \"campaign\", \"reminder\", \"bot\"\n        public Guid? SourceId { get; set; }\n\n        // 🔘 CTA Info\n        public string? ButtonText { get; set; }\n        public string? CTAType { get; set; }\n\n        // 📨 Message Context\n        public string? MessageId { get; set; }\n        public string? TemplateId { get; set; }\n        public Guid? MessageLogId { get; set; }\n\n        // 🧠 Meta / Behaviour\n        public string? ClickedVia { get; set; }\n        public string? Referrer { get; set; }\n        public DateTime? ClickedAt { get; set; } = DateTime.UtcNow;\n        // 📡 Tracking\n        public string? IPAddress { get; set; }\n        public string? Browser { get; set; }\n        public string? DeviceType { get; set; }\n        public string? Country { get; set; }\n        public string? City { get; set; }\n\n        // 🔖 Session context\n        public string? SessionId { get; set; }\n        public string? ThreadId { get; set; }\n\n        public Guid? CampaignId { get; set; }\n        public Guid? CampaignSendLogId { get; set; }\n\n        public string RawJson { get; set; } = string.Empty; // used in queue method\n        public DateTime EnqueuedAt { get; set; } // used in queue method\n        public string? NextStepMatched { get; set; } // ✅ Add this if not already there\n\n        public string? TemplateName { get; set; } // ✅ Needed for follow-up matcher\n\n\n    }\n}\n"
-    },
-    {
-      "path": "xbytechat-api/Features/Tracking/ExtrackAllFiles.bat",
-      "sha256": "3d14ccc013b9fd82ff0759820acc71da52821878e664cb4daa9418062278e799",
-      "language": "bat",
-      "size": 922,
-      "content": "@echo off\nREM This script will find all files and output their name and content into one file.\nREM The output file will be named [FolderName]_AllFileDump.txt.\n\nREM Get the current folder's name and set it as the output file name with the custom suffix\nfor %%I in (\"%cd%\") do set \"outputFile=%%~nI_AllFileDump.txt\"\n\nREM Clear the output file to start fresh\n> \"%outputFile%\" (echo Folder and File Content Report)\necho. >> \"%outputFile%\"\n\nREM Loop through all files in the current directory and subdirectories\nfor /R . %%F in (*.*) do (\n    echo ====================================================== >> \"%outputFile%\"\n    echo FILE: %%F >> \"%outputFile%\"\n    echo ====================================================== >> \"%outputFile%\"\n    echo. >> \"%outputFile%\"\n    type \"%%F\" >> \"%outputFile%\" 2>nul\n    echo. >> \"%outputFile%\"\n    echo. >> \"%outputFile%\"\n)\n\necho Finished! All content has been extracted to %outputFile%"
     },
     {
       "path": "xbytechat-api/Features/Tracking/Models/TrackingLog.cs",
