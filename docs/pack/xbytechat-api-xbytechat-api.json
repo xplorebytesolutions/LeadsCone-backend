@@ -1,6 +1,6 @@
 {
   "name": "xbytechat-api/xbytechat-api",
-  "generatedAt": "2026-01-16 13:34:58 +00:00",
+  "generatedAt": "2026-01-16 13:37:07 +00:00",
   "files": [
     {
       "path": "xbytechat-api/xbytechat-api/Common/Utils/Idempotency.cs",
@@ -8,13 +8,6 @@
       "language": "csharp",
       "size": 668,
       "content": "using System;\nusing System.Security.Cryptography;\nusing System.Text;\n\nnamespace xbytechat.api.Common.Utils\n{\n    public static class Idempotency\n    {\n        /// <summary>\n        /// SHA256 over a canonical string. Returns lowercase hex.\n        /// </summary>\n        public static string Sha256(string canonical)\n        {\n            using var sha = SHA256.Create();\n            var bytes = Encoding.UTF8.GetBytes(canonical ?? string.Empty);\n            var hash = sha.ComputeHash(bytes);\n            var sb = new StringBuilder(hash.Length * 2);\n            foreach (var b in hash) sb.Append(b.ToString(\"x2\"));\n            return sb.ToString();\n        }\n    }\n}\n"
-    },
-    {
-      "path": "xbytechat-api/xbytechat-api/ExtrackAllFiles.bat",
-      "sha256": "3d14ccc013b9fd82ff0759820acc71da52821878e664cb4daa9418062278e799",
-      "language": "bat",
-      "size": 922,
-      "content": "@echo off\nREM This script will find all files and output their name and content into one file.\nREM The output file will be named [FolderName]_AllFileDump.txt.\n\nREM Get the current folder's name and set it as the output file name with the custom suffix\nfor %%I in (\"%cd%\") do set \"outputFile=%%~nI_AllFileDump.txt\"\n\nREM Clear the output file to start fresh\n> \"%outputFile%\" (echo Folder and File Content Report)\necho. >> \"%outputFile%\"\n\nREM Loop through all files in the current directory and subdirectories\nfor /R . %%F in (*.*) do (\n    echo ====================================================== >> \"%outputFile%\"\n    echo FILE: %%F >> \"%outputFile%\"\n    echo ====================================================== >> \"%outputFile%\"\n    echo. >> \"%outputFile%\"\n    type \"%%F\" >> \"%outputFile%\" 2>nul\n    echo. >> \"%outputFile%\"\n    echo. >> \"%outputFile%\"\n)\n\necho Finished! All content has been extracted to %outputFile%"
     },
     {
       "path": "xbytechat-api/xbytechat-api/Helpers/AuditLoggingHelper.cs",

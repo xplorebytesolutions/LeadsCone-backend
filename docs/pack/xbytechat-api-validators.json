@@ -1,6 +1,6 @@
 {
   "name": "xbytechat-api/Validators",
-  "generatedAt": "2026-01-16 13:34:58 +00:00",
+  "generatedAt": "2026-01-16 13:37:07 +00:00",
   "files": [
     {
       "path": "xbytechat-api/Validators/MessageTypeValidator.cs",
