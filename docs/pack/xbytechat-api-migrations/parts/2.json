@@ -2,7 +2,7 @@
   "name": "xbytechat-api/Migrations",
   "part": 2,
   "of": 4,
-  "generatedAt": "2026-01-16 13:30:39 +00:00",
+  "generatedAt": "2026-01-16 13:31:15 +00:00",
   "files": [
     {
       "path": "xbytechat-api/Migrations/20250929043613_AddBillingIndexes.Designer.cs",

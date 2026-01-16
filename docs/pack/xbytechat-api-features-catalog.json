@@ -1,6 +1,6 @@
 {
   "name": "xbytechat-api/Features/Catalog",
-  "generatedAt": "2026-01-16 13:30:39 +00:00",
+  "generatedAt": "2026-01-16 13:31:15 +00:00",
   "files": [
     {
       "path": "xbytechat-api/Features/Catalog/Controllers/CatalogDashboardController.cs",

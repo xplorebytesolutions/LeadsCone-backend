@@ -1,12 +1,12 @@
 {
   "version": "2.3-sliced",
-  "generatedAt": "2026-01-16 13:30:39 +00:00",
+  "generatedAt": "2026-01-16 13:31:15 +00:00",
   "modules": [
     {
       "name": "xbytechat-api",
       "slug": "xbytechat-api",
       "mode": "parts",
-      "totalBytes": 4144736,
+      "totalBytes": 4143814,
       "partCount": 9,
       "parts": [
         {
@@ -18,8 +18,8 @@
         {
           "n": 2,
           "href": "/busiorbit-api/pack/xbytechat-api/parts/2.json",
-          "bytes": 563182,
-          "fileCount": 95
+          "bytes": 562260,
+          "fileCount": 94
         },
         {
           "n": 3,
@@ -133,14 +133,14 @@
       "name": "xbytechat-api/Features",
       "slug": "xbytechat-api-features",
       "mode": "parts",
-      "totalBytes": 1787464,
+      "totalBytes": 1786542,
       "partCount": 4,
       "parts": [
         {
           "n": 1,
           "href": "/busiorbit-api/pack/xbytechat-api-features/parts/1.json",
-          "bytes": 521413,
-          "fileCount": 193
+          "bytes": 520491,
+          "fileCount": 192
         },
         {
           "n": 2,
@@ -351,8 +351,8 @@
       "name": "xbytechat-api/Features/CampaignModule",
       "slug": "xbytechat-api-features-campaignmodule",
       "mode": "single",
-      "fileCount": 85,
-      "bytes": 537984,
+      "fileCount": 84,
+      "bytes": 537062,
       "href": "/busiorbit-api/pack/xbytechat-api-features-campaignmodule.json"
     },
     {
