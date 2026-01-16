@@ -2,7 +2,7 @@
   "name": "xbytechat-api/Features",
   "part": 2,
   "of": 4,
-  "generatedAt": "2026-01-16 13:38:03 +00:00",
+  "generatedAt": "2026-01-16 13:38:32 +00:00",
   "files": [
     {
       "path": "xbytechat-api/Features/CampaignModule/Services/CampaignService.cs",
