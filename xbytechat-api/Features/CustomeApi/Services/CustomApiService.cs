@@ -195,12 +195,15 @@ namespace xbytechat.api.Features.CustomeApi.Services
                             flowConfigId = req.FlowConfigId,
                             flowEntryStepId = entryStepId
                         })
-                    : ResponseResult.ErrorInfo("❌ Send failed.", result.ErrorMessage);
+                    : ResponseResult.ErrorInfo(
+                        result.ErrorMessage ?? result.Message ?? "Send failed.",
+                        result.ErrorMessage,
+                        result.RawResponse);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "❌ Exception in CustomApiService.SendTemplateAsync");
-                return ResponseResult.ErrorInfo("🚨 Server error while sending template.", ex.ToString());
+                return ResponseResult.FromException(ex, ex.GetBaseException().Message);
             }
         }
 

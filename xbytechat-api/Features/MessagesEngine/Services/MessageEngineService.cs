@@ -190,7 +190,14 @@ namespace xbytechat.api.Features.MessagesEngine.Services
                 var res = await action(wa);
 
                 if (!res.Success)
-                    return ResponseResult.ErrorInfo("❌ WhatsApp API returned an error.", res.Error, res.RawResponse);
+                {
+                    // Previous behavior kept for reference:
+                    // return ResponseResult.ErrorInfo("❌ WhatsApp API returned an error.", res.Error, res.RawResponse);
+                    return ResponseResult.ErrorInfo(
+                        res.Error ?? "❌ WhatsApp API returned an error.",
+                        res.Error,
+                        res.RawResponse);
+                }
 
                 var rr = ResponseResult.SuccessInfo("✅ Message sent successfully", data: null, raw: res.RawResponse);
                 rr.MessageId = string.IsNullOrWhiteSpace(res.ProviderMessageId)
