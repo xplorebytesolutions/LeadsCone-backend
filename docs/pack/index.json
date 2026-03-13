@@ -1,12 +1,12 @@
 {
   "version": "2.3-sliced",
-  "generatedAt": "2026-01-16 13:38:32 +00:00",
+  "generatedAt": "2026-03-13 06:28:02 +00:00",
   "modules": [
     {
       "name": "xbytechat-api",
       "slug": "xbytechat-api",
       "mode": "parts",
-      "totalBytes": 4139204,
+      "totalBytes": 4141418,
       "partCount": 9,
       "parts": [
         {
@@ -24,13 +24,13 @@
         {
           "n": 3,
           "href": "/busiorbit-api/pack/xbytechat-api/parts/3.json",
-          "bytes": 508118,
+          "bytes": 510026,
           "fileCount": 164
         },
         {
           "n": 4,
           "href": "/busiorbit-api/pack/xbytechat-api/parts/4.json",
-          "bytes": 561134,
+          "bytes": 561440,
           "fileCount": 94
         },
         {
@@ -133,7 +133,7 @@
       "name": "xbytechat-api/Features",
       "slug": "xbytechat-api-features",
       "mode": "parts",
-      "totalBytes": 1782854,
+      "totalBytes": 1785068,
       "partCount": 4,
       "parts": [
         {
@@ -151,14 +151,14 @@
         {
           "n": 3,
           "href": "/busiorbit-api/pack/xbytechat-api-features/parts/3.json",
-          "bytes": 562806,
-          "fileCount": 140
+          "bytes": 555878,
+          "fileCount": 139
         },
         {
           "n": 4,
           "href": "/busiorbit-api/pack/xbytechat-api-features/parts/4.json",
-          "bytes": 224001,
-          "fileCount": 53
+          "bytes": 233143,
+          "fileCount": 54
         }
       ]
     },
@@ -408,7 +408,7 @@
       "slug": "xbytechat-api-features-customeapi",
       "mode": "single",
       "fileCount": 13,
-      "bytes": 53223,
+      "bytes": 55131,
       "href": "/busiorbit-api/pack/xbytechat-api-features-customeapi.json"
     },
     {
@@ -448,7 +448,7 @@
       "slug": "xbytechat-api-features-messagesengine",
       "mode": "single",
       "fileCount": 36,
-      "bytes": 166067,
+      "bytes": 166373,
       "href": "/busiorbit-api/pack/xbytechat-api-features-messagesengine.json"
     },
     {
